@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Quantix.Api
 {
@@ -10,31 +8,32 @@ namespace Quantix.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Force TLS 1.2 (opsional, biasanya sudah default di .NET 6+)
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            // Accept all SSL certificates (⚠️ jangan dipakai di production kalau bisa)
-            ServicePointManager.ServerCertificateValidationCallback +=
-                (sender, certificate, chain, sslPolicyErrors) => true;
-
-            // Add services to the container.
-
+            // ✅ Service untuk controller (API)
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // ✅ Swagger hanya aktif di development
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
+            // ⚠️ Certificate validation (ini boleh tetap, tapi hati-hati di production)
+            ServicePointManager.ServerCertificateValidationCallback +=
+                (sender, certificate, chain, sslPolicyErrors) => true;
+
+            // ✅ Tambahan penting agar index.html bisa ditampilkan
+            app.UseDefaultFiles();  // cari file default seperti index.html
+            app.UseStaticFiles();   // izinkan akses ke file di wwwroot
+
             app.UseHttpsRedirection();
             app.UseAuthorization();
+
+            // ✅ Routing API
             app.MapControllers();
 
             app.Run();
