@@ -1,0 +1,1795 @@
+﻿
+.StatusSuspend {
+    color: blue;
+    font-size: 20px;
+}
+
+.TBReconcileHeader {
+    background-color: darkgray;
+    color: black;
+    font-weight: bolder;
+}
+
+.TbReconTitle {
+    color: black;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+
+.OMSExposureWarningMaxAlert {
+    background-color: orange;
+    color: white;
+    font-weight: bolder;
+}
+
+.OMSExposureMaxAlert {
+    background-color: red;
+    color: white;
+    font-weight: bolder;
+}
+
+.Reallocate {
+    background-color: yellow;
+    color: black;
+    font-weight: bolder;
+}
+
+.OMSExposureCashAndAum {
+    color: royalblue;
+    font-size: x-large;
+}
+
+.OMSEquityBySectorUnrealizedPlus {
+    background-color: green;
+    color: white;
+    font-weight: bolder;
+}
+
+.OMSEquityBySectorUnrealizedMin {
+    background-color: red;
+    color: white;
+    font-weight: bolder;
+}
+
+.OMSEquityByInstrumentYellow {
+    background-color: #E8FAFF;
+    color: black;
+    /*font-weight: bolder;*/
+}
+
+.OMSBondByInstrumentYellow {
+    background-color: #E8FAFF;
+    color: black;
+    /*font-weight: bolder;*/
+}
+
+
+.LastUpdateReadOnly {
+    background-color: gray;
+}
+
+.OMSGridHeader {
+    background-color: black;
+    color: white;
+    font-size: large;
+    padding: 5px;
+}
+
+.OMSGridHeaderBuy {
+    background-color: #5496CF;
+    color: white;
+    font-size: large;
+    padding: 5px;
+}
+
+.OMSGridHeaderSell {
+    background-color: #FF6565;
+    color: white;
+    font-size: large;
+    padding: 5px;
+}
+
+.OMSGridHeaderSummaryEquity {
+    background-color: black;
+    color: white;
+    font-size: large;
+    padding: 5px;
+}
+
+.highRiskSuspend {
+    background-color: red;
+    color: white;
+    font-size: large;
+    padding: 5px;
+}
+
+.highRiskRowWaiting {
+    background-color: lightblue;
+}
+
+.k-window-titlebar.k-header {
+    background: #275CAB; /*set background to the titlebar*/
+    color: white; /*set color to the titlebar*/
+    font-weight: bold; /*set font-weight to the titlebar*/
+}
+
+body {
+    font-size: 0.8rem;
+    background: #ff6e7f; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, white, darkgray); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, lightgray, white); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    font-family: 'Calibri';
+    color: black;
+}
+
+.k-input {
+    background: white;
+    color: black;
+    font-weight: bold;
+}
+
+/*FORM STYLE*/
+
+.FormHeaderButton {
+    margin-top: 55px;
+}
+
+.FormGrid {
+    margin-top: 15px;
+    padding-left: 10px;
+}
+
+.MarginTop10 {
+    margin-top: 10px;
+}
+
+.Margin15 {
+    margin: 15px;
+}
+
+.formNameHeader {
+    text-align: right;
+    font-size: xx-large;
+    color: royalblue;
+    padding-right: 30px;
+}
+
+.formNameHeaderAdjustedRight {
+    text-align: right;
+    font-size: medium;
+    color: royalblue;
+    padding-right: 30px;
+}
+
+.formNameHeaderAdjustedCenter {
+    text-align: center;
+    font-size: medium;
+    color: black;
+    padding-right: 30px;
+}
+
+.formNameHeaderAdjustedLeft {
+    text-align: left;
+    font-size: medium;
+    color: royalblue;
+    padding-right: 30px;
+}
+
+.formNameHeaderDashboard {
+    text-align: left;
+    font-size: xx-large;
+    color: white;
+    padding-right: 310px;
+    background-color: darkgray;
+}
+
+/*NUMBER*/
+
+/*.textboxSmallNumberReadOnly {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 150px;
+    text-align: right;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: bold;
+}*/
+
+.textboxSmallNumberReadOnly { 
+    background-color: darkgray;
+    width: 180px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+.textboxSmallNumberReadOnly352 {
+    background-color: darkgray;
+    width: 352px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxSmallNumber {
+    width: 180px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumber {
+    width: 250px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumber310 {
+    width: 312px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumber340 {
+    width: 338px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumberReadOnly {
+    background-color: darkgray;
+    width: 250px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLongNumber {
+    width: 350px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+.textboxLongNumberwidth170 {
+    width: 170px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLongNumber385 {
+    width: 385px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+    border-radius: 1px;
+    border: 0.5px solid darkgray;
+}
+
+.textboxLongNumber400 {
+    width: 395px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+    border-radius: 1px;
+    border: 0.5px solid darkgray;
+}
+
+.textboxLongNumberReadOnly {
+    background-color: darkgray;
+    width: 350px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+/*TEXT*/
+
+.textboxSmall {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 150px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxSmallReadOnly {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 150px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 240px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxRightMedium {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 250px;
+    /*padding: 0px 7px 2px 4px;*/
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 250px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxMedium335 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 338px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumberReadOnly335 {
+    background-color: darkgray;
+    width: 335px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnlyNew {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 235px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: bold;
+}
+
+.textboxLong {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 350px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+    display: flex;
+}
+
+.textboxLong340 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 340px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+    display: flex;
+}
+
+.textboxLong390 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 372px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+    display: flex;
+}
+
+.textboxLong400 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 385px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLong500 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 500px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+
+.textboxLong800 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 700px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+
+.textboxNotesReadOnlyForm {
+    border: 1px solid darkgray;
+    background-color: #f3eeee;
+    height: 50px;
+    width: 500px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLongReadOnly {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 340px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxAddress {
+    border: 1px solid #c4c4c4;
+    height: 75px;
+    width: 337px;
+    font-size: 12px;
+    color: black;
+    font-weight: normal;
+    vertical-align: top;
+    padding: 2px 7px 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-weight: normal;
+    border: 1px solid darkgray;
+    background-color: white;
+}
+
+.textboxAddress300 {
+    border: 1px solid #c4c4c4;
+    height: 75px;
+    width: 300px;
+    font-size: 12px;
+    color: black;
+    font-weight: normal;
+    vertical-align: top;
+    padding: 2px 7px 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-weight: normal;
+    border: 1px solid darkgray;
+    background-color: white;
+    resize: none;
+}
+
+.textboxAddress400 {
+    border: 1px solid #c4c4c4;
+    height: 75px;
+    width: 385px;
+    font-size: 12px;
+    color: black;
+    font-weight: normal;
+    vertical-align: top;
+    padding: 2px 7px 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-weight: normal;
+    border: 1px solid darkgray;
+    background-color: white;
+    resize: none;
+}
+
+/*COMBO*/
+.SmallCombo {
+    background-color: white;
+    width: 150px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+.SmallCombowidth200 {
+    background-color: white;
+    width: 200px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.SmallComboReadOnly {
+    background-color: darkgray;
+    width: 150px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+
+.MediumComboAndDate {
+    background-color: white;
+    width: 250px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+/*DIANA*/
+
+.textboxLongReadOnly350 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 338px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLongReadOnlyTest285 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 285px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+
+.MediumComboAndDateReadOnlyTest350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMediumNumberReadOnly352 {
+    background-color: darkgray;
+    width: 352px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumberReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly249 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 249px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxLongReadOnlyTest300 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxSmall340 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 340px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.MediumComboAndDateReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.MediumComboAndDateReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMedium300 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly235 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 235px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.LongCombo390 {
+    background-color: white;
+    width: 390px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.MediumComboAndDate200 {
+    background-color: white;
+    width: 200px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+/*BANG AGENG*/
+
+.UserAdmin {
+    width: 30rem !important;
+}
+
+.UserNonAdmin {
+    width: auto;
+}
+
+.MediumComboAndDateTest {
+    background-color: white;
+    width: 327px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.MediumComboAndDateTest400 {
+    background-color: white;
+    width: 395px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMediumTest {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 315px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.MediumComboAndDateReadOnlyTest {
+    background-color: darkgray;
+    width: 327px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxSmallReadOnlyTest {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 316px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxAddressTest {
+    border: 1px solid #c4c4c4;
+    height: 75px;
+    width: 316px;
+    font-size: 12px;
+    color: black;
+    font-weight: normal;
+    vertical-align: top;
+    padding: 2px 7px 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-weight: normal;
+    border: 1px solid darkgray;
+    background-color: white;
+}
+
+.textboxMediumNumberTest {
+    width: 330px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.FormHeaderDetailTest {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
+    border-radius: 5px;
+    /*border: 1px solid black;*/
+    font-weight: normal;
+}
+
+.textboxSmallReadOnlyTest {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 314px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.SmallComboTest {
+    background-color: white;
+    width: 327px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxSmallNumberTest {
+    width: 355px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxLongReadOnlyTest {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 261px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+/*FIKRI*/
+
+.textboxMediumNumberReadonlyTest {
+    background-color: darkgray;
+    width: 330px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+/*---------------------*/
+
+.MediumComboAndDateReadOnly {
+    background-color: darkgray;
+    width: 250px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo300 {
+    background-color: white;
+    width: 300px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo310 {
+    background-color: white;
+    width: 310px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo500 {
+    background-color: white;
+    width: 500px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo800 {
+    background-color: white;
+    width: 800px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo500ReadOnly {
+    background-color: darkgray;
+    width: 500px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo340 {
+    background-color: white;
+    width: 336px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo350 {
+    background-color: white;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+.LongCombo250 {
+    background-color: white;
+    width: 250px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo365 {
+    background-color: white;
+    width: 365px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo385 {
+    background-color: white;
+    width: 385px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo350ReadOnly {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo400 {
+    background-color: white;
+    width: 400px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo395 {
+    background-color: white;
+    width: 395px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongCombo450 {
+    background-color: white;
+    width: 450px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+/*BEX*/
+
+.textboxAddress335 {
+    border: 1px solid #c4c4c4;
+    height: 75px;
+    width: 338px;
+    font-size: 12px;
+    color: black;
+    font-weight: normal;
+    vertical-align: top;
+    padding: 2px 7px 2px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-weight: normal;
+    border: 1px solid darkgray;
+    background-color: white;
+    resize: none;
+}
+
+.textboxLongNumber352 {
+    width: 352px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium300 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium275 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 295px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium325 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 325px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium335 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 338px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMedium345 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 345px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnlySingle {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly285 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 285px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly340 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 303px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly345 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 345px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly335 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 338px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.MediumComboAndDate350 {
+    background-color: white;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.MediumComboAndDate350RO {
+    background-color: lightgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.LongComboAndDate {
+    background-color: white;
+    width: 395px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMediumReadOnly200 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 200px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+
+/*---------------------*/
+
+/*DIANA*/
+
+.textboxLongReadOnly350 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 338px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+
+.textboxLongReadOnlyTest315 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 315px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+
+.MediumComboAndDateReadOnlyTest350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMediumNumberReadOnly352 {
+    background-color: darkgray;
+    width: 352px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumNumberReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly249 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 249px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.textboxLongReadOnlyTest300 {
+    border: 1px solid darkgray;
+    background-color: lightgray;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxSmall340 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 340px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.MediumComboAndDateReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.MediumComboAndDateReadOnly350 {
+    background-color: darkgray;
+    width: 350px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.textboxMedium300 {
+    border: 1px solid darkgray;
+    background-color: white;
+    height: 25px;
+    width: 300px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly235 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 235px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+.LongCombo390 {
+    background-color: white;
+    width: 390px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+/*---------------------*/
+.FormHeaderDetail {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-weight: normal;
+}
+
+.FormHeaderDetail2 {
+    margin-top: 62px;
+    margin-bottom: 10px;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-weight: normal;
+}
+
+.FormHeaderState {
+    background-color: aliceblue;
+    border-radius: 2px;
+    border: 1px solid black;
+    padding-left: 10px;
+    color: black;
+}
+.FormHeaderStateWidth495 {
+    background-color: aliceblue;
+    border-radius: 2px;
+    border: 1px solid black;
+    padding-left: 10px;
+    color: black;
+    width: 495px;
+}
+.FormHeaderStateWidth1190 {
+    background-color: aliceblue;
+    border-radius: 2px;
+    border: 1px solid black;
+    padding-left: 10px;
+    color: black;
+    width: 1190px;
+}
+.ContentDetail {
+    background-color: whitesmoke;
+    color: black;
+    font-weight: normal;
+    overflow: hidden !important;
+}
+
+.sysAndHisLabel {
+    text-align: right;
+}
+
+.CompareDataLabel {
+    color: limegreen;
+    font-size: 100%;
+}
+
+.FormLabel100 {
+    width: 100px;
+}
+
+.FormLabel150 {
+    width: 150px;
+}
+
+.FormLabel200 {
+    width: 200px;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.width50 {
+    width: 50%;
+}
+
+.width20 {
+    width: 20%;
+}
+
+.width10 {
+    width: 10%;
+}
+
+.width30 {
+    width: 30%;
+}
+
+.width40 {
+    width: 40%;
+}
+
+.width45 {
+    width: 45%;
+}
+
+.historyRowPending {
+    background-color: lightgray;
+}
+
+.historyRowApprove {
+    background-color: lightgray;
+}
+
+.historyRowVoid {
+    background-color: #FFE8E8;
+    color: black;
+}
+
+.historyRowWaiting {
+    background-color: lightblue;
+}
+
+.approvedRowPending {
+    background-color: lightgray;
+}
+
+.approvedRowPosted {
+    background-color: lightgreen;
+    color: black;
+}
+
+.approvedRowRevised {
+    background-color: lightblue;
+}
+
+.pendingRowApproveBuy {
+    background-color: #E8FFEC;
+    color: black;
+}
+
+
+.pendingRowApproveSell {
+    background-color: lightblue;
+}
+
+.pendingRowApprove {
+    background-color: #E8FAFF;
+    color: black;
+}
+
+.pendingRowWaiting {
+    background-color: #FFFFFF;
+    color: black;
+}
+
+.pendingRowVoid {
+    background-color: red;
+}
+
+.pendingRowPartial {
+    background-color: lightblue;
+}
+
+.RowRegular {
+    background-color: lightsalmon;
+}
+
+.primary {
+    background-color: #64a1d5;
+    background-image: linear-gradient(to bottom, #64a1d5, #428bca);
+    color: #fff;
+    border-color: #428bca;
+    min-width: 70px;
+}
+
+.RightPosition {
+    position: absolute;
+    right: 10px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden
+}
+
+#vertical {
+    height: 100%;
+    border-width: 0;
+}
+
+#horizontal {
+    width: 100%;
+    height: 100%;
+}
+
+.k-grid .k-grid-header .k-header .k-link {
+    height: auto;
+}
+
+.k-grid .k-grid-header .k-header {
+    white-space: normal;
+}
+
+.OMSBondByInstrumentCross {
+    background-color: darkviolet;
+    color: white;
+    font-weight: bolder;
+}
+
+.Onyet {
+    color: black;
+}
+
+.tblSplitAcq tr {
+    height: 35px;
+}
+
+/*Fikri*/
+
+/*Ini untuk class switch ukuran/size nya, size yg ini udah disesuain untuk di form bagian add. Masalah ukuran bisa bikin class switch baru atau langsung style di html nya*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 25px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/*ini bagian slider/bulet nya*/
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        left: 5px;
+        bottom: 5px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+/*ini ubah warna background pas transisi*/
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+/*Ini transisi pas slider nya pindah*/
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Ini yg bulet nya */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+.WindowFooter {
+    background-color: #fcfcfc;
+    color: black;
+    border-radius: 3px;
+    border: 1px solid;
+    border-color: #aeb0ae;
+    font-weight: normal;
+}
+
+.Window-Button-Footer {
+    margin: 0;
+    position: absolute;
+}
+
+.negative_field {
+    color: red;
+}
+
+.positive_field {
+    color: green;
+}
+
+.textboxMediumNumberSmall {
+    width: 100px;
+    text-align: right;
+    color: black;
+    font-weight: normal;
+}
+
+.textboxMediumReadOnly275 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 275px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+.textboxMediumReadOnly315 {
+    border: 1px solid darkgray;
+    background-color: darkgray;
+    height: 25px;
+    width: 315px;
+    padding: 0px 7px 2px 4px;
+    border-radius: 2px;
+    color: Black;
+    font-weight: normal;
+}
+
+/*-----------------------------------------------------------------------------------------------------area new style-----------------------------------------------------------------------------------------------------*/
+
+.container {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.header-wrapper {
+    margin-top: 3em;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .form-header label {
+        margin-bottom: 0px;
+        margin-right: 10px;
+    }
+
+    .form-header .date-filter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-header input {
+        padding: 5px;
+    }
+
+    .form-header .title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+.button-group {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.form-wrapper {
+    display: flex;
+    gap: 30px;
+    width: auto;
+    padding: 10px 10px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+    .form-section label {
+        /*font-weight: bold;*/
+        margin-bottom: 5px;
+    }
+
+    .form-section input, .form-section textarea {
+        padding: 8px;
+        border: 1px solid #ccc;
+        /*border-radius: 5px;*/
+    }
+
+.form-group {
+    display: flex;
+    align-items: center; /* Untuk menyelaraskan secara vertikal */
+    /*margin-bottom: 10px;*/
+    min-height: 35px;
+}
+
+    .form-group label {
+        width: 120px; /* Atur lebar label */
+        padding-right: 10px; /* Jarak antara label dan input */
+        text-align: left; /* Rata kanan untuk label */
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 3px;
+    }
+
+    .form-group textarea {
+        resize: vertical; /* Hanya bisa di-resize ke bawah */
+        overflow: auto; /* Tambahkan scrollbar jika kontennya lebih panjang */
+    }
+
+    .form-group input[type="checkbox"] {
+        flex: 0; /* Hanya berlaku untuk checkbox agar tidak mengambil sisa ruang */
+        margin: 0; /* Hilangkan margin default */
+    }
+
+    .form-group label.switch {
+        width: 50px; /* Atur lebar label */
+    }
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 25px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 17px;
+        width: 17px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(35px);
+    }
+
+.form-grid {
+    /*display: flex;*/
+    /*gap: 30px;*/
+    width: auto;
+    padding: 10px 10px;
+}
+
+.sectionHeader {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-weight: normal;
+}
+
+.k-grid .void-cell {
+    background-color: #ffe6e6;
+    color: #d8000c;
+    font-weight: bold;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+}
+
+    .k-grid .void-cell:hover {
+        background-color: #ffcccc;
+        color: #a80000;
+    }
+
+.frame-grid-fundclient {
+    position: relative;
+    overflow: hidden;
+    min-height: 10rem;
+    max-height: 62em;
+    display: block;
+}
+
+
+#WinImportBenchmarkIndex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2vh; /* agar vertikal tengah juga */
+}
+
+.import-container table {
+    border-collapse: collapse;
+}
+
+.import-container td {
+    padding: 5px;
+}
+
+.MediumComboAndDate275 {
+    background-color: white;
+    width: 275px;
+    color: black;
+    font-weight: normal;
+    border: 0.5px solid darkgray;
+}
+
+.mandatory-indicator {
+    color: orange !important;
+    font-weight: bold;
+    margin-right: 5px;
+    display: inline !important;
+}
+

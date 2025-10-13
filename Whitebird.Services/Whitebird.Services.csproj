@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Whitebird.Models\Whitebird.Models.csproj" />
+    <ProjectReference Include="..\Whitebird.Repository\Whitebird.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Implementations\Client01\" />
+    <Folder Include="Implementations\Client02\" />
+    <Folder Include="Implementations\Client03\" />
+    <Folder Include="Implementations\Product\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+</Project>

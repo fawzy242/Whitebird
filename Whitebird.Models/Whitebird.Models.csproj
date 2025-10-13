@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Client01\" />
+    <Folder Include="Entities\Client02\" />
+    <Folder Include="Entities\Client03\" />
+    <Folder Include="Entities\Product\" />
+  </ItemGroup>
+
+</Project>

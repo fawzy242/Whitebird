@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Whitebird.Models\Whitebird.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EfCore\Client01\" />
+    <Folder Include="EfCore\Client02\" />
+    <Folder Include="EfCore\Client03\" />
+    <Folder Include="EfCore\Product\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="24.12.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="EPPlus" Version="4.0.1.1" />
+  </ItemGroup>
+
+</Project>

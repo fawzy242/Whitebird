@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whitebird.Api", "Whitebird.Api\Whitebird.Api.csproj", "{231B815C-9618-4C20-A48D-F39261B05FF5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whitebird.Services", "Whitebird.Services\Whitebird.Services.csproj", "{0A747F4A-5CAC-4050-93A5-A739A8ACEDC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whitebird.Repository", "Whitebird.Repository\Whitebird.Repository.csproj", "{A6CAF44D-CBD9-427C-8BC0-C3CB9EE8D751}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whitebird.Models", "Whitebird.Models\Whitebird.Models.csproj", "{E47C1A58-167C-4E70-80E5-923780C01420}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whitebird.Helper", "Whitebird.Helper\Whitebird.Helper.csproj", "{15092643-4EA3-4383-9B16-5ADBD11AED97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{C5C01B0C-CC79-41B8-915E-249B9B67F84E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{0B66C6DF-3EFF-405A-AA60-1E31F2A59E92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{231B815C-9618-4C20-A48D-F39261B05FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{231B815C-9618-4C20-A48D-F39261B05FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{231B815C-9618-4C20-A48D-F39261B05FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{231B815C-9618-4C20-A48D-F39261B05FF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A747F4A-5CAC-4050-93A5-A739A8ACEDC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A747F4A-5CAC-4050-93A5-A739A8ACEDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A747F4A-5CAC-4050-93A5-A739A8ACEDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A747F4A-5CAC-4050-93A5-A739A8ACEDC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6CAF44D-CBD9-427C-8BC0-C3CB9EE8D751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6CAF44D-CBD9-427C-8BC0-C3CB9EE8D751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6CAF44D-CBD9-427C-8BC0-C3CB9EE8D751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6CAF44D-CBD9-427C-8BC0-C3CB9EE8D751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E47C1A58-167C-4E70-80E5-923780C01420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E47C1A58-167C-4E70-80E5-923780C01420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E47C1A58-167C-4E70-80E5-923780C01420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E47C1A58-167C-4E70-80E5-923780C01420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15092643-4EA3-4383-9B16-5ADBD11AED97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15092643-4EA3-4383-9B16-5ADBD11AED97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15092643-4EA3-4383-9B16-5ADBD11AED97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15092643-4EA3-4383-9B16-5ADBD11AED97}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {69E992EE-FD1E-4976-A2E5-BBDBBAC70B76}
+	EndGlobalSection
+EndGlobal

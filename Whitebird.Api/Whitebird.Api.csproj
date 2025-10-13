@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Whitebird.Helper\Whitebird.Helper.csproj" />
+    <ProjectReference Include="..\Whitebird.Models\Whitebird.Models.csproj" />
+    <ProjectReference Include="..\Whitebird.Services\Whitebird.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="Reports\Masters\" />
+    <Folder Include="Reports\Template\" />
+    <Folder Include="Temp\" />
+    <Folder Include="wwwroot\public\Client01\Features\" />
+    <Folder Include="wwwroot\public\Client02\Features\" />
+    <Folder Include="wwwroot\public\Client03\Features\" />
+    <Folder Include="wwwroot\public\legacy-lib\css\" />
+    <Folder Include="wwwroot\public\legacy-lib\js\" />
+    <Folder Include="wwwroot\public\lib\css\" />
+    <Folder Include="wwwroot\public\images\" />
+    <Folder Include="wwwroot\public\Product\Features\fund\" />
+    <Folder Include="wwwroot\public\Product\Features\instrument\" />
+    <Folder Include="wwwroot\public\Product\Features\counterpart\" />
+    <Folder Include="wwwroot\public\Product\Features\fundclient\" />
+    <Folder Include="wwwroot\public\Product\Features\fundclientaperd\" />
+    <Folder Include="wwwroot\public\Product\Features\bank\" />
+    <Folder Include="wwwroot\public\Product\Features\bankbranch\" />
+    <Folder Include="wwwroot\public\Product\Features\clientsubscription\" />
+    <Folder Include="wwwroot\public\Product\Features\clientredemption\" />
+    <Folder Include="wwwroot\public\Product\Features\clientswitching\" />
+    <Folder Include="wwwroot\public\Product\Features\closenav\" />
+    <Folder Include="wwwroot\public\Product\Features\fundcashref\" />
+    <Folder Include="wwwroot\public\Product\Features\blacklistname\" />
+    <Folder Include="wwwroot\public\Product\Features\highriskmonitoring\" />
+    <Folder Include="wwwroot\public\Product\Features\unitreconcile\" />
+  </ItemGroup>
+
+</Project>

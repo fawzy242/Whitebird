@@ -1,0 +1,50 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Quantix.Services/1.0.0": {
+        "dependencies": {
+          "Quantix.Models": "1.0.0",
+          "Quantix.Repository": "1.0.0"
+        },
+        "runtime": {
+          "Quantix.Services.dll": {}
+        }
+      },
+      "Quantix.Models/1.0.0": {
+        "runtime": {
+          "Quantix.Models.dll": {}
+        }
+      },
+      "Quantix.Repository/1.0.0": {
+        "dependencies": {
+          "Quantix.Models": "1.0.0"
+        },
+        "runtime": {
+          "Quantix.Repository.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Quantix.Services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Quantix.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Quantix.Repository/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

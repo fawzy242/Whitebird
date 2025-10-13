@@ -1,0 +1,17 @@
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Services.deps.json
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Services.dll
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Services.pdb
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Models.dll
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Repository.dll
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Models.pdb
+E:\New Product MI\Quantix\Quantix.Services\bin\Debug\net6.0\Quantix.Repository.pdb
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.csproj.AssemblyReference.cache
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.GeneratedMSBuildEditorConfig.editorconfig
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.AssemblyInfoInputs.cache
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.AssemblyInfo.cs
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.csproj.CoreCompileInputs.cache
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.csproj.CopyComplete
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.dll
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\refint\Quantix.Services.dll
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\Quantix.Services.pdb
+E:\New Product MI\Quantix\Quantix.Services\obj\Debug\net6.0\ref\Quantix.Services.dll
