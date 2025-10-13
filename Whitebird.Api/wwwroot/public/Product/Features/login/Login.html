@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Whitebird</title>
+    <link href="../../../lib/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin-top: 80px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="login-container">
+            <h3 class="text-center mb-4">Whitebird Login</h3>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary login-btn">Login</button>
+                </div>
+                <div id="loginAlert" class="alert alert-danger mt-3 d-none" role="alert">
+                    Invalid username or password.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS Libraries -->
+    <script src="../../../lib/js/jquery-3.7.1.min.js"></script>
+    <script src="../../../lib/js/bootstrap.min.js"></script>
+    <script src="JsLogin.js"></script>
+</body>
+
+</html>

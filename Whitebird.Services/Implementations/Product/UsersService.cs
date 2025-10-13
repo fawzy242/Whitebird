@@ -1,10 +1,11 @@
 using Whitebird.Repository.EfCore.Product;
 using Whitebird.Models.Entities.Product;
 using Whitebird.Helper.Extensions;
+using Whitebird.Services.Interfaces;
 
 namespace Whitebird.Services.Implementations.Product
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly UsersReps _repo;
 
