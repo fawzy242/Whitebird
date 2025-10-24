@@ -1,5 +1,4 @@
 # Whitebird
----
 
 ### 📝 **Deskripsi Repository (Portfolio)**
 
