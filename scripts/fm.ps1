@@ -5,8 +5,8 @@ param(
 
 # --- Konfigurasi dasar ---
 $solutionDir = (Get-Location).Path
-$migrationProject = "$solutionDir\Whitebird.Migrations"
-$apiProject = "$solutionDir\Whitebird.Api"
+$migrationProject = "$solutionDir\src\Whitebird.Migrations"
+$apiProject = "$solutionDir\src\Whitebird.Api"
 $timestamp = (Get-Date -Format "yyyyMMddHHmmss")
 $TargetFramework = "net8.0"
 $processor = "SqlServer2016"
