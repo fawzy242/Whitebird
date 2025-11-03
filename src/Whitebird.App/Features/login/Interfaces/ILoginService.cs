@@ -1,10 +1,10 @@
-using Whitebird.Domain.Features.login.Entities;
-using Whitebird.Helper.Extensions;
+using Whitebird.App.Features.Common.Service;
+using Whitebird.Domain.Features.Login.Entities;
 
-namespace Whitebird.Services.Features.login.Interfaces
+namespace Whitebird.App.Features.Login.Interfaces
 {
     public interface ILoginService
     {
-        Task<Result<IEnumerable<Login>>> Quest();
+        Task<Result<IEnumerable<LoginEntity>>> Quest();
     }
 }

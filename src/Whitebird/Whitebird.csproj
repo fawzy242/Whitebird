@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Whitebird.Helper\Whitebird.Helper.csproj" />
-    <ProjectReference Include="..\Whitebird.Domain\Whitebird.Domain.csproj" />
     <ProjectReference Include="..\Whitebird.App\Whitebird.App.csproj" />
   </ItemGroup>
   

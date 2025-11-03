@@ -1,8 +1,8 @@
 using System.Data;
-using System.Data.SqlClient;
 using Dapper;
+using Microsoft.Data.SqlClient;
 
-namespace Whitebird.Helper.Extensions
+namespace Whitebird.Infra.Features.Common
 {
     public static class CommonReps
     {

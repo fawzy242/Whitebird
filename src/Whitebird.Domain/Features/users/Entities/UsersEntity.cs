@@ -1,4 +1,4 @@
-namespace Whitebird.Domain.Features.users.Entities
+namespace Whitebird.Domain.Features.Users.Entities
 {
     public class UsersEntity
     {

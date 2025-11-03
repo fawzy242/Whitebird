@@ -1,7 +1,7 @@
-using Whitebird.Domain.Features.users.Entities;
-using Whitebird.Helper.Extensions;
+using Whitebird.App.Features.Common.Service;
+using Whitebird.Domain.Features.Users.Entities;
 
-namespace Whitebird.App.Features.users.Interfaces
+namespace Whitebird.App.Features.Users.Interfaces
 {
     public interface IUserService
     {

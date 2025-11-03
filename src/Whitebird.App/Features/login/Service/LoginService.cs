@@ -1,9 +1,9 @@
-using Whitebird.Domain.Features.login.Entities;
-using Whitebird.Helper.Extensions;
-using Whitebird.Infra.Features.login.Reps;
-using Whitebird.Services.Features.login.Interfaces;
+using Whitebird.App.Features.Common.Service;
+using Whitebird.App.Features.Login.Interfaces;
+using Whitebird.Domain.Features.Login.Entities;
+using Whitebird.Infra.Features.Login;
 
-namespace Whitebird.App.Features.login.Service
+namespace Whitebird.App.Features.Login.Service
 {
     public class LoginService : ILoginService
     {
@@ -14,16 +14,16 @@ namespace Whitebird.App.Features.login.Service
             _repo = repo;
         }
 
-        public async Task<Result<IEnumerable<Login>>> Quest()
+        public async Task<Result<IEnumerable<LoginEntity>>> Quest()
         {
             try
             {
                 var users = await _repo.Quest();
-                return Result<IEnumerable<Login>>.Ok(users);
+                return Result<IEnumerable<LoginEntity>>.Ok(users);
             }
             catch (Exception ex)
             {
-                return Result<IEnumerable<Login>>.Fail(ex.Message);
+                return Result<IEnumerable<LoginEntity>>.Fail(ex.Message);
             }
         }
     }

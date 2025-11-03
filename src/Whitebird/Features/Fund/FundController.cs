@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Whitebird.App.Features.fund.Service;
-using Whitebird.Helper.Extensions;
+using Whitebird.App.Features.Fund.Service;
+using Whitebird.Features.Common;
 
 [ApiController]
 [Route("api/[controller]")]

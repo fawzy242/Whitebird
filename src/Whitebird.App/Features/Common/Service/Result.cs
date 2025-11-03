@@ -1,4 +1,4 @@
-namespace Whitebird.Helper.Extensions
+namespace Whitebird.App.Features.Common.Service
 {
     public class Result<T>
     {

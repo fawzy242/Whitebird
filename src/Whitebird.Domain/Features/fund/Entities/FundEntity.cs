@@ -1,4 +1,4 @@
-namespace Whitebird.Domain.Features.fund.Entities
+namespace Whitebird.Domain.Features.Fund.Entities
 {
     public class FundEntity
     {

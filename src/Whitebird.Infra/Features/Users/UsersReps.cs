@@ -2,9 +2,9 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using Whitebird.Domain.Features.users.Entities;
+using Whitebird.Domain.Features.Users.Entities;
 
-namespace Whitebird.Infra.Features.users.Reps
+namespace Whitebird.Infra.Features.Users
 {
     public class UsersReps
     {

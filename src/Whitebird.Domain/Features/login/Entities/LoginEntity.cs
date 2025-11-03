@@ -1,6 +1,6 @@
-namespace Whitebird.Domain.Features.login.Entities
+namespace Whitebird.Domain.Features.Login.Entities
 {
-    public class Login
+    public class LoginEntity
     {
         public int Id { get; set; }
         public string? Passowrd { get; set; }

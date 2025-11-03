@@ -1,8 +1,8 @@
-using Whitebird.Domain.Features.fund.Entities;
-using Whitebird.Helper.Extensions;
-using Whitebird.Infra.Features.fund.Reps;
+using Whitebird.App.Features.Common.Service;
+using Whitebird.Domain.Features.Fund.Entities;
+using Whitebird.Infra.Features.Fund;
 
-namespace Whitebird.App.Features.fund.Service
+namespace Whitebird.App.Features.Fund.Service
 {
     public class FundService
     {

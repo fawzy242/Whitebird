@@ -1,9 +1,9 @@
-using Whitebird.App.Features.users.Interfaces;
-using Whitebird.Domain.Features.users.Entities;
-using Whitebird.Helper.Extensions;
-using Whitebird.Infra.Features.users.Reps;
+using Whitebird.App.Features.Common.Service;
+using Whitebird.App.Features.Users.Interfaces;
+using Whitebird.Domain.Features.Users.Entities;
+using Whitebird.Infra.Features.Users;
 
-namespace Whitebird.App.Features.users.Service
+namespace Whitebird.App.Features.Users.Service
 {
     public class UserService : IUserService
     {

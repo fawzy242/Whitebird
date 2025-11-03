@@ -1,16 +1,16 @@
 using System.Data;
-using Dapper;
 using Microsoft.Data.SqlClient;
+using Dapper;
 using Microsoft.Extensions.Configuration;
-using Whitebird.Domain.Features.fund.Entities;
+using Whitebird.Domain.Features.Login.Entities;
 
-namespace Whitebird.Infra.Features.fund.Reps
+namespace Whitebird.Infra.Features.Login
 {
-    public class FundReps
+    public class LoginReps
     {
         private readonly string _connectionString;
 
-        public FundReps(IConfiguration configuration)
+        public LoginReps(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("WhitebirdDb")
                                  ?? throw new InvalidOperationException("Connection string 'WhitebirdDb' is not configured.");
@@ -21,11 +21,11 @@ namespace Whitebird.Infra.Features.fund.Reps
             return new SqlConnection(_connectionString);
         }
 
-        public async Task<IEnumerable<FundEntity>> GetShowData()
+        public async Task<IEnumerable<LoginEntity>> Quest()
         {
             using var connection = CreateConnection();
-            string sql = "Select FundPK, Id, Name, EntryTime as CreatedAt, UpdateTime as UpdatedAt,1 as IsActive FROM Fund";
-            return await connection.QueryAsync<FundEntity>(sql);
+            string sql = "SELECT Id, Name, Email FROM Users";
+            return await connection.QueryAsync<LoginEntity>(sql);
         }
     }
 }
