@@ -2,13 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Whitebird.Api",
+      "name": "Launch Whitebird",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build Whitebird.Api",
-      "program": "${workspaceFolder}/src/Whitebird.Api/bin/Debug/net8.0/Whitebird.Api.dll",
+      "preLaunchTask": "build Whitebird",
+      "program": "${workspaceFolder}/src/Whitebird/bin/Debug/net8.0/Whitebird.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/Whitebird.Api",
+      "cwd": "${workspaceFolder}/src/Whitebird",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openExternally",

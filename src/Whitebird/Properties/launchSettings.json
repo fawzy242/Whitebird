@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "Whitebird.Api": {
+    "Whitebird": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
