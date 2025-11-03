@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Whitebird.Domain\Whitebird.Domain.csproj" />
+    <ProjectReference Include="..\Whitebird.Infra\Whitebird.Infra.csproj" />
+    <ProjectReference Include="..\Whitebird.Helper\Whitebird.Helper.csproj" />
+  </ItemGroup>
+
+</Project>
