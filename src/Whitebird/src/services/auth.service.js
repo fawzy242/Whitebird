@@ -10,7 +10,7 @@ import { EventBus } from '../utils/event-bus.js';
 // Test credentials
 const TEST_CREDENTIALS = {
   username: 'testuser@redadmin.local',
-  password: 'Test@1234'
+  password: 'Test@1234',
 };
 
 class AuthServiceClass {
@@ -49,7 +49,7 @@ class AuthServiceClass {
       const response = await apiService.post('/auth/login', {
         username,
         password,
-        remember_me: rememberMe
+        remember_me: rememberMe,
       });
 
       return this.handleLoginSuccess(response, rememberMe);
@@ -71,7 +71,7 @@ class AuthServiceClass {
       lastName: 'User',
       role: 'admin',
       avatar: null,
-      permissions: ['*']
+      permissions: ['*'],
     };
 
     const testToken = 'test_token_' + Date.now();
@@ -91,7 +91,7 @@ class AuthServiceClass {
       success: true,
       user: testUser,
       token: testToken,
-      message: 'Test account login successful'
+      message: 'Test account login successful',
     };
   }
 
@@ -114,7 +114,7 @@ class AuthServiceClass {
     return {
       success: true,
       user,
-      token
+      token,
     };
   }
 
@@ -170,7 +170,7 @@ class AuthServiceClass {
     try {
       const response = await apiService.post('/auth/reset-password', {
         token,
-        password: newPassword
+        password: newPassword,
       });
       EventBus.emit('auth:password-reset-success');
       return response;
@@ -187,7 +187,7 @@ class AuthServiceClass {
     try {
       const response = await apiService.post('/auth/change-password', {
         current_password: currentPassword,
-        new_password: newPassword
+        new_password: newPassword,
       });
       EventBus.emit('auth:password-changed');
       return response;
@@ -207,7 +207,7 @@ class AuthServiceClass {
       }
 
       const response = await apiService.post('/auth/refresh', {
-        refresh_token: refreshToken
+        refresh_token: refreshToken,
       });
 
       StorageService.setToken(response.token);
@@ -292,14 +292,17 @@ class AuthServiceClass {
    */
   startTokenExpiryCheck() {
     this.stopTokenExpiryCheck();
-    
+
     // Check every 5 minutes
-    this.tokenExpiryTimer = setInterval(() => {
-      if (!this.checkAuth()) {
-        this.clearAuthData();
-        EventBus.emit('auth:session-expired');
-      }
-    }, 5 * 60 * 1000);
+    this.tokenExpiryTimer = setInterval(
+      () => {
+        if (!this.checkAuth()) {
+          this.clearAuthData();
+          EventBus.emit('auth:session-expired');
+        }
+      },
+      5 * 60 * 1000
+    );
   }
 
   /**
@@ -326,7 +329,7 @@ class AuthServiceClass {
   async unlockScreen(password) {
     try {
       const user = this.getCurrentUser();
-      
+
       // For test account
       if (this.isTestAccount() && password === TEST_CREDENTIALS.password) {
         StorageService.removeTempData('screen_locked');
@@ -337,7 +340,7 @@ class AuthServiceClass {
       // Real API unlock
       const response = await apiService.post('/auth/unlock', {
         user_id: user.id,
-        password
+        password,
       });
 
       StorageService.removeTempData('screen_locked');

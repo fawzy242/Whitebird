@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 import { StorageService } from '../storage.service.js';
-import { EventBus} from '../../utils/event-bus.js';
+import { EventBus } from '../../utils/event-bus.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.redadmin.local/v1';
 const API_TIMEOUT = import.meta.env.VITE_API_TIMEOUT || 30000;
@@ -27,7 +27,7 @@ class AxiosService {
       timeout: API_TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     });
 
@@ -279,9 +279,7 @@ class AxiosService {
       },
       onUploadProgress: (progressEvent) => {
         if (onProgress) {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           onProgress(percentCompleted);
         }
       },

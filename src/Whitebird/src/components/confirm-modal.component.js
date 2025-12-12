@@ -43,10 +43,10 @@ class ConfirmModalComponent {
 
     const existing = document.getElementById('confirmModal');
     if (existing) existing.remove();
-    
+
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     this.modal = document.getElementById('confirmModal');
-    
+
     this.setupEventListeners();
   }
 
@@ -82,7 +82,7 @@ class ConfirmModalComponent {
       message = 'Are you sure?',
       okText = 'Confirm',
       cancelText = 'Cancel',
-      okClass = 'btn-primary'
+      okClass = 'btn-primary',
     } = options;
 
     return new Promise((resolve) => {
@@ -138,7 +138,7 @@ class ConfirmModalComponent {
 
       iconEl.innerHTML = iconHTML;
       iconEl.className = `confirm-icon mb-3 ${iconColor}`;
-      
+
       document.getElementById('confirmTitle').textContent = title;
       document.getElementById('confirmMessage').textContent = message;
       okBtn.textContent = okText;
@@ -155,7 +155,7 @@ class ConfirmModalComponent {
       type: 'success',
       title,
       message,
-      okText: 'OK'
+      okText: 'OK',
     });
   }
 
@@ -164,7 +164,7 @@ class ConfirmModalComponent {
       type: 'error',
       title,
       message,
-      okText: 'OK'
+      okText: 'OK',
     });
   }
 
@@ -174,7 +174,7 @@ class ConfirmModalComponent {
       title,
       message,
       okText: 'Proceed',
-      cancelText: 'Cancel'
+      cancelText: 'Cancel',
     });
   }
 
@@ -184,7 +184,7 @@ class ConfirmModalComponent {
       title,
       message,
       okText: 'Delete',
-      cancelText: 'Cancel'
+      cancelText: 'Cancel',
     });
   }
 
@@ -194,7 +194,7 @@ class ConfirmModalComponent {
       title,
       message,
       okText: 'Confirm',
-      cancelText: 'Cancel'
+      cancelText: 'Cancel',
     });
   }
 
@@ -203,7 +203,7 @@ class ConfirmModalComponent {
       type: 'info',
       title,
       message,
-      okText: 'OK'
+      okText: 'OK',
     });
   }
 }

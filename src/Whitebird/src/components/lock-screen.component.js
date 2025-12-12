@@ -15,7 +15,7 @@ class LockScreenComponent {
     localStorage.setItem('isLocked', 'true');
     localStorage.setItem('lockScreenTime', new Date().toISOString());
     this.isLocked = true;
-    
+
     // Navigate to lock screen
     window.location.href = '/lockscreen';
   }
@@ -27,7 +27,7 @@ class LockScreenComponent {
     localStorage.removeItem('isLocked');
     localStorage.removeItem('lockScreenTime');
     this.isLocked = false;
-    
+
     // Navigate to dashboard
     window.location.href = '/dashboard';
   }

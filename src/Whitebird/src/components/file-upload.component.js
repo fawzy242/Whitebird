@@ -22,7 +22,7 @@ export class FileUploadComponent {
       onProgress: null,
       onSuccess: null,
       onError: null,
-      ...options
+      ...options,
     };
 
     this.files = [];
@@ -73,10 +73,12 @@ export class FileUploadComponent {
    */
   getAcceptedTypes() {
     if (this.options.allowedTypes.length === 0) return '*';
-    return this.options.allowedTypes.map(type => {
-      if (type.startsWith('.')) return type;
-      return `.${type}`;
-    }).join(',');
+    return this.options.allowedTypes
+      .map((type) => {
+        if (type.startsWith('.')) return type;
+        return `.${type}`;
+      })
+      .join(',');
   }
 
   /**
@@ -97,20 +99,20 @@ export class FileUploadComponent {
 
     if (this.options.dragDrop) {
       // Drag and drop events
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
         zone.addEventListener(eventName, (e) => {
           e.preventDefault();
           e.stopPropagation();
         });
       });
 
-      ['dragenter', 'dragover'].forEach(eventName => {
+      ['dragenter', 'dragover'].forEach((eventName) => {
         zone.addEventListener(eventName, () => {
           zone.classList.add('drag-over');
         });
       });
 
-      ['dragleave', 'drop'].forEach(eventName => {
+      ['dragleave', 'drop'].forEach((eventName) => {
         zone.addEventListener(eventName, () => {
           zone.classList.remove('drag-over');
         });
@@ -127,12 +129,12 @@ export class FileUploadComponent {
    * Handle selected files
    */
   handleFiles(files) {
-    const validFiles = files.filter(file => this.validateFile(file));
-    
+    const validFiles = files.filter((file) => this.validateFile(file));
+
     if (validFiles.length === 0) return;
 
     this.files = this.options.multiple ? [...this.files, ...validFiles] : validFiles;
-    
+
     if (this.options.showPreview) {
       this.showPreview();
     }
@@ -170,18 +172,23 @@ export class FileUploadComponent {
    */
   showPreview() {
     const preview = this.container.querySelector('[data-preview]');
-    
-    const previewHTML = this.files.map((file, index) => {
-      const isImage = file.type.startsWith('image/');
-      const previewUrl = isImage ? URL.createObjectURL(file) : null;
-      
-      return `
+
+    const previewHTML = this.files
+      .map((file, index) => {
+        const isImage = file.type.startsWith('image/');
+        const previewUrl = isImage ? URL.createObjectURL(file) : null;
+
+        return `
         <div class="preview-item" data-index="${index}">
-          ${isImage ? `
+          ${
+            isImage
+              ? `
             <img src="${previewUrl}" alt="${file.name}" class="preview-image">
-          ` : `
+          `
+              : `
             <i class="fas fa-file fa-3x text-secondary"></i>
-          `}
+          `
+          }
           <div class="preview-info">
             <strong>${file.name}</strong>
             <small class="text-muted">${this.formatFileSize(file.size)}</small>
@@ -191,7 +198,8 @@ export class FileUploadComponent {
           </button>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
 
     preview.innerHTML = previewHTML;
 
@@ -222,44 +230,39 @@ export class FileUploadComponent {
 
     const progressContainer = this.container.querySelector('[data-progress]');
     const progressBar = progressContainer.querySelector('.progress-bar');
-    
+
     progressContainer.hidden = false;
 
     try {
       for (let i = 0; i < this.files.length; i++) {
         const file = this.files[i];
-        
-        await apiService.uploadFile(
-          this.options.uploadUrl,
-          file,
-          (percent) => {
-            progressBar.style.width = `${percent}%`;
-            progressBar.textContent = `${percent}%`;
-            
-            if (this.options.onProgress) {
-              this.options.onProgress(percent, file, i);
-            }
+
+        await apiService.uploadFile(this.options.uploadUrl, file, (percent) => {
+          progressBar.style.width = `${percent}%`;
+          progressBar.textContent = `${percent}%`;
+
+          if (this.options.onProgress) {
+            this.options.onProgress(percent, file, i);
           }
-        );
+        });
       }
 
       progressBar.style.width = '100%';
       progressBar.textContent = 'Complete!';
-      
+
       if (this.options.onSuccess) {
         this.options.onSuccess(this.files);
       }
 
       EventBus.emit('fileupload:success', { files: this.files });
-      
+
       setTimeout(() => {
         progressContainer.hidden = true;
         this.reset();
       }, 2000);
-
     } catch (error) {
       this.showError('Upload failed: ' + error.message);
-      
+
       if (this.options.onError) {
         this.options.onError(error);
       }
@@ -273,12 +276,12 @@ export class FileUploadComponent {
    */
   formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   /**
@@ -295,7 +298,7 @@ export class FileUploadComponent {
     this.files = [];
     const preview = this.container.querySelector('[data-preview]');
     const input = this.container.querySelector('.file-input');
-    
+
     if (preview) preview.innerHTML = '';
     if (input) input.value = '';
   }

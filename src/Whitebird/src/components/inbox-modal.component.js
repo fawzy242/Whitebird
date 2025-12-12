@@ -27,9 +27,9 @@ export class InboxModalComponent {
       this.messages = this.generateSampleMessages();
     }
     // else: reuse existing cached messages
-    
+
     this.totalPages = Math.ceil(this.messages.length / this.perPage);
-    
+
     // Cache modal instance for performance
     if (!this.modal || !document.getElementById('inboxModal')) {
       this.modal = modalManager.create({
@@ -40,7 +40,7 @@ export class InboxModalComponent {
         footer: false,
         onShow: () => {
           this.setupInboxHandlers();
-        }
+        },
       });
     } else {
       // Just refresh content if modal exists
@@ -76,7 +76,7 @@ export class InboxModalComponent {
         </div>
         
         <div class="inbox-list">
-          ${pageMessages.map(msg => this.renderMessage(msg)).join('')}
+          ${pageMessages.map((msg) => this.renderMessage(msg)).join('')}
         </div>
         
         ${this.renderPagination()}
@@ -90,7 +90,7 @@ export class InboxModalComponent {
   renderMessage(message) {
     const unreadClass = message.unread ? 'unread' : '';
     const avatarUrl = message.avatar || 'https://via.placeholder.com/40';
-    
+
     return `
       <div class="inbox-message ${unreadClass}" data-message-id="${message.id}">
         <div class="message-avatar">
@@ -146,13 +146,16 @@ export class InboxModalComponent {
    */
   setupInboxHandlers() {
     const modalElement = this.modal.getElement();
-    
+
     // Search functionality
     const searchInput = modalElement.querySelector('#inboxSearch');
     if (searchInput) {
-      searchInput.addEventListener('input', DOMUtils.debounce((e) => {
-        this.handleSearch(e.target.value);
-      }, 300));
+      searchInput.addEventListener(
+        'input',
+        DOMUtils.debounce((e) => {
+          this.handleSearch(e.target.value);
+        }, 300)
+      );
     }
 
     // Message click
@@ -164,7 +167,7 @@ export class InboxModalComponent {
     // Pagination
     DOMUtils.on(modalElement, 'click', '.page-link', (e) => {
       const page = e.currentTarget.dataset.page;
-      
+
       if (page === 'prev') {
         this.currentPage = Math.max(1, this.currentPage - 1);
       } else if (page === 'next') {
@@ -172,7 +175,7 @@ export class InboxModalComponent {
       } else {
         this.currentPage = parseInt(page);
       }
-      
+
       this.updateInbox();
     });
   }
@@ -189,7 +192,7 @@ export class InboxModalComponent {
    * Open message
    */
   openMessage(messageId) {
-    const message = this.messages.find(m => m.id == messageId);
+    const message = this.messages.find((m) => m.id == messageId);
     if (message) {
       message.unread = false;
       EventBus.emit('inbox:message-opened', { message });
@@ -219,7 +222,7 @@ export class InboxModalComponent {
         preview: `This is a preview of message ${i}...`,
         time: `${i} hours ago`,
         unread: i <= 5,
-        avatar: null
+        avatar: null,
       });
     }
     return sampleMessages;

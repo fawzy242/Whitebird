@@ -54,8 +54,8 @@ export class EmployeeCrudModule {
 
     // Form submit
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        console.log("📤 Form submitted");
+      e.preventDefault();
+      console.log('📤 Form submitted');
       this.handleSubmit();
     });
 

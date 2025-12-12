@@ -17,13 +17,13 @@ export class SearchableDropdown {
       noResultsText: 'No results found',
       maxHeight: '300px',
       onSelect: null,
-      ...options
+      ...options,
     };
 
     this.selectedValue = null;
     this.filteredData = [...this.options.data];
     this.isOpen = false;
-    
+
     this.init();
   }
 
@@ -41,20 +41,24 @@ export class SearchableDropdown {
   createDropdown() {
     const wrapper = document.createElement('div');
     wrapper.className = 'searchable-dropdown';
-    
+
     wrapper.innerHTML = `
       <div class="dropdown-trigger" tabindex="0">
         <span class="dropdown-value">${this.options.placeholder}</span>
         <i class="fas fa-chevron-down dropdown-icon"></i>
       </div>
       <div class="dropdown-menu-custom">
-        ${this.options.searchable ? `
+        ${
+          this.options.searchable
+            ? `
           <div class="dropdown-search">
             <i class="fas fa-search"></i>
             <input type="text" class="form-control form-control-sm" 
                    placeholder="${this.options.searchPlaceholder}">
           </div>
-        ` : ''}
+        `
+            : ''
+        }
         <div class="dropdown-list" style="max-height: ${this.options.maxHeight}">
           ${this.renderOptions()}
         </div>
@@ -74,17 +78,19 @@ export class SearchableDropdown {
       return `<div class="dropdown-no-results">${this.options.noResultsText}</div>`;
     }
 
-    return this.filteredData.map(item => {
-      const value = typeof item === 'object' ? item.value : item;
-      const label = typeof item === 'object' ? item.label : item;
-      const selected = value === this.selectedValue ? 'selected' : '';
-      
-      return `
+    return this.filteredData
+      .map((item) => {
+        const value = typeof item === 'object' ? item.value : item;
+        const label = typeof item === 'object' ? item.label : item;
+        const selected = value === this.selectedValue ? 'selected' : '';
+
+        return `
         <div class="dropdown-option ${selected}" data-value="${value}">
           ${label}
         </div>
       `;
-    }).join('');
+      })
+      .join('');
   }
 
   /**
@@ -101,9 +107,12 @@ export class SearchableDropdown {
 
     // Search functionality
     if (searchInput) {
-      searchInput.addEventListener('input', DOMUtils.debounce((e) => {
-        this.handleSearch(e.target.value);
-      }, 300));
+      searchInput.addEventListener(
+        'input',
+        DOMUtils.debounce((e) => {
+          this.handleSearch(e.target.value);
+        }, 300)
+      );
     }
 
     // Option selection
@@ -135,8 +144,8 @@ export class SearchableDropdown {
    */
   handleSearch(query) {
     const lowerQuery = query.toLowerCase();
-    
-    this.filteredData = this.options.data.filter(item => {
+
+    this.filteredData = this.options.data.filter((item) => {
       const label = typeof item === 'object' ? item.label : item;
       return label.toString().toLowerCase().includes(lowerQuery);
     });
@@ -157,9 +166,9 @@ export class SearchableDropdown {
    */
   selectOption(value) {
     this.selectedValue = value;
-    
+
     // Find label
-    const item = this.options.data.find(i => {
+    const item = this.options.data.find((i) => {
       return (typeof i === 'object' ? i.value : i) === value;
     });
     const label = typeof item === 'object' ? item.label : item;
@@ -201,7 +210,7 @@ export class SearchableDropdown {
   open() {
     this.wrapper.classList.add('open');
     this.isOpen = true;
-    
+
     const searchInput = this.wrapper.querySelector('.dropdown-search input');
     if (searchInput) {
       setTimeout(() => searchInput.focus(), 100);
@@ -214,7 +223,7 @@ export class SearchableDropdown {
   close() {
     this.wrapper.classList.remove('open');
     this.isOpen = false;
-    
+
     const searchInput = this.wrapper.querySelector('.dropdown-search input');
     if (searchInput) {
       searchInput.value = '';

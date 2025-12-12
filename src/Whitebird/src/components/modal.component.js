@@ -22,7 +22,7 @@ export class ModalComponent {
       onShow: null,
       onHide: null,
       onSubmit: null,
-      ...options
+      ...options,
     };
 
     this.modal = null;
@@ -43,9 +43,13 @@ export class ModalComponent {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="${this.options.id}Label">${this.options.title}</h5>
-              ${this.options.closeButton ? `
+              ${
+                this.options.closeButton
+                  ? `
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              ` : ''}
+              `
+                  : ''
+              }
             </div>
             <div class="modal-body">
               ${this.options.content}
@@ -58,10 +62,10 @@ export class ModalComponent {
 
     const container = document.getElementById('modals-container') || document.body;
     DOMUtils.insertHTML(container, modalHTML);
-    
+
     this.modal = document.getElementById(this.options.id);
     this.setupEventListeners();
-    
+
     return this;
   }
 
@@ -74,7 +78,7 @@ export class ModalComponent {
       md: '',
       lg: 'modal-lg',
       xl: 'modal-xl',
-      fullscreen: 'modal-fullscreen'
+      fullscreen: 'modal-fullscreen',
     };
     return sizeMap[this.options.size] || '';
   }
@@ -91,15 +95,17 @@ export class ModalComponent {
       `;
     }
 
-    const buttonsHTML = this.options.buttons.map(btn => {
-      const classes = btn.className || 'btn-primary';
-      const dismiss = btn.dismiss ? 'data-bs-dismiss="modal"' : '';
-      return `
+    const buttonsHTML = this.options.buttons
+      .map((btn) => {
+        const classes = btn.className || 'btn-primary';
+        const dismiss = btn.dismiss ? 'data-bs-dismiss="modal"' : '';
+        return `
         <button type="button" class="btn ${classes}" data-action="${btn.action || ''}" ${dismiss}>
           ${btn.text}
         </button>
       `;
-    }).join('');
+      })
+      .join('');
 
     return `<div class="modal-footer">${buttonsHTML}</div>`;
   }
@@ -130,7 +136,7 @@ export class ModalComponent {
     });
 
     // Button actions
-    this.options.buttons.forEach(btn => {
+    this.options.buttons.forEach((btn) => {
       if (btn.action && btn.onClick) {
         const button = this.modal.querySelector(`[data-action="${btn.action}"]`);
         if (button) {
@@ -151,7 +157,7 @@ export class ModalComponent {
     if (!this.bsModal) {
       this.bsModal = new bootstrap.Modal(this.modal, {
         backdrop: this.options.backdrop,
-        keyboard: this.options.keyboard
+        keyboard: this.options.keyboard,
       });
     }
 
@@ -293,7 +299,7 @@ export class ModalManager {
    * Destroy all modals
    */
   destroyAll() {
-    this.modals.forEach(modal => modal.destroy());
+    this.modals.forEach((modal) => modal.destroy());
     this.modals.clear();
   }
 
@@ -301,7 +307,7 @@ export class ModalManager {
    * Hide all modals
    */
   hideAll() {
-    this.modals.forEach(modal => modal.hide());
+    this.modals.forEach((modal) => modal.hide());
   }
 
   /**

@@ -30,13 +30,13 @@ class StorageServiceClass {
     try {
       const prefixedKey = this.getPrefixedKey(key);
       const serializedValue = JSON.stringify(value);
-      
+
       if (useSession) {
         this.sessionStorage.setItem(prefixedKey, serializedValue);
       } else {
         this.storage.setItem(prefixedKey, serializedValue);
       }
-      
+
       return true;
     } catch (error) {
       console.error('Storage error:', error);
@@ -50,10 +50,10 @@ class StorageServiceClass {
   getItem(key, useSession = false) {
     try {
       const prefixedKey = this.getPrefixedKey(key);
-      const item = useSession 
+      const item = useSession
         ? this.sessionStorage.getItem(prefixedKey)
         : this.storage.getItem(prefixedKey);
-      
+
       return item ? JSON.parse(item) : null;
     } catch (error) {
       console.error('Storage error:', error);
@@ -67,13 +67,13 @@ class StorageServiceClass {
   removeItem(key, useSession = false) {
     try {
       const prefixedKey = this.getPrefixedKey(key);
-      
+
       if (useSession) {
         this.sessionStorage.removeItem(prefixedKey);
       } else {
         this.storage.removeItem(prefixedKey);
       }
-      
+
       return true;
     } catch (error) {
       console.error('Storage error:', error);
@@ -88,13 +88,13 @@ class StorageServiceClass {
     try {
       const targetStorage = useSession ? this.sessionStorage : this.storage;
       const keys = Object.keys(targetStorage);
-      
-      keys.forEach(key => {
+
+      keys.forEach((key) => {
         if (key.startsWith(this.prefix)) {
           targetStorage.removeItem(key);
         }
       });
-      
+
       return true;
     } catch (error) {
       console.error('Storage error:', error);
@@ -123,8 +123,8 @@ class StorageServiceClass {
     const targetStorage = useSession ? this.sessionStorage : this.storage;
     const keys = Object.keys(targetStorage);
     return keys
-      .filter(key => key.startsWith(this.prefix))
-      .map(key => key.replace(this.prefix, ''));
+      .filter((key) => key.startsWith(this.prefix))
+      .map((key) => key.replace(this.prefix, ''));
   }
 
   /**
@@ -133,18 +133,18 @@ class StorageServiceClass {
   getStorageSize(useSession = false) {
     const targetStorage = useSession ? this.sessionStorage : this.storage;
     let size = 0;
-    
+
     for (let key in targetStorage) {
       if (targetStorage.hasOwnProperty(key) && key.startsWith(this.prefix)) {
         size += targetStorage[key].length + key.length;
       }
     }
-    
+
     return size;
   }
 
   // Authentication specific methods
-  
+
   /**
    * Set authentication token
    */

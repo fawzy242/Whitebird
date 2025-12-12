@@ -13,12 +13,12 @@ export class FileDownloadComponent {
   static async downloadFile(url, filename) {
     try {
       EventBus.emit('download:start', { url, filename });
-      
+
       await apiService.downloadFile(url, filename);
-      
+
       EventBus.emit('download:complete', { url, filename });
       EventBus.emit('notification:success', 'File downloaded successfully');
-      
+
       return true;
     } catch (error) {
       EventBus.emit('download:error', { error, url, filename });
@@ -34,21 +34,21 @@ export class FileDownloadComponent {
     try {
       const blob = new Blob([data], { type: mimeType });
       const url = window.URL.createObjectURL(blob);
-      
+
       const link = document.createElement('a');
       link.href = url;
       link.download = filename;
       link.style.display = 'none';
-      
+
       document.body.appendChild(link);
       link.click();
-      
+
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       EventBus.emit('download:complete', { filename });
       EventBus.emit('notification:success', 'File downloaded successfully');
-      
+
       return true;
     } catch (error) {
       EventBus.emit('download:error', { error, filename });
@@ -84,16 +84,20 @@ export class FileDownloadComponent {
    */
   static downloadTableAsCSV(tableElement, filename = 'table.csv') {
     const rows = Array.from(tableElement.querySelectorAll('tr'));
-    const csv = rows.map(row => {
-      const cells = Array.from(row.querySelectorAll('th, td'));
-      return cells.map(cell => {
-        let text = cell.textContent.trim();
-        if (text.includes(',') || text.includes('"') || text.includes('\n')) {
-          text = '"' + text.replace(/"/g, '""') + '"';
-        }
-        return text;
-      }).join(',');
-    }).join('\n');
+    const csv = rows
+      .map((row) => {
+        const cells = Array.from(row.querySelectorAll('th, td'));
+        return cells
+          .map((cell) => {
+            let text = cell.textContent.trim();
+            if (text.includes(',') || text.includes('"') || text.includes('\n')) {
+              text = '"' + text.replace(/"/g, '""') + '"';
+            }
+            return text;
+          })
+          .join(',');
+      })
+      .join('\n');
 
     return this.downloadCSV(csv, filename);
   }

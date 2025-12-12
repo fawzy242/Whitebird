@@ -5,7 +5,7 @@ import { resolve } from 'path';
 export default defineConfig(({ mode }) => {
   // Mode akan otomatis dari command: 'development' atau 'production'
   const isProduction = mode === 'production';
-  
+
   return {
     root: './',
     base: '/',
@@ -14,20 +14,22 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'assets',
       sourcemap: false,
       minify: isProduction ? 'terser' : false,
-      terserOptions: isProduction ? {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
-        },
-      } : {},
+      terserOptions: isProduction
+        ? {
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+            },
+          }
+        : {},
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
         },
         output: {
           manualChunks: {
-            'vendor': ['axios'],
-            'ui': ['bootstrap'],
+            vendor: ['axios'],
+            ui: ['bootstrap'],
           },
         },
       },
@@ -39,18 +41,20 @@ export default defineConfig(({ mode }) => {
       open: true,
       cors: true,
       // Proxy hanya untuk development
-      proxy: !isProduction ? {
-        '/api': {
-          target: 'http://localhost:5000',
-          changeOrigin: true,
-          secure: false,
-        },
-        '/health': {
-          target: 'http://localhost:5000',
-          changeOrigin: true,
-          secure: false,
-        }
-      } : undefined
+      proxy: !isProduction
+        ? {
+            '/api': {
+              target: 'http://localhost:5000',
+              changeOrigin: true,
+              secure: false,
+            },
+            '/health': {
+              target: 'http://localhost:5000',
+              changeOrigin: true,
+              secure: false,
+            },
+          }
+        : undefined,
     },
     plugins: [
       legacy({
@@ -70,7 +74,7 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.PROD': JSON.stringify(isProduction),
       'import.meta.env.DEV': JSON.stringify(!isProduction),
-      'import.meta.env.MODE': JSON.stringify(mode)
-    }
+      'import.meta.env.MODE': JSON.stringify(mode),
+    },
   };
 });

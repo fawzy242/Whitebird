@@ -60,12 +60,11 @@ class RedAdminApp {
       this.setupUIHandlers();
 
       this.isInitialized = true;
-      
+
       // Hide loading screen
       this.hideLoadingScreen();
 
       EventBus.emit('app:initialized');
-      
     } catch (error) {
       console.error('App initialization error:', error);
       this.showError('Application failed to initialize');
@@ -133,7 +132,6 @@ class RedAdminApp {
       if (topbarContainer) {
         topbarContainer.innerHTML = topbarHTML;
       }
-
     } catch (error) {
       console.error('Layout loading error:', error);
     }
@@ -150,7 +148,7 @@ class RedAdminApp {
       resizeTimer = setTimeout(() => {
         EventBus.emit('window:resized', {
           width: window.innerWidth,
-          height: window.innerHeight
+          height: window.innerHeight,
         });
       }, 250);
     });
@@ -158,7 +156,7 @@ class RedAdminApp {
     // Page visibility change
     document.addEventListener('visibilitychange', () => {
       EventBus.emit('page:visibility-changed', {
-        hidden: document.hidden
+        hidden: document.hidden,
       });
     });
 
@@ -297,14 +295,14 @@ class RedAdminApp {
         const parentLi = submenuToggle.parentElement;
         const submenu = parentLi.querySelector('.submenu');
         const wasOpen = parentLi.classList.contains('open');
-        
+
         // Close all other submenus
-        document.querySelectorAll('.has-submenu.open').forEach(item => {
+        document.querySelectorAll('.has-submenu.open').forEach((item) => {
           item.classList.remove('open');
           const sub = item.querySelector('.submenu');
           if (sub) sub.classList.remove('show');
         });
-        
+
         // Toggle current submenu
         if (!wasOpen) {
           parentLi.classList.add('open');
@@ -373,7 +371,7 @@ class RedAdminApp {
    */
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
+      document.documentElement.requestFullscreen().catch((err) => {
         notification.error(`Error attempting to enable fullscreen: ${err.message}`);
       });
     } else {
@@ -389,14 +387,14 @@ class RedAdminApp {
   handleEscape() {
     // Close any open Bootstrap modals
     const openModals = document.querySelectorAll('.modal.show');
-    openModals.forEach(modal => {
+    openModals.forEach((modal) => {
       const bsModal = bootstrap.Modal.getInstance(modal);
       if (bsModal) bsModal.hide();
     });
 
     // Close dropdowns
     const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
-    openDropdowns.forEach(dropdown => {
+    openDropdowns.forEach((dropdown) => {
       dropdown.classList.remove('show');
     });
 
@@ -498,7 +496,7 @@ class RedAdminApp {
       initialized: this.isInitialized,
       currentRoute: router.getCurrentRoute(),
       user: state.getUser(),
-      theme: state.getTheme()
+      theme: state.getTheme(),
     };
   }
 }

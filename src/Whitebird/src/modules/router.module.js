@@ -22,7 +22,7 @@ class RouterModule {
     this.registerRoutes();
     this.setupEventListeners();
     this.handleInitialRoute();
-    
+
     this.isInitialized = true;
   }
 
@@ -32,47 +32,47 @@ class RouterModule {
       title: 'Dashboard',
       template: 'pages/dashboard.html',
       requiresAuth: true,
-      onEnter: () => this.loadDashboardData()
+      onEnter: () => this.loadDashboardData(),
     });
 
     // Profile
     this.register('profile', {
       title: 'User Profile',
       template: 'pages/profile.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     // Settings
     this.register('settings', {
       title: 'Settings',
       template: 'pages/settings.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     // Models/Pages
     this.register('model1', {
       title: 'Data Table',
       template: 'pages/model1.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('model2', {
       title: 'Forms',
       template: 'pages/model2.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('model3', {
       title: 'Analytics',
       template: 'pages/model3.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     // EMPLOYEES MODULE
     this.register('employees', {
       title: 'Employees - RedAdmin Pro',
       template: 'pages/employees.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('employeescreate', {
@@ -83,7 +83,7 @@ class RouterModule {
         sessionStorage.setItem('crudMode', 'create');
         sessionStorage.setItem('crudModule', 'employee');
         sessionStorage.removeItem('crudId');
-      }
+      },
     });
 
     this.register('employeesupdate', {
@@ -93,14 +93,14 @@ class RouterModule {
       onEnter: () => {
         sessionStorage.setItem('crudMode', 'update');
         sessionStorage.setItem('crudModule', 'employee');
-      }
+      },
     });
 
     // ASSETS MODULE
     this.register('assets', {
       title: 'Assets - RedAdmin Pro',
       template: 'pages/assets.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('assetscreate', {
@@ -111,7 +111,7 @@ class RouterModule {
         sessionStorage.setItem('crudMode', 'create');
         sessionStorage.setItem('crudModule', 'asset');
         sessionStorage.removeItem('crudId');
-      }
+      },
     });
 
     this.register('assetsupdate', {
@@ -121,14 +121,14 @@ class RouterModule {
       onEnter: () => {
         sessionStorage.setItem('crudMode', 'update');
         sessionStorage.setItem('crudModule', 'asset');
-      }
+      },
     });
 
     // CATEGORIES MODULE
     this.register('categories', {
       title: 'Categories - RedAdmin Pro',
       template: 'pages/categories.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('categoriescreate', {
@@ -139,7 +139,7 @@ class RouterModule {
         sessionStorage.setItem('crudMode', 'create');
         sessionStorage.setItem('crudModule', 'category');
         sessionStorage.removeItem('crudId');
-      }
+      },
     });
 
     this.register('categoriesupdate', {
@@ -149,14 +149,14 @@ class RouterModule {
       onEnter: () => {
         sessionStorage.setItem('crudMode', 'update');
         sessionStorage.setItem('crudModule', 'category');
-      }
+      },
     });
 
     // TRANSACTIONS MODULE
     this.register('transactions', {
       title: 'Transactions - RedAdmin Pro',
       template: 'pages/transactions.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('transactionscreate', {
@@ -167,7 +167,7 @@ class RouterModule {
         sessionStorage.setItem('crudMode', 'create');
         sessionStorage.setItem('crudModule', 'transaction');
         sessionStorage.removeItem('crudId');
-      }
+      },
     });
 
     this.register('transactionsupdate', {
@@ -177,33 +177,33 @@ class RouterModule {
       onEnter: () => {
         sessionStorage.setItem('crudMode', 'update');
         sessionStorage.setItem('crudModule', 'transaction');
-      }
+      },
     });
 
     // Reports
     this.register('reports', {
       title: 'Reports - RedAdmin Pro',
       template: 'pages/reports.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('file-upload', {
       title: 'File Upload - RedAdmin Pro',
       template: 'pages/file-upload.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     // Components
     this.register('components', {
       title: 'UI Components',
       template: 'pages/components.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     this.register('buttons', {
       title: 'Buttons',
       template: 'pages/buttons.html',
-      requiresAuth: true
+      requiresAuth: true,
     });
 
     // Auth pages
@@ -211,28 +211,28 @@ class RouterModule {
       title: 'Login',
       template: 'pages/login.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     this.register('register', {
       title: 'Register',
       template: 'pages/register.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     this.register('forgot-password', {
       title: 'Forgot Password',
       template: 'pages/forgot-password.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     this.register('reset-password', {
       title: 'Reset Password',
       template: 'pages/reset-password.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     // Lock screen
@@ -240,7 +240,7 @@ class RouterModule {
       title: 'Lock Screen',
       template: 'pages/lockscreen.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     // Error pages
@@ -248,21 +248,21 @@ class RouterModule {
       title: '404 Not Found',
       template: 'pages/error404.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     this.register('error500', {
       title: '500 Server Error',
       template: 'pages/error500.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
 
     this.register('maintenance', {
       title: 'Maintenance',
       template: 'pages/maintenance.html',
       requiresAuth: false,
-      layout: 'auth'
+      layout: 'auth',
     });
   }
 
@@ -275,7 +275,7 @@ class RouterModule {
       const path = this.getPathFromUrl();
       this.loadRoute(path);
     });
-    
+
     document.addEventListener('click', (e) => {
       const link = e.target.closest('[data-route]');
       if (link) {
@@ -293,7 +293,7 @@ class RouterModule {
 
   handleInitialRoute() {
     const path = this.getPathFromUrl();
-    
+
     if (this.routes.has(path)) {
       this.loadRoute(path, false);
     } else if (path === '' || path === '/') {
@@ -306,18 +306,18 @@ class RouterModule {
   navigate(path, options = true) {
     let pushState = true;
     let id = null;
-    
+
     if (typeof options === 'boolean') {
       pushState = options;
     } else if (typeof options === 'object') {
       pushState = options.pushState !== false;
       id = options.id || null;
     }
-    
+
     if (id) {
       sessionStorage.setItem('crudId', id);
     }
-    
+
     if (pushState) {
       window.history.pushState({ path }, '', `/${path}`);
     }
@@ -326,7 +326,7 @@ class RouterModule {
 
   async loadRoute(path, updateHistory = true) {
     const route = this.routes.get(path);
-    
+
     if (!route) {
       this.navigate('error404', updateHistory);
       return;
@@ -374,7 +374,6 @@ class RouterModule {
 
       // Emit route change event
       EventBus.emit('route:changed', { path, route });
-
     } catch (error) {
       console.error('Route loading error:', error);
       EventBus.emit('app:error', error);
@@ -389,16 +388,15 @@ class RouterModule {
       if (!response.ok) {
         throw new Error(`Failed to load template: ${response.status}`);
       }
-      
+
       const html = await response.text();
       const pageContent = document.getElementById('pageContent');
-      
+
       if (pageContent) {
         pageContent.innerHTML = html;
-        
+
         window.dispatchEvent(new CustomEvent('pageLoaded', { detail: { path: templatePath } }));
       }
-
     } catch (error) {
       throw error;
     }
@@ -435,7 +433,7 @@ class RouterModule {
   }
 
   updateActiveMenu(path) {
-    document.querySelectorAll('.sidebar-menu a').forEach(link => {
+    document.querySelectorAll('.sidebar-menu a').forEach((link) => {
       link.classList.remove('active');
     });
 

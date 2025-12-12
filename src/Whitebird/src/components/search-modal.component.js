@@ -9,20 +9,20 @@ class SearchModalComponent {
       { name: 'Dashboard', path: '/dashboard', icon: 'home', category: 'Main' },
       { name: 'Profile', path: '/profile', icon: 'user', category: 'Main' },
       { name: 'Settings', path: '/settings', icon: 'cog', category: 'Main' },
-      
+
       { name: 'Employees', path: '/employees', icon: 'users', category: 'Data' },
       { name: 'Assets', path: '/assets', icon: 'box', category: 'Data' },
       { name: 'Categories', path: '/categories', icon: 'tags', category: 'Data' },
       { name: 'Transactions', path: '/transactions', icon: 'exchange-alt', category: 'Data' },
-      
+
       { name: 'Data Table', path: '/model1', icon: 'table', category: 'Pages' },
       { name: 'Forms', path: '/model2', icon: 'edit', category: 'Pages' },
       { name: 'Analytics', path: '/model3', icon: 'chart-bar', category: 'Pages' },
       { name: 'Reports', path: '/reports', icon: 'chart-line', category: 'Pages' },
       { name: 'File Upload', path: '/file-upload', icon: 'cloud-upload-alt', category: 'Pages' },
-      
+
       { name: 'Components', path: '/components', icon: 'th-large', category: 'UI' },
-      { name: 'Buttons', path: '/buttons', icon: 'mouse-pointer', category: 'UI' }
+      { name: 'Buttons', path: '/buttons', icon: 'mouse-pointer', category: 'UI' },
     ];
     this.init();
   }
@@ -42,7 +42,7 @@ class SearchModalComponent {
   }
 
   addToRecent(search) {
-    this.recentSearches = this.recentSearches.filter(s => s !== search);
+    this.recentSearches = this.recentSearches.filter((s) => s !== search);
     this.recentSearches.unshift(search);
     this.recentSearches = this.recentSearches.slice(0, 5);
     this.saveRecentSearches();
@@ -137,7 +137,7 @@ class SearchModalComponent {
 
     const existing = document.getElementById('searchModal');
     if (existing) existing.remove();
-    
+
     document.body.insertAdjacentHTML('beforeend', modalHTML);
   }
 
@@ -218,9 +218,10 @@ class SearchModalComponent {
       return;
     }
 
-    const filtered = this.pages.filter(p =>
-      p.name.toLowerCase().includes(query.toLowerCase()) ||
-      p.category.toLowerCase().includes(query.toLowerCase())
+    const filtered = this.pages.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query.toLowerCase()) ||
+        p.category.toLowerCase().includes(query.toLowerCase())
     );
 
     recentSection.style.display = 'none';
@@ -228,8 +229,10 @@ class SearchModalComponent {
     if (filtered.length > 0) {
       noResults.style.display = 'none';
       resultsSection.style.display = 'block';
-      
-      const resultsHTML = filtered.map(page => `
+
+      const resultsHTML = filtered
+        .map(
+          (page) => `
         <a href="${page.path}" class="search-result-item" data-page="${page.name}" data-path="${page.path}">
           <i class="fas fa-${page.icon} me-3"></i>
           <div class="result-info">
@@ -237,8 +240,10 @@ class SearchModalComponent {
             <div class="result-category">${page.category}</div>
           </div>
         </a>
-      `).join('');
-      
+      `
+        )
+        .join('');
+
       document.getElementById('searchResults').innerHTML = resultsHTML;
     } else {
       resultsSection.style.display = 'none';
@@ -256,12 +261,16 @@ class SearchModalComponent {
 
     if (this.recentSearches.length > 0) {
       recentSection.style.display = 'block';
-      const recentHTML = this.recentSearches.map(search => `
+      const recentHTML = this.recentSearches
+        .map(
+          (search) => `
         <div class="recent-item">
           <i class="fas fa-clock me-2"></i>
           <span>${search}</span>
         </div>
-      `).join('');
+      `
+        )
+        .join('');
       document.getElementById('recentSearches').innerHTML = recentHTML;
     } else {
       recentSection.style.display = 'none';
@@ -279,19 +288,19 @@ class SearchModalComponent {
     if (!this.modalInstance) {
       this.modalInstance = new bootstrap.Modal(document.getElementById('searchModal'), {
         backdrop: true,
-        keyboard: true
+        keyboard: true,
       });
     }
-    
+
     // Clear search input for fresh start
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
       searchInput.value = '';
     }
-    
+
     // Show modal (cached instance = faster)
     this.modalInstance.show();
-    
+
     // Focus input after modal is shown (better UX)
     setTimeout(() => {
       if (searchInput) searchInput.focus();

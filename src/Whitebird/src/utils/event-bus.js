@@ -15,9 +15,9 @@ class EventBusClass {
     if (!this.events[event]) {
       this.events[event] = [];
     }
-    
+
     this.events[event].push(callback);
-    
+
     // Return unsubscribe function
     return () => this.off(event, callback);
   }
@@ -30,7 +30,7 @@ class EventBusClass {
       callback(...args);
       this.off(event, onceWrapper);
     };
-    
+
     this.on(event, onceWrapper);
   }
 
@@ -39,9 +39,9 @@ class EventBusClass {
    */
   off(event, callback) {
     if (!this.events[event]) return;
-    
-    this.events[event] = this.events[event].filter(cb => cb !== callback);
-    
+
+    this.events[event] = this.events[event].filter((cb) => cb !== callback);
+
     if (this.events[event].length === 0) {
       delete this.events[event];
     }
@@ -52,8 +52,8 @@ class EventBusClass {
    */
   emit(event, data) {
     if (!this.events[event]) return;
-    
-    this.events[event].forEach(callback => {
+
+    this.events[event].forEach((callback) => {
       try {
         callback(data);
       } catch (error) {

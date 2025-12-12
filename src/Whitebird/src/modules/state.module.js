@@ -14,7 +14,7 @@ class StateModule {
       sidebarCollapsed: false,
       notifications: [],
       settings: {},
-      cache: {}
+      cache: {},
     };
 
     this.subscribers = new Map();
@@ -42,7 +42,7 @@ class StateModule {
       user,
       theme,
       sidebarCollapsed,
-      settings
+      settings,
     };
   }
 
@@ -88,7 +88,7 @@ class StateModule {
     if (!this.subscribers.has(key)) {
       this.subscribers.set(key, []);
     }
-    
+
     this.subscribers.get(key).push(callback);
 
     // Return unsubscribe function
@@ -107,7 +107,7 @@ class StateModule {
   notify(key, newValue, oldValue) {
     const callbacks = this.subscribers.get(key);
     if (callbacks) {
-      callbacks.forEach(callback => {
+      callbacks.forEach((callback) => {
         try {
           callback(newValue, oldValue);
         } catch (error) {
@@ -127,7 +127,7 @@ class StateModule {
       sidebarCollapsed: false,
       notifications: [],
       settings: {},
-      cache: {}
+      cache: {},
     };
 
     if (persist) {
@@ -194,19 +194,20 @@ class StateModule {
    * Remove notification
    */
   removeNotification(id) {
-    const notifications = this.get('notifications').filter(n => n.id !== id);
+    const notifications = this.get('notifications').filter((n) => n.id !== id);
     this.set('notifications', notifications);
   }
 
   /**
    * Cache data
    */
-  cacheData(key, data, ttl = 3600000) { // Default 1 hour
+  cacheData(key, data, ttl = 3600000) {
+    // Default 1 hour
     const cache = this.get('cache');
     cache[key] = {
       data,
       timestamp: Date.now(),
-      ttl
+      ttl,
     };
     this.set('cache', cache);
   }

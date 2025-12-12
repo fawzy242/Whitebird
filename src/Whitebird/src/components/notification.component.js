@@ -33,12 +33,12 @@ export class NotificationComponent {
       dismissible: true,
       icon: true,
       position: 'top-right',
-      ...options
+      ...options,
     };
 
     const id = 'toast-' + Date.now();
     const iconClass = this.getIconClass(type);
-    
+
     const toastHTML = `
       <div class="toast align-items-center text-bg-${type} border-0" 
            id="${id}" role="alert" aria-live="assertive" aria-atomic="true">
@@ -47,19 +47,23 @@ export class NotificationComponent {
             ${defaultOptions.icon ? `<i class="${iconClass} me-2"></i>` : ''}
             ${message}
           </div>
-          ${defaultOptions.dismissible ? `
+          ${
+            defaultOptions.dismissible
+              ? `
             <button type="button" class="btn-close btn-close-white me-2 m-auto" 
                     data-bs-dismiss="toast" aria-label="Close"></button>
-          ` : ''}
+          `
+              : ''
+          }
         </div>
       </div>
     `;
 
     DOMUtils.insertHTML(this.container, toastHTML);
-    
+
     const toastElement = document.getElementById(id);
     const toast = new bootstrap.Toast(toastElement, {
-      delay: defaultOptions.duration
+      delay: defaultOptions.duration,
     });
 
     toast.show();
@@ -81,7 +85,7 @@ export class NotificationComponent {
       danger: 'fas fa-exclamation-circle',
       warning: 'fas fa-exclamation-triangle',
       info: 'fas fa-info-circle',
-      primary: 'fas fa-bell'
+      primary: 'fas fa-bell',
     };
     return iconMap[type] || iconMap.info;
   }

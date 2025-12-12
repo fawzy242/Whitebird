@@ -23,7 +23,7 @@ class NotificationModalComponent {
         title: 'Task Completed',
         message: 'Your report has been successfully generated and is ready for download.',
         time: '5 minutes ago',
-        read: false
+        read: false,
       },
       {
         id: 2,
@@ -32,7 +32,7 @@ class NotificationModalComponent {
         title: 'System Update',
         message: 'A new system update is available. Please update to get the latest features.',
         time: '1 hour ago',
-        read: false
+        read: false,
       },
       {
         id: 3,
@@ -41,7 +41,7 @@ class NotificationModalComponent {
         title: 'Storage Warning',
         message: 'Your storage is almost full. Consider upgrading your plan or removing old files.',
         time: '2 hours ago',
-        read: true
+        read: true,
       },
       {
         id: 4,
@@ -50,17 +50,18 @@ class NotificationModalComponent {
         title: 'New Team Member',
         message: 'John Doe has joined your team. Welcome them aboard!',
         time: '3 hours ago',
-        read: true
+        read: true,
       },
       {
         id: 5,
         type: 'danger',
         icon: 'exclamation-circle',
         title: 'Security Alert',
-        message: 'Unusual login activity detected from a new device. Please verify if this was you.',
+        message:
+          'Unusual login activity detected from a new device. Please verify if this was you.',
         time: '1 day ago',
-        read: true
-      }
+        read: true,
+      },
     ];
   }
 
@@ -110,7 +111,9 @@ class NotificationModalComponent {
       `;
     }
 
-    return this.notifications.map(notif => `
+    return this.notifications
+      .map(
+        (notif) => `
       <div class="notification-item ${notif.read ? 'read' : 'unread'}" data-id="${notif.id}">
         <div class="notif-icon bg-${notif.type}">
           <i class="fas fa-${notif.icon}"></i>
@@ -131,7 +134,9 @@ class NotificationModalComponent {
           </button>
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   }
 
   show() {
@@ -142,15 +147,15 @@ class NotificationModalComponent {
       // Just refresh content if modal already exists
       this.refresh();
     }
-    
+
     // Cache modal instance
     if (!this.modalInstance) {
       this.modalInstance = new bootstrap.Modal(document.getElementById('notificationModal'), {
         backdrop: true,
-        keyboard: true
+        keyboard: true,
       });
     }
-    
+
     this.modalInstance.show();
   }
 
@@ -160,22 +165,22 @@ class NotificationModalComponent {
   refresh() {
     const notifList = document.getElementById('notificationList');
     const notifCount = document.getElementById('notifCount');
-    
+
     if (notifList) {
       notifList.innerHTML = this.renderNotifications();
     }
-    
+
     if (notifCount) {
       notifCount.textContent = this.getUnreadCount();
     }
   }
 
   getUnreadCount() {
-    return this.notifications.filter(n => !n.read).length;
+    return this.notifications.filter((n) => !n.read).length;
   }
 
   markRead(id) {
-    const notif = this.notifications.find(n => n.id === id);
+    const notif = this.notifications.find((n) => n.id === id);
     if (notif) {
       notif.read = true;
       this.refresh();
@@ -183,12 +188,12 @@ class NotificationModalComponent {
   }
 
   markAllRead() {
-    this.notifications.forEach(n => n.read = true);
+    this.notifications.forEach((n) => (n.read = true));
     this.refresh();
   }
 
   remove(id) {
-    this.notifications = this.notifications.filter(n => n.id !== id);
+    this.notifications = this.notifications.filter((n) => n.id !== id);
     this.refresh();
   }
 
@@ -210,7 +215,7 @@ class NotificationModalComponent {
       count.textContent = unread;
       count.style.display = unread > 0 ? 'inline-block' : 'none';
     }
-    
+
     // Update topbar badge
     const topbarBadge = document.querySelector('.topbar-icon .notification-badge');
     if (topbarBadge) {
@@ -226,5 +231,5 @@ export const notificationModal = new NotificationModalComponent();
 
 // Expose to window for onclick handlers
 if (typeof window !== 'undefined') {
-    window.notificationModal = notificationModal;
+  window.notificationModal = notificationModal;
 }

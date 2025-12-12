@@ -9,7 +9,7 @@ export class DOMUtils {
    */
   static createElement(tag, attributes = {}, content = '') {
     const element = document.createElement(tag);
-    
+
     Object.entries(attributes).forEach(([key, value]) => {
       if (key === 'className') {
         element.className = value;
@@ -24,7 +24,7 @@ export class DOMUtils {
         element.setAttribute(key, value);
       }
     });
-    
+
     if (content) {
       if (typeof content === 'string') {
         element.textContent = content;
@@ -32,7 +32,7 @@ export class DOMUtils {
         element.appendChild(content);
       }
     }
-    
+
     return element;
   }
 
@@ -106,7 +106,7 @@ export class DOMUtils {
   static insertHTML(element, html, position = 'beforeend') {
     const template = document.createElement('template');
     template.innerHTML = html.trim();
-    
+
     switch (position) {
       case 'beforebegin':
         element.parentNode.insertBefore(template.content, element);
@@ -165,7 +165,7 @@ export class DOMUtils {
       block: 'start',
       inline: 'nearest',
     };
-    
+
     element.scrollIntoView({ ...defaultOptions, ...options });
   }
 

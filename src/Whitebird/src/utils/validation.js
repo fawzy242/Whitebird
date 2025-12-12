@@ -17,12 +17,12 @@ export class Validation {
    */
   static isStrongPassword(password, minLength = 8) {
     if (password.length < minLength) return false;
-    
+
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
+
     return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
   }
 
@@ -51,7 +51,7 @@ export class Validation {
    */
   static sanitizeInput(input) {
     if (typeof input !== 'string') return input;
-    
+
     return input
       .trim()
       .replace(/[<>]/g, '')
@@ -103,7 +103,7 @@ export class Validation {
    */
   static isValidFileType(file, allowedTypes = []) {
     if (allowedTypes.length === 0) return true;
-    return allowedTypes.some(type => file.type.includes(type));
+    return allowedTypes.some((type) => file.type.includes(type));
   }
 
   /**
