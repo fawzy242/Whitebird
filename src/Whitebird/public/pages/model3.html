@@ -1,0 +1,248 @@
+<!-- Model 3: Analytics & Charts Page - Complete Implementation -->
+<div id="model3Page">
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-chart-bar me-2"></i>Analytics & Charts</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Analytics</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="btnRefreshCharts">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+            <button class="btn btn-danger" id="btnExportCharts">
+                <i class="fas fa-download me-2"></i>Export All
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="fromDate">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="toDate">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Quick Select</label>
+                    <select class="form-select" id="quickDateRange">
+                        <option value="">Custom</option>
+                        <option value="today">Today</option>
+                        <option value="week" selected>Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                        <option value="year">Last 12 Months</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100" id="btnApplyDateRange">
+                        <i class="fas fa-filter me-2"></i>Apply Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Revenue</h6>
+                            <h3 class="mb-0" id="statRevenue">$0</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i><span id="statRevenueChange">0%</span></small>
+                        </div>
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Users</h6>
+                            <h3 class="mb-0" id="statUsers">0</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i><span id="statUsersChange">0%</span></small>
+                        </div>
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Conversion</h6>
+                            <h3 class="mb-0" id="statConversion">0%</h3>
+                            <small class="text-danger"><i class="fas fa-arrow-down me-1"></i><span id="statConversionChange">0%</span></small>
+                        </div>
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Avg. Order</h6>
+                            <h3 class="mb-0" id="statAvgOrder">$0</h3>
+                            <small class="text-success"><i class="fas fa-arrow-up me-1"></i><span id="statAvgOrderChange">0%</span></small>
+                        </div>
+                        <div class="stat-icon bg-info">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="row mb-4">
+        <!-- Line Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-chart-line me-2"></i>Revenue Trend
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnExportLineChart">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="card-body" style="height: 320px; position: relative;">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Chart -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-chart-pie me-2"></i>Revenue by Category
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnExportPieChart">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="card-body" style="height: 320px; position: relative;">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="row mb-4">
+        <!-- Bar Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-chart-bar me-2"></i>Monthly Comparison
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnExportBarChart">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="card-body" style="height: 300px; position: relative;">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-chart-area me-2"></i>Performance Metrics
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnExportRadarChart">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="card-body" style="height: 300px; position: relative;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-time Update Section -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-sync-alt me-2"></i>Real-time Data
+                <span class="badge bg-success ms-2" id="realTimeStatus">Live</span>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="realTimeToggle" checked>
+                <label class="form-check-label" for="realTimeToggle">Auto Refresh</label>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-success fa-pulse"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Active Users</small>
+                            <h5 class="mb-0" id="liveUsers">0</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-primary fa-pulse"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Orders/Min</small>
+                            <h5 class="mb-0" id="liveOrders">0</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="me-3">
+                            <i class="fas fa-circle text-warning fa-pulse"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted">Revenue/Min</small>
+                            <h5 class="mb-0">$<span id="liveRevenue">0</span></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

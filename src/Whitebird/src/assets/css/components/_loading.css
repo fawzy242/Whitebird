@@ -1,0 +1,34 @@
+/* ====================================
+   LOADING SPINNER
+   ==================================== */
+.spinner-border-custom {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid rgba(220, 53, 69, 0.1);
+    border-right-color: var(--primary-red);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.content-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
+.content-loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--color-gray-200);
+    border-top-color: var(--color-primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}

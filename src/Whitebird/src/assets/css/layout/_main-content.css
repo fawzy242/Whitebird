@@ -1,0 +1,99 @@
+/* ====================================
+   MAIN CONTENT STYLING - FLUID LAYOUT
+   ==================================== */
+
+/* Default state */
+.main-content {
+    min-height: 100vh;
+    transition: margin-left var(--transition-normal) var(--ease-standard),
+        padding var(--transition-normal) var(--ease-standard);
+    margin-left: var(--sidebar-width);
+    background: var(--bg-body);
+    position: relative;
+}
+
+/* When sidebar is collapsed - FLUID */
+body.sidebar-collapsed .main-content {
+    margin-left: var(--sidebar-collapsed);
+}
+
+/* When in auth mode */
+.main-content.isAuth {
+    margin-left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%) !important;
+    transition: none !important;
+}
+
+/* Content area */
+.content-area {
+    padding: var(--space-xl);
+    min-height: calc(100vh - var(--topbar-height));
+    padding-top: calc(var(--topbar-height) + var(--space-xl));
+    animation: fadeInContent 0.4s var(--ease-decelerate);
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gray-dark);
+    margin: 0;
+}
+
+/* Cards Grid */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+    }
+
+    .content-area {
+        padding: var(--space-md);
+        padding-top: calc(var(--topbar-height) + var(--space-md));
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

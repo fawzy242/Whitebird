@@ -1,0 +1,287 @@
+/* ====================================
+   TOPBAR STYLES - STICKY POSITION (FIXED)
+   ==================================== */
+
+/* Topbar - Sticky at top, moves with sidebar */
+.topbar {
+    position: sticky;
+    top: 0;
+    height: var(--topbar-height);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: var(--z-topbar);
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Dark mode topbar */
+[data-theme="dark"] .topbar {
+    background: var(--bg-topbar);
+    background-color: rgba(22, 27, 34, 0.95);
+    color: var(--text-primary);
+}
+
+/* Topbar Left Section */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-dark);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.menu-toggle:hover {
+    background: var(--gray-light);
+    color: var(--primary-red);
+}
+
+.menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Topbar Right Section */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+/* Topbar Icons - RESTORED ORIGINAL */
+.topbar-icon {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: var(--gray-light);
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .topbar-icon {
+    background: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.topbar-icon:hover {
+    background: var(--primary-red);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.topbar-icon i {
+    font-size: 1.125rem;
+}
+
+.topbar-icon:active {
+    transform: translateY(0);
+}
+
+/* Notification Badge - RESTORED WITH ANIMATION */
+.notification-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    min-width: 18px;
+    height: 18px;
+    background: var(--primary-red);
+    color: var(--white);
+    border-radius: 50%;
+    font-size: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border: 2px solid var(--white);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    z-index: 1;
+}
+
+[data-theme="dark"] .notification-badge {
+    border-color: var(--bg-topbar);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* User Profile Dropdown - RESTORED ORIGINAL */
+.user-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.user-profile:hover {
+    background: var(--gray-light);
+    border-color: var(--gray-border);
+}
+
+[data-theme="dark"] .user-profile:hover {
+    background: var(--bg-input);
+}
+
+.user-profile .dropdown-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* User Avatar - RESTORED WITH BORDER */
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1rem;
+    border: 3px solid var(--white);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .user-avatar {
+    border-color: var(--bg-topbar);
+}
+
+.user-profile:hover .user-avatar {
+    transform: scale(1.05);
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.user-info .name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .user-info .name {
+    color: var(--text-primary);
+}
+
+.user-info .role {
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+
+[data-theme="dark"] .user-info .role {
+    color: var(--text-secondary);
+}
+
+/* Dropdown Menu */
+.user-profile .dropdown-menu {
+    min-width: 220px;
+    padding: 0.5rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+}
+
+.user-profile .dropdown-item {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all var(--transition-fast);
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .user-profile .dropdown-item {
+    color: var(--text-primary);
+}
+
+.user-profile .dropdown-item:hover {
+    background: var(--gray-light);
+    color: var(--primary-red);
+    padding-left: 1.5rem;
+}
+
+.user-profile .dropdown-item i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.user-profile .dropdown-item.text-danger:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--primary-red);
+}
+
+.user-profile .dropdown-divider {
+    margin: 0.5rem 0;
+    border-color: var(--border-color);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .topbar {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-info {
+        display: none;
+    }
+
+    .topbar-right {
+        gap: 0.75rem;
+    }
+
+    .topbar-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .user-avatar {
+        width: 38px;
+        height: 38px;
+    }
+}

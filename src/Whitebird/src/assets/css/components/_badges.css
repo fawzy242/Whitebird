@@ -1,0 +1,43 @@
+/* ====================================
+   BADGES & STATUS INDICATORS
+   ==================================== */
+.badge {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1;
+}
+
+.badge-success {
+    background: rgba(25, 135, 84, 0.15);
+    color: #198754;
+}
+
+.badge-danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: var(--primary-red);
+}
+
+.badge-warning {
+    background: rgba(253, 126, 20, 0.15);
+    color: #fd7e14;
+}
+
+.badge-info {
+    background: rgba(13, 202, 240, 0.15);
+    color: #0dcaf0;
+}
+
+.badge-primary {
+    background: rgba(220, 53, 69, 0.15);
+    color: var(--primary-red);
+}
+
+.badge-secondary {
+    background: rgba(108, 117, 125, 0.15);
+    color: var(--gray-medium);
+}

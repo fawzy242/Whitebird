@@ -1,0 +1,459 @@
+:root {
+   /* ---------------------------------------------------------
+     * 1. COLOR PALETTE
+     * --------------------------------------------------------- */
+   --primary-red: #dc3545;
+   --dark-red: #c82333;
+   --light-red: #f8d7da;
+   --hover-red: #b02a37;
+
+   --gray-dark: #2c3e50;
+   --gray-medium: #6c757d;
+   --gray-light: #f8f9fa;
+   --gray-border: #dee2e6;
+
+   --white: #ffffff;
+   --black: #000000;
+
+   /* ---------------------------------------------------------
+     * 2. LAYOUT
+     * --------------------------------------------------------- */
+   --sidebar-width: 280px;
+   --sidebar-collapsed: 65px;
+   --topbar-height: 70px;
+
+   /* ---------------------------------------------------------
+     * 3. SHADOWS
+     * --------------------------------------------------------- */
+   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+   --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.16);
+
+   /* ---------------------------------------------------------
+     * 4. BORDER RADIUS
+     * --------------------------------------------------------- */
+   --radius-sm: 6px;
+   --radius-md: 10px;
+   --radius-lg: 14px;
+   --radius-xl: 18px;
+
+   /* ---------------------------------------------------------
+     * 5. TRANSITIONS - DIPERBAIKI dengan cubic-bezier
+     * --------------------------------------------------------- */
+   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+   --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+   --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+   --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+   --transition-fast: 0.15s var(--ease-standard);
+   --transition-normal: 0.25s var(--ease-standard);
+   --transition-slow: 0.35s var(--ease-decelerate);
+
+   /* ---------------------------------------------------------
+     * 6. Z-INDEX
+     * --------------------------------------------------------- */
+   --z-sidebar: 1000;
+   --z-topbar: 1050;
+   --z-dropdown: 1100;
+   --z-modal: 1150;
+   --z-tooltip: 1200;
+   --z-toast: 1250;
+
+   /* ---------------------------------------------------------
+     * 7. TYPOGRAPHY
+     * --------------------------------------------------------- */
+   --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+   --font-family-monospace: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+
+   --font-size-xs: 0.75rem;
+   --font-size-sm: 0.875rem;
+   --font-size-base: 1rem;
+   --font-size-lg: 1.125rem;
+   --font-size-xl: 1.25rem;
+   --font-size-xxl: 1.5rem;
+   --font-size-xxxl: 1.875rem;
+
+   --font-weight-light: 300;
+   --font-weight-normal: 400;
+   --font-weight-medium: 500;
+   --font-weight-semibold: 600;
+   --font-weight-bold: 700;
+   --font-weight-extrabold: 800;
+
+   --line-height-tight: 1.25;
+   --line-height-base: 1.5;
+   --line-height-relaxed: 1.75;
+   --line-height-heading: 1.3;
+
+   /* ---------------------------------------------------------
+     * 8. SPACING SYSTEM
+     * --------------------------------------------------------- */
+   --space-0: 0;
+   --space-xxs: 0.25rem;
+   --space-xs: 0.5rem;
+   --space-sm: 0.75rem;
+   --space-md: 1rem;
+   --space-lg: 1.5rem;
+   --space-xl: 2rem;
+   --space-xxl: 3rem;
+   --space-xxxl: 4rem;
+
+   /* ---------------------------------------------------------
+     * 9. EXTENDED COLORS
+     * --------------------------------------------------------- */
+   --blue: #0d6efd;
+   --blue-light: #cfe2ff;
+   --blue-dark: #0a58ca;
+
+   --green: #28a745;
+   --green-light: #d4edda;
+   --green-dark: #1e7e34;
+
+   --yellow: #ffc107;
+   --yellow-light: #fff3cd;
+   --yellow-dark: #e0a800;
+
+   --orange: #fd7e14;
+   --orange-light: #ffe5d0;
+   --orange-dark: #e8590c;
+
+   --purple: #6f42c1;
+   --purple-light: #e2d9f3;
+   --purple-dark: #59359a;
+
+   --teal: #20c997;
+   --teal-light: #d2f4ea;
+   --teal-dark: #1aa179;
+
+   --cyan: #0dcaf0;
+   --pink: #d63384;
+   --indigo: #6610f2;
+
+   /* ---------------------------------------------------------
+     * 10. BORDERS
+     * --------------------------------------------------------- */
+   --border-width: 1px;
+   --border-width-thick: 2px;
+   --border-width-thicker: 3px;
+   --border-color: #dee2e6;
+   --border-light: #e9ecef;
+
+   /* ---------------------------------------------------------
+     * 11. BREAKPOINTS
+     * --------------------------------------------------------- */
+   --breakpoint-xs: 0;
+   --breakpoint-sm: 576px;
+   --breakpoint-md: 768px;
+   --breakpoint-lg: 992px;
+   --breakpoint-xl: 1200px;
+   --breakpoint-xxl: 1400px;
+
+   /* ---------------------------------------------------------
+     * 12. OPACITY
+     * --------------------------------------------------------- */
+   --opacity-0: 0;
+   --opacity-25: 0.25;
+   --opacity-50: 0.5;
+   --opacity-75: 0.75;
+   --opacity-100: 1;
+   --opacity-disabled: 0.6;
+   --opacity-muted: 0.75;
+   --opacity-hover: 0.9;
+
+   /* ---------------------------------------------------------
+     * 13. ANIMATIONS
+     * --------------------------------------------------------- */
+   --animation-fade: fade-in 0.3s var(--ease-standard);
+   --animation-slide: slide-up 0.4s var(--ease-decelerate);
+   --animation-bounce: bounce 1s infinite;
+   --animation-spin: spin 1s linear infinite;
+   --animation-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+   /* ---------------------------------------------------------
+     * 14. BACKGROUNDS & SURFACES
+     * --------------------------------------------------------- */
+   --bg-body: #f8f9fa;
+   --bg-card: #ffffff;
+   --bg-sidebar: #ffffff;
+   --bg-topbar: #ffffff;
+   --bg-input: #ffffff;
+   --bg-dropdown: #ffffff;
+   --bg-modal: #ffffff;
+
+   /* ---------------------------------------------------------
+     * 15. TEXT COLORS
+     * --------------------------------------------------------- */
+   --text-primary: #2c3e50;
+   --text-secondary: #6c757d;
+   --text-muted: #adb5bd;
+   --text-light: #f8f9fa;
+   --text-dark: #212529;
+   --text-danger: #dc3545;
+   --text-success: #28a745;
+   --text-warning: #ffc107;
+   --text-info: #0dcaf0;
+
+   /* ---------------------------------------------------------
+     * 16. FOCUS STATES
+     * --------------------------------------------------------- */
+   --focus-ring-width: 3px;
+   --focus-ring-color: rgba(220, 53, 69, 0.25);
+   --focus-ring-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+
+   /* ---------------------------------------------------------
+     * 17. BUTTONS
+     * --------------------------------------------------------- */
+   --btn-height-sm: 2rem;
+   --btn-height-md: 2.5rem;
+   --btn-height-lg: 3rem;
+   --btn-padding-x-sm: 0.75rem;
+   --btn-padding-x-md: 1rem;
+   --btn-padding-x-lg: 1.5rem;
+   --btn-border-radius: var(--radius-md);
+}
+
+/* =========================================================
+   DARK MODE VARIABLES
+   ========================================================= */
+
+/* =========================================================
+   SYSTEM PREFERENCE DETECTION
+   ========================================================= */
+@media (prefers-color-scheme: dark) {
+   :root:not([data-theme="light"]) {
+      --primary-red: #ff6b6b;
+      --dark-red: #ff5252;
+      --light-red: rgba(255, 107, 107, 0.1);
+      --hover-red: #ff3333;
+
+      --gray-dark: #f8f9fa;
+      --gray-medium: #adb5bd;
+      --gray-light: #343a40;
+      --gray-border: #495057;
+
+      --white: #212529;
+      --black: #f8f9fa;
+
+      --bg-body: #121212;
+      --bg-card: #1e1e1e;
+      --bg-sidebar: #1a1a1a;
+      --bg-topbar: #1e1e1e;
+      --bg-input: #2d2d2d;
+      --bg-dropdown: #2d2d2d;
+      --bg-modal: #2d2d2d;
+
+      --text-primary: #f8f9fa;
+      --text-secondary: #adb5bd;
+      --text-muted: #6c757d;
+      --text-light: #343a40;
+      --text-dark: #f8f9fa;
+
+      --border-color: #495057;
+      --border-light: #343a40;
+
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.55);
+   }
+}
+
+/* =========================================================
+   KEYFRAMES ANIMATIONS
+   ========================================================= */
+@keyframes fade-in {
+   from {
+      opacity: 0;
+   }
+
+   to {
+      opacity: 1;
+   }
+}
+
+@keyframes slide-up {
+   from {
+      transform: translateY(10px);
+      opacity: 0;
+   }
+
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+
+@keyframes bounce {
+
+   0%,
+   100% {
+      transform: translateY(0);
+   }
+
+   50% {
+      transform: translateY(-5px);
+   }
+}
+
+@keyframes spin {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes pulse {
+
+   0%,
+   100% {
+      opacity: 1;
+   }
+
+   50% {
+      opacity: 0.5;
+   }
+}
+
+/* =========================================================
+   UTILITY CLASSES FOR THEME SWITCHING
+   ========================================================= */
+.theme-light {
+   color-scheme: light;
+}
+
+.theme-dark {
+   color-scheme: dark;
+}[data-theme="dark"] {
+   --primary-red: #dc3545;
+   --dark-red: #c82333;
+   --light-red: rgba(220, 53, 69, 0.1);
+   --hover-red: #bd2130;
+
+   --gray-dark: #e9ecef;
+   --gray-medium: #868e96;
+   --gray-light: #2d3339;
+   --gray-border: #404449;
+
+   --white: #1a1d23;
+   --black: #f8f9fa;
+
+   --blue: #3498db;
+   --blue-light: rgba(52, 152, 219, 0.1);
+   --blue-dark: #2980b9;
+
+   --green: #27ae60;
+   --green-light: rgba(39, 174, 96, 0.1);
+   --green-dark: #229954;
+
+   --yellow: #f1c40f;
+   --yellow-light: rgba(241, 196, 15, 0.1);
+   --yellow-dark: #f39c12;
+
+   --orange: #e67e22;
+   --orange-light: rgba(230, 126, 34, 0.1);
+   --orange-dark: #d35400;
+
+   --purple: #9b59b6;
+   --purple-light: rgba(155, 89, 182, 0.1);
+   --purple-dark: #8e44ad;
+
+   --teal: #1abc9c;
+   --teal-light: rgba(26, 188, 156, 0.1);
+   --teal-dark: #16a085;
+
+   --bg-body: #0d1117;
+   --bg-card: #161b22;
+   --bg-sidebar: #0d1117;
+   --bg-topbar: #161b22;
+   --bg-input: #21262d;
+   --bg-dropdown: #161b22;
+   --bg-modal: #161b22;
+
+   --text-primary: #c9d1d9;
+   --text-secondary: #8b949e;
+   --text-muted: #6e7681;
+   --text-light: #484f58;
+   --text-dark: #c9d1d9;
+
+   --border-color: #30363d;
+   --border-light: #21262d;
+
+   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+   --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.8);
+
+   --focus-ring-color: rgba(220, 53, 69, 0.25);
+}
+/* ====================================
+   DARK MODE - LIGHTER VERSION
+   ==================================== */
+[data-theme="dark"] {
+   --primary-red: #dc3545;
+   --dark-red: #c82333;
+   --light-red: rgba(220, 53, 69, 0.1);
+   --hover-red: #bd2130;
+
+   --gray-dark: #e9ecef;
+   --gray-medium: #adb5bd;
+   --gray-light: #2d3748;
+   --gray-border: #4a5568;
+
+   --white: #1a202c;
+   --black: #f7fafc;
+
+   --blue: #4299e1;
+   --blue-light: rgba(66, 153, 225, 0.1);
+   --blue-dark: #3182ce;
+
+   --green: #48bb78;
+   --green-light: rgba(72, 187, 120, 0.1);
+   --green-dark: #38a169;
+
+   --yellow: #ecc94b;
+   --yellow-light: rgba(236, 201, 75, 0.1);
+   --yellow-dark: #d69e2e;
+
+   --orange: #ed8936;
+   --orange-light: rgba(237, 137, 54, 0.1);
+   --orange-dark: #dd6b20;
+
+   --purple: #9f7aea;
+   --purple-light: rgba(159, 122, 234, 0.1);
+   --purple-dark: #805ad5;
+
+   --teal: #38b2ac;
+   --teal-light: rgba(56, 178, 172, 0.1);
+   --teal-dark: #319795;
+
+   /* LIGHTER backgrounds */
+   --bg-body: #1a202c;
+   --bg-card: #2d3748;
+   --bg-sidebar: #1a202c;
+   --bg-topbar: #2d3748;
+   --bg-input: #374151;
+   --bg-dropdown: #2d3748;
+   --bg-modal: #2d3748;
+
+   /* LIGHTER text colors */
+   --text-primary: #f7fafc;
+   --text-secondary: #cbd5e0;
+   --text-muted: #a0aec0;
+   --text-light: #718096;
+   --text-dark: #f7fafc;
+
+   /* LIGHTER borders */
+   --border-color: #4a5568;
+   --border-light: #374151;
+
+   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+   --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.7);
+
+   --focus-ring-color: rgba(220, 53, 69, 0.25);
+}

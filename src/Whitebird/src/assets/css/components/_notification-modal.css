@@ -1,0 +1,82 @@
+/* ====================================
+   NOTIFICATION MODAL STYLES
+   ==================================== */
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s;
+    position: relative;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.unread {
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.notification-item:hover {
+    background: var(--gray-light);
+}
+
+.notif-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.notif-icon i {
+    font-size: 1.125rem;
+}
+
+.notif-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--gray-dark);
+}
+
+.notif-message {
+    font-size: 0.8125rem;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.notif-time {
+    font-size: 0.75rem;
+    color: var(--gray-medium);
+}
+
+.notif-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.notif-actions .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+.notif-actions .btn i {
+    font-size: 0.875rem;
+}

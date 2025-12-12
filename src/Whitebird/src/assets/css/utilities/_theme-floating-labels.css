@@ -1,0 +1,108 @@
+/* ====================================
+   FLOATING LABELS - DARK MODE PERFECT
+   ==================================== */
+
+[data-theme="dark"] {
+    /* Floating Label Container */
+    .form-floating {
+        position: relative;
+    }
+
+    /* Form Controls in Floating */
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        background-color: var(--bg-input);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    /* Focus State */
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        background-color: var(--bg-input);
+        border-color: var(--primary-red);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Label - Default (when empty and not focused) */
+    .form-floating > label {
+        color: #8b949e;  /* Light gray - visible */
+        background-color: transparent;
+    }
+
+    /* Label - When input has value OR is focused */
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        color: var(--primary-red);  /* Red when active */
+        background-color: var(--bg-input);
+        padding: 0 0.25rem;
+    }
+
+    /* Placeholder - must be transparent for floating to work */
+    .form-floating > .form-control::placeholder {
+        color: transparent;
+    }
+
+    .form-floating > .form-control:focus::placeholder {
+        color: #6e7681;  /* Muted gray when focused */
+    }
+
+    /* Valid State */
+    .form-floating > .form-control.is-valid,
+    .form-floating > .form-select.is-valid {
+        border-color: var(--green);
+    }
+
+    .form-floating > .form-control.is-valid:focus,
+    .form-floating > .form-select.is-valid:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 0.25rem rgba(72, 187, 120, 0.25);
+    }
+
+    .form-floating > .form-control.is-valid ~ label,
+    .form-floating > .form-select.is-valid ~ label {
+        color: var(--green);
+    }
+
+    /* Invalid State */
+    .form-floating > .form-control.is-invalid,
+    .form-floating > .form-select.is-invalid {
+        border-color: var(--primary-red);
+    }
+
+    .form-floating > .form-control.is-invalid:focus,
+    .form-floating > .form-select.is-invalid:focus {
+        border-color: var(--primary-red);
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .form-floating > .form-control.is-invalid ~ label,
+    .form-floating > .form-select.is-invalid ~ label {
+        color: var(--primary-red);
+    }
+
+    /* Disabled State */
+    .form-floating > .form-control:disabled,
+    .form-floating > .form-select:disabled {
+        background-color: var(--bg-input);
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .form-floating > .form-control:disabled ~ label,
+    .form-floating > .form-select:disabled ~ label {
+        color: #6e7681;
+        opacity: 0.6;
+    }
+
+    /* Textarea Floating */
+    .form-floating > textarea.form-control {
+        min-height: 100px;
+    }
+
+    .form-floating > textarea.form-control ~ label {
+        height: auto;
+    }
+}

@@ -1,0 +1,45 @@
+/* ====================================
+   DARK MODE SUPPORT
+   ==================================== */
+[data-theme="dark"] {
+    .stats-card {
+        background: var(--bg-card);
+    }
+
+    .card {
+        background: var(--bg-card);
+        border-color: var(--border-color);
+    }
+
+    .table-container {
+        background: var(--bg-card);
+    }
+
+    .table thead th {
+        background: var(--gray-light);
+        color: var(--text-primary);
+    }
+
+    .modal-content {
+        background: var(--bg-modal);
+    }
+
+    .modal-header,
+    .modal-footer {
+        background: var(--gray-light);
+        border-color: var(--border-color);
+    }
+
+    .alert {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .dropdown-menu {
+        background: var(--bg-dropdown);
+        border-color: var(--border-color);
+    }
+
+    .dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}

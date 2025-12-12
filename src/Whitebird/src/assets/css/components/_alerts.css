@@ -1,0 +1,53 @@
+/* ====================================
+   ALERTS & NOTIFICATIONS
+   ==================================== */
+.alert {
+    border-radius: var(--radius-md);
+    border: none;
+    padding: 1rem 1.25rem;
+    margin-bottom: var(--space-lg);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: slideInRight 0.5s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.alert i {
+    font-size: 1.25rem;
+}
+
+.alert-success {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+    border-left: 4px solid #198754;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--primary-red);
+    border-left: 4px solid var(--primary-red);
+}
+
+.alert-warning {
+    background: rgba(253, 126, 20, 0.1);
+    color: #fd7e14;
+    border-left: 4px solid #fd7e14;
+}
+
+.alert-info {
+    background: rgba(13, 202, 240, 0.1);
+    color: #0dcaf0;
+    border-left: 4px solid #0dcaf0;
+}

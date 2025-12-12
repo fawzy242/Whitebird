@@ -1,0 +1,259 @@
+<!-- Model 2: Forms Page -->
+<div id="model2Page">
+    <div class="page-header">
+        <h1>Form Management</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)" data-route="dashboard">Home</a></li>
+                <li class="breadcrumb-item active">Forms</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-edit me-2"></i>Product Registration Form
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#basicInfo">Basic Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#details">Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#pricing">Pricing</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-4">
+                <div class="tab-pane fade show active" id="basicInfo">
+                    <form id="basicInfoForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">SKU Code</label>
+                                <input type="text" class="form-control" id="skuCode">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="productCategory">
+                                    <option selected>Select Category</option>
+                                    <option>Electronics</option>
+                                    <option>Clothing</option>
+                                    <option>Food & Beverage</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Brand</label>
+                                <input type="text" class="form-control" id="productBrand">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="productDescription" rows="4"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="details">
+                    <form id="detailsForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Weight (kg)</label>
+                                <input type="number" class="form-control" id="productWeight" step="0.01">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Dimensions</label>
+                                <input type="text" class="form-control" id="productDimensions" placeholder="L x W x H">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Color</label>
+                                <input type="text" class="form-control" id="productColor">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Material</label>
+                                <input type="text" class="form-control" id="productMaterial">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Features</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="feature1">
+                                    <label class="form-check-label" for="feature1">Waterproof</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="feature2">
+                                    <label class="form-check-label" for="feature2">Eco-Friendly</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="feature3">
+                                    <label class="form-check-label" for="feature3">Premium Quality</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="pricing">
+                    <form id="pricingForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Regular Price ($)</label>
+                                <input type="number" class="form-control" id="regularPrice" step="0.01">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Sale Price ($)</label>
+                                <input type="number" class="form-control" id="salePrice" step="0.01">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Tax Rate (%)</label>
+                                <input type="number" class="form-control" id="taxRate" value="10">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" id="stockQuantity">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="availableSwitch" checked>
+                                    <label class="form-check-label" for="availableSwitch">Available for Sale</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="button" class="btn btn-primary" id="saveProductBtn">
+                    <i class="fas fa-save me-2"></i>Save Product
+                </button>
+                <button type="button" class="btn btn-secondary" id="resetFormBtn">
+                    <i class="fas fa-undo me-2"></i>Reset
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Initialize form validation
+    function validateForm() {
+        let isValid = true;
+        
+        // Check required fields
+        $('#basicInfoForm [required]').each(function() {
+            if (!$(this).val()) {
+                $(this).addClass('is-invalid');
+                isValid = false;
+            } else {
+                $(this).removeClass('is-invalid').addClass('is-valid');
+            }
+        });
+        
+        return isValid;
+    }
+
+    // Save product button
+    $('#saveProductBtn').on('click', function() {
+        if (!validateForm()) {
+            RedAdminUtils.showNotification('danger', 'Please fill all required fields');
+            return;
+        }
+
+        const saveBtn = $(this);
+        RedAdminUtils.showButtonLoading(saveBtn);
+
+        // Collect all form data
+        const productData = {
+            basicInfo: {
+                name: $('#productName').val(),
+                sku: $('#skuCode').val(),
+                category: $('#productCategory').val(),
+                brand: $('#productBrand').val(),
+                description: $('#productDescription').val()
+            },
+            details: {
+                weight: $('#productWeight').val(),
+                dimensions: $('#productDimensions').val(),
+                color: $('#productColor').val(),
+                material: $('#productMaterial').val(),
+                features: {
+                    waterproof: $('#feature1').is(':checked'),
+                    ecoFriendly: $('#feature2').is(':checked'),
+                    premiumQuality: $('#feature3').is(':checked')
+                }
+            },
+            pricing: {
+                regularPrice: parseFloat($('#regularPrice').val()) || 0,
+                salePrice: parseFloat($('#salePrice').val()) || 0,
+                taxRate: parseFloat($('#taxRate').val()) || 10,
+                stockQuantity: parseInt($('#stockQuantity').val()) || 0,
+                available: $('#availableSwitch').is(':checked')
+            },
+            timestamp: new Date().toISOString()
+        };
+
+        // Simulate API call
+        setTimeout(() => {
+            RedAdminUtils.hideButtonLoading(saveBtn);
+            
+            // Show success message
+            RedAdminUtils.showNotification('success', 
+                `Product "${productData.basicInfo.name}" saved successfully!`);
+            
+            // Log data for debugging
+            console.log('Product data saved:', productData);
+            
+            // Optionally, reset form
+            // resetForms();
+            
+        }, 1500);
+    });
+
+    // Reset form button
+    $('#resetFormBtn').on('click', function() {
+        if (confirm('Are you sure you want to reset all form data? This cannot be undone.')) {
+            resetForms();
+            RedAdminUtils.showNotification('info', 'All forms have been reset');
+        }
+    });
+
+    function resetForms() {
+        // Reset all forms
+        $('#basicInfoForm')[0].reset();
+        $('#detailsForm')[0].reset();
+        $('#pricingForm')[0].reset();
+        
+        // Reset validation classes
+        $('.form-control').removeClass('is-valid is-invalid');
+        $('.form-check-input').prop('checked', false);
+        $('#availableSwitch').prop('checked', true);
+        $('#taxRate').val(10);
+        
+        // Go back to first tab
+        $('.nav-tabs .nav-link').first().tab('show');
+    }
+
+    // Real-time validation
+    $('input[required], textarea[required]').on('input', function() {
+        if ($(this).val()) {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+        } else {
+            $(this).removeClass('is-valid').addClass('is-invalid');
+        }
+    });
+
+    // Initialize tab functionality
+    $('.nav-tabs a').on('click', function(e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    // Auto-save form data on tab change (optional)
+    $('.nav-tabs a').on('shown.bs.tab', function(e) {
+        console.log('Tab changed to:', e.target.getAttribute('href'));
+    });
+});
+</script>

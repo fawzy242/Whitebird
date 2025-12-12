@@ -1,0 +1,114 @@
+/* ====================================
+   TABLES & DATA GRID - PROFESSIONAL
+   ==================================== */
+.table-container {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-sm);
+    overflow-x: auto;
+    overflow-y: visible;
+    margin-bottom: var(--space-xl);
+    position: relative;
+}
+
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--gray-light);
+    border-radius: 4px;
+    margin: 0 var(--space-lg);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--gray-medium);
+    border-radius: 4px;
+    transition: background var(--transition-fast);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-red);
+}
+
+/* Table Base Styles */
+.table {
+    width: 100%;
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table thead th {
+    background: var(--gray-light);
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-md) var(--space-lg);
+    white-space: nowrap;
+    vertical-align: middle;
+    position: relative;
+}
+
+.table tbody td {
+    padding: var(--space-md) var(--space-lg);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
+    white-space: nowrap;
+    transition: background-color var(--transition-fast);
+}
+
+.table tbody tr {
+    transition: all var(--transition-fast);
+}
+
+.table tbody tr:hover {
+    background: var(--gray-light);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Sortable Headers */
+.table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 2.5rem;
+    position: relative;
+}
+
+.table thead th.sortable::after {
+    content: '\f0dc';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 1rem;
+    opacity: 0.3;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.table thead th.sortable:hover::after {
+    opacity: 0.7;
+}
+
+.table thead th.sortable.asc::after {
+    content: '\f0de';
+    opacity: 1;
+    color: var(--primary-red);
+}
+
+.table thead th.sortable.desc::after {
+    content: '\f0dd';
+    opacity: 1;
+    color: var(--primary-red);
+}

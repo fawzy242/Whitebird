@@ -1,0 +1,94 @@
+<!-- Asset CRUD Page - Add/Edit Asset -->
+<div id="assetCrudPage">
+    <div class="page-header mb-4">
+        <div>
+            <h1 id="crudTitle"><i class="fas fa-box me-2"></i>Add New Asset</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" data-route="assets">Assets</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                </ol>
+            </nav>
+        </div>
+        <button class="btn btn-outline-secondary" id="btnBackToAssets">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="assetForm">
+                <div class="row">
+                    <!-- Asset Name (Required) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Asset Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="assetName" name="assetName" 
+                               maxlength="100" required placeholder="Enter asset name">
+                        <div class="invalid-feedback">Asset name is required (max 100 characters)</div>
+                    </div>
+
+                    <!-- Serial Number (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" id="serialNumber" name="serialNumber" 
+                               maxlength="50" placeholder="Enter serial number">
+                        <div class="form-text">Optional, max 50 characters</div>
+                    </div>
+
+                    <!-- Category (Required, will load from API) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Category <span class="text-danger">*</span></label>
+                        <select class="form-select" id="categoryId" name="categoryId" required>
+                            <option value="">Select Category</option>
+                            <!-- Will be loaded from API -->
+                        </select>
+                        <div class="invalid-feedback">Please select a category</div>
+                    </div>
+
+                    <!-- Condition (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Condition</label>
+                        <select class="form-select" id="condition" name="condition">
+                            <option value="">Select Condition</option>
+                            <option value="Excellent">Excellent</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Poor">Poor</option>
+                            <option value="Damaged">Damaged</option>
+                        </select>
+                        <div class="form-text">Optional, max 20 characters</div>
+                    </div>
+
+                    <!-- Purchase Date (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Purchase Date</label>
+                        <input type="date" class="form-control" id="purchaseDate" name="purchaseDate">
+                        <div class="form-text">Optional</div>
+                    </div>
+
+                    <!-- Purchase Price (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Purchase Price</label>
+                        <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" 
+                               min="0" step="0.01" placeholder="0.00">
+                        <div class="form-text">Optional, minimum 0</div>
+                    </div>
+                </div>
+                                <input type="date" class="form-control" id="assignedDate">
+                            </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger" id="btnSaveAsset">
+                        <i class="fas fa-save me-2"></i>Save Asset
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnCancelAsset">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

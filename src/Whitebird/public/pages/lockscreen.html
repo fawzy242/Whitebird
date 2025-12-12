@@ -1,0 +1,228 @@
+<!-- Lock Screen Page -->
+<div class="lock-screen-container">
+    <div class="lock-screen-card">
+        <!-- User Avatar -->
+        <div class="lock-screen-avatar">
+            <div class="avatar-circle">JD</div>
+            <i class="fas fa-lock lock-icon"></i>
+        </div>
+
+        <!-- User Info -->
+        <div class="lock-screen-user">
+            <h3>John Doe</h3>
+            <p class="text-muted">testuser@redadmin.local</p>
+        </div>
+
+        <!-- Unlock Form -->
+        <form id="unlockForm" class="lock-screen-form">
+            <div class="form-group mb-3">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input 
+                        type="password" 
+                        class="form-control form-control-lg" 
+                        id="unlockPassword"
+                        placeholder="Enter your password to unlock"
+                        required
+                        autofocus
+                    />
+                    <button class="input-group-text password-toggle-btn" type="button" onclick="togglePasswordVisibility()">
+                        <i class="fas fa-eye" id="toggleIcon"></i>
+                    </button>
+                </div>
+                <small class="form-text text-muted mt-2">
+                    Hint: Password is "Test@1234"
+                </small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                <i class="fas fa-unlock me-2"></i>Unlock
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary w-100" id="switchUserBtn">
+                <i class="fas fa-user-friends me-2"></i>Sign in as different user
+            </button>
+        </form>
+
+        <!-- Additional Info -->
+        <div class="lock-screen-footer mt-4">
+            <p class="text-muted small">
+                <i class="fas fa-clock me-1"></i>
+                Locked at <span id="lockTime"></span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.lock-screen-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    position: relative;
+}
+
+.lock-screen-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+    opacity: 0.3;
+}
+
+.lock-screen-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lock-screen-avatar {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.lock-icon {
+    position: absolute;
+    bottom: 0;
+    right: calc(50% - 50px);
+    background: #dc3545;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.lock-screen-user h3 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.lock-screen-form {
+    margin-top: 2rem;
+}
+
+.password-toggle-btn {
+    cursor: pointer;
+    background: transparent;
+    border-left: none !important;
+}
+
+.password-toggle-btn:hover {
+    background: #f8f9fa;
+}
+
+.lock-screen-footer {
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+</style>
+
+<script>
+// Display lock time
+const lockTime = localStorage.getItem('lockScreenTime');
+if (lockTime) {
+    document.getElementById('lockTime').textContent = new Date(lockTime).toLocaleTimeString();
+} else {
+    document.getElementById('lockTime').textContent = new Date().toLocaleTimeString();
+}
+
+// Password toggle - FIXED
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('unlockPassword');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Unlock form
+document.getElementById('unlockForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const password = document.getElementById('unlockPassword').value;
+    const passwordInput = document.getElementById('unlockPassword');
+    
+    if (password === 'Test@1234') {
+        localStorage.removeItem('isLocked');
+        localStorage.removeItem('lockScreenTime');
+        
+        passwordInput.classList.add('is-valid');
+        
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 500);
+    } else {
+        passwordInput.classList.add('is-invalid');
+        passwordInput.classList.remove('is-valid');
+        
+        setTimeout(() => {
+            passwordInput.classList.remove('is-invalid');
+            passwordInput.value = '';
+            passwordInput.focus();
+        }, 2000);
+    }
+});
+
+// Switch user button
+document.getElementById('switchUserBtn').addEventListener('click', function() {
+    localStorage.removeItem('isLocked');
+    localStorage.removeItem('lockScreenTime');
+    window.location.href = '/login';
+});
+
+// Auto-focus password field
+document.getElementById('unlockPassword').focus();
+</script>

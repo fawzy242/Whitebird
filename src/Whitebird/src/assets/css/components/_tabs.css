@@ -1,0 +1,27 @@
+/* ====================================
+   TABS - IMPROVED
+   ==================================== */
+.nav-tabs {
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: var(--space-lg);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    padding: 0.875rem 1.5rem;
+    transition: all var(--transition-fast);
+    border-bottom: 3px solid transparent;
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--primary-red);
+    border-bottom-color: rgba(220, 53, 69, 0.3);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-red);
+    background: none;
+    border-bottom-color: var(--primary-red);
+}

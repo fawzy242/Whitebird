@@ -1,0 +1,109 @@
+<!-- Categories Management Page -->
+<div id="categoriesPage">
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-tags me-2"></i>Category Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Categories</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="btnRefreshCategories">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+            <button class="btn btn-danger" id="btnAddCategory">
+                <i class="fas fa-plus me-2"></i>Add Category
+            </button>
+        </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div class="card mb-4">
+        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#categoryFilters" style="cursor: pointer;">
+            <i class="fas fa-filter me-2"></i>Advanced Filters
+            <i class="fas fa-chevron-down float-end"></i>
+        </div>
+        <div class="collapse" id="categoryFilters">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Items Count</label>
+                        <select class="form-select" id="filterItemCount">
+                            <option value="">All</option>
+                            <option value="0">Empty (0 items)</option>
+                            <option value="1-10">1-10 items</option>
+                            <option value="11-50">11-50 items</option>
+                            <option value="51+">51+ items</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="filterSearch" placeholder="Search by name or description...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-danger" id="btnApplyFilters">
+                                <i class="fas fa-check me-1"></i>Apply
+                            </button>
+                            <button class="btn btn-outline-secondary" id="btnResetFilters">
+                                <i class="fas fa-redo me-1"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-list me-2"></i>All Categories
+                    <span class="badge bg-primary ms-2" id="totalCategories">0</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 60px;">#</th>
+                                    <th>Category Name</th>
+                                    <th>Description</th>
+                                    <th>Items</th>
+                                    <th style="width: 150px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie me-2"></i>Category Distribution
+                </div>
+                <div class="card-body">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

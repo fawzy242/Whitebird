@@ -1,0 +1,77 @@
+<!-- Footer Layout -->
+<footer class="footer mt-auto py-3 border-top">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="text-muted">
+                    &copy; 2024 RedAdmin Pro. All rights reserved.
+                    <span class="mx-2">•</span>
+                    <a href="#" class="text-muted">Privacy Policy</a>
+                    <span class="mx-2">•</span>
+                    <a href="#" class="text-muted">Terms of Service</a>
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="text-muted">
+                    <span class="me-3">v1.0.0</span>
+                    <span class="me-3">
+                        <i class="fas fa-circle text-success me-1"></i>
+                        <span id="connectionStatus">Online</span>
+                    </span>
+                    <a href="#" class="text-muted me-3" data-bs-toggle="tooltip" title="Documentation">
+                        <i class="fas fa-book"></i>
+                    </a>
+                    <a href="#" class="text-muted me-3" data-bs-toggle="tooltip" title="Support">
+                        <i class="fas fa-headset"></i>
+                    </a>
+                    <a href="#" class="text-muted" data-bs-toggle="tooltip" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    // Connection status monitoring
+    function updateConnectionStatus() {
+        const isOnline = navigator.onLine;
+        const $status = $('#connectionStatus');
+        const $icon = $status.prev('i');
+        
+        if (isOnline) {
+            $status.text('Online');
+            $icon.removeClass('text-danger').addClass('text-success');
+        } else {
+            $status.text('Offline');
+            $icon.removeClass('text-success').addClass('text-danger');
+            
+            // Show offline notification
+            RedAdminUtils.showNotification('warning', 
+                'You are currently offline. Some features may not be available.');
+        }
+    }
+    
+    // Initial check
+    updateConnectionStatus();
+    
+    // Listen for online/offline events
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    
+    // Auto-update copyright year
+    const currentYear = new Date().getFullYear();
+    $('footer .text-muted').html(function(index, html) {
+        return html.replace('2024', currentYear);
+    });
+    
+    // Add page load time
+    const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+    $('.text-md-end').append(`<span class="ms-3 d-none d-md-inline">Loaded in ${loadTime}ms</span>`);
+});
+</script>

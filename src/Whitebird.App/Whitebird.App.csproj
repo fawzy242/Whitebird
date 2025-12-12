@@ -6,8 +6,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Whitebird.Domain\Whitebird.Domain.csproj" />
     <ProjectReference Include="..\Whitebird.Infra\Whitebird.Infra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="MailKit" Version="4.5.0" />
+    <PackageReference Include="MimeKit" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
   </ItemGroup>
 </Project>

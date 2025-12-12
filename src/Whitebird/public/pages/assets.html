@@ -1,0 +1,236 @@
+<!-- Assets Management Page - Complete Implementation -->
+<div id="assetsPage">
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-box me-2"></i>Asset Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Assets</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="btnRefreshAssets">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+            <button class="btn btn-danger" id="btnAddAsset">
+                <i class="fas fa-plus me-2"></i>Add New Asset
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Total Assets</h6>
+                            <h3 id="totalAssets">0</h3>
+                        </div>
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Available</h6>
+                            <h3 id="availableAssets">0</h3>
+                        </div>
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-muted">In Use</h6>
+                            <h3 id="inUseAssets">0</h3>
+                        </div>
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="text-muted">Maintenance</h6>
+                            <h3 id="maintenanceAssets">0</h3>
+                        </div>
+                        <div class="stat-icon bg-danger">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#assetFilterCollapse">
+                <i class="fas fa-filter me-2"></i>Advanced Filters
+                <i class="fas fa-chevron-down ms-2"></i>
+            </button>
+        </div>
+        <div class="collapse" id="assetFilterCollapse">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="filterCategory">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="Available">Available</option>
+                            <option value="In Use">In Use</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchAssets" placeholder="Search assets...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-outline-secondary w-100" id="btnResetFilters">
+                            <i class="fas fa-redo me-2"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="assetTabs">
+                <li class="nav-item">
+                    <button class="nav-link active" id="availableTab" data-bs-toggle="tab" data-bs-target="#available-pane">
+                        Available <span class="badge bg-success ms-2" id="availableCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="inuseTab" data-bs-toggle="tab" data-bs-target="#inuse-pane">
+                        In Use <span class="badge bg-warning ms-2" id="inuseCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="maintenanceTab" data-bs-toggle="tab" data-bs-target="#maintenance-pane">
+                        Maintenance <span class="badge bg-danger ms-2" id="maintenanceCount">0</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body p-0">
+            <div class="tab-content">
+                <!-- Available Tab -->
+                <div class="tab-pane fade show active" id="available-pane">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Asset Name</th>
+                                    <th>Asset Code</th>
+                                    <th>Category</th>
+                                    <th>Purchase Date</th>
+                                    <th>Value</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="availableTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="availableEmpty" class="text-center py-5 d-none">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No available assets</p>
+                    </div>
+                </div>
+
+                <!-- In Use Tab -->
+                <div class="tab-pane fade" id="inuse-pane">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Asset Name</th>
+                                    <th>Asset Code</th>
+                                    <th>Category</th>
+                                    <th>Assigned To</th>
+                                    <th>Since</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inuseTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="inuseEmpty" class="text-center py-5 d-none">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No assets in use</p>
+                    </div>
+                </div>
+
+                <!-- Maintenance Tab -->
+                <div class="tab-pane fade" id="maintenance-pane">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Asset Name</th>
+                                    <th>Asset Code</th>
+                                    <th>Category</th>
+                                    <th>Issue</th>
+                                    <th>Since</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="maintenanceTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="maintenanceEmpty" class="text-center py-5 d-none">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No assets in maintenance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> assets
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="pagination"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

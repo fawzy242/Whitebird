@@ -1,0 +1,78 @@
+/* ====================================
+   KENDO UI CUSTOMIZATION (SINGLE SECTION)
+   ==================================== */
+.k-grid {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.k-grid .k-grid-content {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.k-grid .k-grid-content::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.k-grid .k-grid-content::-webkit-scrollbar-track {
+    background: var(--gray-light);
+    border-radius: 4px;
+}
+
+.k-grid .k-grid-content::-webkit-scrollbar-thumb {
+    background: var(--gray-medium);
+    border-radius: 4px;
+    transition: background-color var(--transition-fast);
+}
+
+.k-grid .k-grid-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-red);
+}
+
+.k-grid-header {
+    background: var(--gray-light);
+    font-weight: var(--font-weight-semibold);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.k-grid-header .k-header {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    padding: var(--space-md) var(--space-lg);
+}
+
+.k-button {
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    border: 2px solid transparent;
+}
+
+.k-button.k-button-primary {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: var(--white);
+}
+
+.k-button.k-button-primary:hover:not(.k-state-disabled) {
+    background-color: var(--dark-red);
+    border-color: var(--dark-red);
+    transform: translateY(-1px);
+}
+
+.k-datepicker,
+.k-dropdownlist,
+.k-numerictextbox {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.k-datepicker:focus,
+.k-dropdownlist:focus,
+.k-numerictextbox:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}

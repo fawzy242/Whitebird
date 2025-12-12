@@ -1,0 +1,251 @@
+/* ====================================
+   EXTENDED DARK MODE SUPPORT
+   ==================================== */
+
+[data-theme="dark"] {
+    /* Forms */
+    .form-control,
+    .form-select {
+        background-color: var(--bg-input);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: var(--bg-input);
+        border-color: var(--primary-red);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .form-control::placeholder {
+        color: var(--text-muted);
+    }
+
+    /* Floating Labels */
+    .form-floating > label {
+        color: var(--text-secondary);
+    }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: var(--primary-red);
+    }
+
+    /* Input Groups */
+    .input-group-text {
+        background-color: var(--bg-input);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    /* Checkboxes & Radios */
+    .form-check-input {
+        background-color: var(--bg-input);
+        border-color: var(--border-color);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-red);
+        border-color: var(--primary-red);
+    }
+
+    .form-check-label {
+        color: var(--text-primary);
+    }
+
+    /* Tables */
+    .table {
+        color: var(--text-primary);
+    }
+
+    .table thead th {
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .table td, .table th {
+        border-color: var(--border-color);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        background-color: var(--bg-card);
+    }
+
+    .breadcrumb-item a {
+        color: var(--text-secondary);
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-primary);
+    }
+
+    /* Page Header */
+    .page-header h1 {
+        color: var(--text-primary);
+    }
+
+    /* Sidebar (if not already covered) */
+    .sidebar-container {
+        background: var(--bg-sidebar);
+    }
+
+    .sidebar-menu a {
+        color: var(--text-primary);
+    }
+
+    .sidebar-logo .logo-text {
+        color: var(--text-primary);
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--bg-card);
+        color: var(--text-secondary);
+        border-color: var(--border-color);
+    }
+
+    /* Search Modal */
+    .search-modal-content {
+        background: var(--bg-modal);
+        color: var(--text-primary);
+    }
+
+    .search-input {
+        background: var(--bg-input);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    .search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .search-section-title {
+        color: var(--text-primary);
+    }
+
+    .quick-link-item {
+        background: var(--bg-input);
+        color: var(--text-primary);
+    }
+
+    .quick-link-item:hover {
+        background: var(--primary-red);
+        color: var(--white);
+    }
+
+    .search-result-item {
+        color: var(--text-primary);
+    }
+
+    .search-result-item:hover {
+        background: var(--bg-input);
+    }
+
+    .result-category {
+        color: var(--text-secondary);
+    }
+
+    .recent-item {
+        color: var(--text-secondary);
+    }
+
+    /* Notification Modal */
+    .notification-list {
+        background: var(--bg-modal);
+    }
+
+    .notification-item {
+        border-color: var(--border-color);
+    }
+
+    .notification-item:hover {
+        background: var(--bg-input);
+    }
+
+    .notif-title {
+        color: var(--text-primary);
+    }
+
+    .notif-message {
+        color: var(--text-secondary);
+    }
+
+    /* Inbox Modal */
+    .inbox-list {
+        background: var(--bg-modal);
+    }
+
+    .inbox-item {
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .inbox-item:hover {
+        background: var(--bg-input);
+    }
+}
+
+/* ====================================
+   FLOATING LABELS - DARK MODE FIX
+   ==================================== */
+[data-theme="dark"] {
+    /* Floating Label - Default State */
+    .form-floating > label {
+        color: var(--text-muted);
+    }
+
+    /* Floating Label - Focused State */
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+    .form-floating > .form-select ~ label {
+        color: var(--primary-red);
+        background-color: var(--bg-input);
+    }
+
+    /* Form Control Background */
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        background-color: var(--bg-input);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    /* Form Control Focus */
+    .form-floating > .form-control:focus,
+    .form-floating > .form-select:focus {
+        background-color: var(--bg-input);
+        border-color: var(--primary-red);
+        color: var(--text-primary);
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    /* Placeholder color when floating */
+    .form-floating > .form-control::placeholder {
+        color: transparent;
+    }
+
+    /* Valid state */
+    .form-floating > .form-control.is-valid ~ label {
+        color: var(--green);
+    }
+
+    /* Invalid state */
+    .form-floating > .form-control.is-invalid ~ label {
+        color: var(--primary-red);
+    }
+
+    /* Disabled state */
+    .form-floating > .form-control:disabled ~ label {
+        color: var(--text-muted);
+        opacity: 0.6;
+    }
+}

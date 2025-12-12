@@ -1,0 +1,77 @@
+<!-- Employee CRUD Page - Add/Edit Employee -->
+<div id="employeeCrudPage">
+    <div class="page-header mb-4">
+        <div>
+            <h1 id="crudTitle"><i class="fas fa-user me-2"></i>Add New Employee</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" data-route="employees">Employees</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                </ol>
+            </nav>
+        </div>
+        <button class="btn btn-outline-secondary" id="btnBackToEmployees">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="employeeForm">
+                <div class="row">
+                    <!-- Full Name (Required) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" 
+                               maxlength="100" required placeholder="Enter full name">
+                        <div class="invalid-feedback">Full name is required (max 100 characters)</div>
+                    </div>
+
+                    <!-- Email (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               maxlength="100" placeholder="employee@company.com">
+                        <div class="form-text">Optional, max 100 characters</div>
+                    </div>
+
+                    <!-- Phone Number (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" 
+                               maxlength="20" placeholder="+1234567890">
+                        <div class="form-text">Optional, max 20 characters</div>
+                    </div>
+
+                    <!-- Department (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Department</label>
+                        <input type="text" class="form-control" id="department" name="department" 
+                               maxlength="50" placeholder="Enter department">
+                        <div class="form-text">Optional, max 50 characters</div>
+                    </div>
+
+                    <!-- Position (Optional) -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position" name="position" 
+                               maxlength="50" placeholder="Enter position">
+                        <div class="form-text">Optional, max 50 characters</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger" id="btnSaveEmployee">
+                        <i class="fas fa-save me-2"></i>Save Employee
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnCancelEmployee">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

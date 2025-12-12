@@ -1,0 +1,354 @@
+<!-- Maintenance Page - Clean & Professional -->
+<div class="maintenance-container">
+    <div class="maintenance-content">
+        <!-- Maintenance Icon -->
+        <div class="maintenance-header">
+            <div class="maintenance-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h1 class="maintenance-title">We'll Be Back Soon!</h1>
+            <p class="maintenance-description">
+                We're performing scheduled maintenance to improve your experience.
+            </p>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="maintenance-timer">
+            <div class="timer-box">
+                <div class="timer-value" id="hours">00</div>
+                <div class="timer-label">Hours</div>
+            </div>
+            <div class="timer-separator">:</div>
+            <div class="timer-box">
+                <div class="timer-value" id="minutes">00</div>
+                <div class="timer-label">Minutes</div>
+            </div>
+            <div class="timer-separator">:</div>
+            <div class="timer-box">
+                <div class="timer-value" id="seconds">00</div>
+                <div class="timer-label">Seconds</div>
+            </div>
+        </div>
+
+        <!-- What We're Doing -->
+        <div class="maintenance-info">
+            <h6>What we're working on:</h6>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-server"></i>
+                    <span>Server Upgrades</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-database"></i>
+                    <span>Database Optimization</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Security Updates</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-rocket"></i>
+                    <span>Performance Boost</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newsletter Subscribe -->
+        <div class="maintenance-subscribe">
+            <h6>Get notified when we're back</h6>
+            <form class="subscribe-form" id="subscribeForm">
+                <input 
+                    type="email" 
+                    class="subscribe-input" 
+                    placeholder="Enter your email"
+                    required
+                />
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-bell me-2"></i>Notify Me
+                </button>
+            </form>
+        </div>
+
+        <!-- Social Links -->
+        <div class="maintenance-social">
+            <p>Follow us for updates:</p>
+            <div class="social-links">
+                <a href="javascript:void(0)" class="social-link">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="javascript:void(0)" class="social-link">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="javascript:void(0)" class="social-link">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="javascript:void(0)" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.maintenance-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+}
+
+.maintenance-content {
+    max-width: 700px;
+    width: 100%;
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.maintenance-header {
+    margin-bottom: 2rem;
+}
+
+.maintenance-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.maintenance-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.maintenance-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1rem 0 0.5rem;
+}
+
+.maintenance-description {
+    color: #6c757d;
+    font-size: 1.125rem;
+    margin-bottom: 0;
+}
+
+.maintenance-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 0.75rem;
+}
+
+.timer-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-value {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #667eea;
+    line-height: 1;
+    min-width: 80px;
+}
+
+.timer-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.timer-separator {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.maintenance-info {
+    margin: 2rem 0;
+}
+
+.maintenance-info h6 {
+    color: #495057;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.info-item i {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+.maintenance-subscribe {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+}
+
+.maintenance-subscribe h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.subscribe-form {
+    display: flex;
+    gap: 0.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.subscribe-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #dee2e6;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.subscribe-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.maintenance-social {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.maintenance-social p {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-link {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f8f9fa;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .maintenance-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .timer-value {
+        font-size: 2rem;
+        min-width: 60px;
+    }
+
+    .timer-separator {
+        font-size: 1.5rem;
+    }
+
+    .subscribe-form {
+        flex-direction: column;
+    }
+
+    .info-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+
+<script>
+// Countdown timer (example: 2 hours from now)
+const countdownDate = new Date().getTime() + (2 * 60 * 60 * 1000);
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+
+    const hours = Math.floor(distance / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+    if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.querySelector('.maintenance-timer').innerHTML = '<h3>We\'re Back!</h3>';
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 2000);
+    }
+}
+
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// Subscribe form
+document.getElementById('subscribeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Thank you! We\'ll notify you when we\'re back online.');
+    e.target.reset();
+});
+</script>

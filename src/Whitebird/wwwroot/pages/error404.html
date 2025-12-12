@@ -1,0 +1,281 @@
+<!-- 404 Error Page - Clean & Professional -->
+<div class="error-page-container">
+    <div class="error-content">
+        <!-- Error Icon & Code -->
+        <div class="error-header">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Page Not Found</h2>
+            <p class="error-description">
+                Sorry, the page you are looking for doesn't exist or has been moved.
+            </p>
+        </div>
+
+        <!-- Search Box -->
+        <div class="error-search">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="errorSearch" 
+                    placeholder="Search for pages, dashboard, profile..."
+                />
+            </div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <a href="/dashboard" class="btn btn-primary btn-lg">
+                <i class="fas fa-home me-2"></i>Back to Dashboard
+            </a>
+            <button onclick="window.history.back()" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Go Back
+            </button>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="error-suggestions">
+            <h6>You might want to try:</h6>
+            <div class="suggestion-links">
+                <a href="/dashboard" class="suggestion-link">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/profile" class="suggestion-link">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="/settings" class="suggestion-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="/components" class="suggestion-link">
+                    <i class="fas fa-th-large"></i>
+                    <span>Components</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+}
+
+.error-content {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.error-header {
+    margin-bottom: 2rem;
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: #fee;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-icon i {
+    font-size: 2.5rem;
+    color: #dc3545;
+}
+
+.error-code {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #dc3545;
+    margin: 0;
+    line-height: 1;
+}
+
+.error-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+}
+
+.error-description {
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.error-search {
+    margin: 2rem 0;
+}
+
+.search-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 2px solid #dee2e6;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.1);
+}
+
+.search-results {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: none;
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.error-suggestions {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.error-suggestions h6 {
+    color: #6c757d;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.suggestion-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.suggestion-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.3s;
+}
+
+.suggestion-link:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.suggestion-link i {
+    font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .error-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .error-code {
+        font-size: 4rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+    }
+
+    .error-actions .btn {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Simple search functionality
+const searchInput = document.getElementById('errorSearch');
+const searchResults = document.getElementById('searchResults');
+
+const pages = [
+    { name: 'Dashboard', path: '/dashboard', icon: 'home' },
+    { name: 'Profile', path: '/profile', icon: 'user' },
+    { name: 'Settings', path: '/settings', icon: 'cog' },
+    { name: 'Components', path: '/components', icon: 'th-large' },
+    { name: 'Buttons', path: '/buttons', icon: 'mouse-pointer' },
+    { name: 'Model 1', path: '/model1', icon: 'table' },
+    { name: 'Model 2', path: '/model2', icon: 'edit' },
+    { name: 'Model 3', path: '/model3', icon: 'chart-bar' }
+];
+
+searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    
+    if (query.length < 2) {
+        searchResults.style.display = 'none';
+        return;
+    }
+
+    const filtered = pages.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.path.toLowerCase().includes(query)
+    );
+
+    if (filtered.length > 0) {
+        searchResults.innerHTML = filtered.map(page => `
+            <a href="${page.path}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; text-decoration: none; color: #495057; border-radius: 0.25rem; margin-bottom: 0.5rem;">
+                <i class="fas fa-${page.icon}"></i>
+                <span>${page.name}</span>
+            </a>
+        `).join('');
+        searchResults.style.display = 'block';
+    } else {
+        searchResults.innerHTML = '<p class="text-muted mb-0">No pages found</p>';
+        searchResults.style.display = 'block';
+    }
+});
+</script>

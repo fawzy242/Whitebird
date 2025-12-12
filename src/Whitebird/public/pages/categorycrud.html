@@ -1,0 +1,53 @@
+<!-- Category CRUD Page - Add/Edit Category -->
+<div id="categoryCrudPage">
+    <div class="page-header mb-4">
+        <div>
+            <h1 id="crudTitle"><i class="fas fa-tag me-2"></i>Add New Category</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" data-route="categories">Categories</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                </ol>
+            </nav>
+        </div>
+        <button class="btn btn-outline-secondary" id="btnBackToCategories">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="categoryForm">
+                <div class="row">
+                    <!-- Category Name (Required) -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Category Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="categoryName" name="categoryName" 
+                               maxlength="100" required placeholder="Enter category name">
+                        <div class="invalid-feedback">Category name is required (max 100 characters)</div>
+                    </div>
+
+                    <!-- Description (Optional) -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  maxlength="500" rows="4" placeholder="Enter description"></textarea>
+                        <div class="form-text">Optional, max 500 characters</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger" id="btnSaveCategory">
+                        <i class="fas fa-save me-2"></i>Save Category
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnCancelCategory">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

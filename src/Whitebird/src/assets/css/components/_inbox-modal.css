@@ -1,0 +1,120 @@
+/* ====================================
+   INBOX MODAL STYLES - CLEAN
+   ==================================== */
+
+.inbox-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.inbox-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.inbox-list::-webkit-scrollbar-thumb {
+    background: var(--gray-medium);
+    border-radius: 3px;
+}
+
+.inbox-message {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.inbox-message:last-child {
+    border-bottom: none;
+}
+
+.inbox-message.unread {
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.inbox-message:hover {
+    background: var(--gray-light);
+}
+
+[data-theme="dark"] .inbox-message:hover {
+    background: var(--bg-input);
+}
+
+.message-avatar {
+    flex-shrink: 0;
+}
+
+.message-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.message-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.25rem;
+}
+
+.message-from {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .message-from {
+    color: var(--text-primary);
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--gray-medium);
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.message-subject {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .message-subject {
+    color: var(--text-primary);
+}
+
+.message-preview {
+    font-size: 0.8125rem;
+    color: var(--gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .message-preview {
+    color: var(--text-secondary);
+}
+
+.inbox-message.unread .message-from,
+.inbox-message.unread .message-subject {
+    font-weight: 700;
+}
+
+.inbox-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.inbox-actions .btn {
+    padding: 0.25rem 0.5rem;
+}

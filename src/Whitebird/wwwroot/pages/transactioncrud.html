@@ -1,0 +1,93 @@
+<!-- Transaction CRUD Page - Add/Edit Transaction -->
+<div id="transactionCrudPage">
+    <div class="page-header mb-4">
+        <div>
+            <h1 id="crudTitle"><i class="fas fa-exchange-alt me-2"></i>Add New Transaction</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" data-route="transactions">Transactions</a></li>
+                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                </ol>
+            </nav>
+        </div>
+        <button class="btn btn-outline-secondary" id="btnBackToTransactions">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form id="transactionForm">
+                <div class="row">
+                    <!-- Asset (Required, will load from API) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Asset <span class="text-danger">*</span></label>
+                        <select class="form-select" id="assetId" name="assetId" required>
+                            <option value="">Select Asset</option>
+                            <!-- Will be loaded from API -->
+                        </select>
+                        <div class="invalid-feedback">Please select an asset</div>
+                    </div>
+
+                    <!-- Employee (Optional, will load from API) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Employee</label>
+                        <select class="form-select" id="employeeId" name="employeeId">
+                            <option value="">Select Employee</option>
+                            <!-- Will be loaded from API -->
+                        </select>
+                        <div class="form-text">Optional</div>
+                    </div>
+
+                    <!-- Transaction Type (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Transaction Type</label>
+                        <select class="form-select" id="transactionType" name="transactionType">
+                            <option value="">Select Type</option>
+                            <option value="Checkout">Checkout</option>
+                            <option value="Return">Return</option>
+                            <option value="Transfer">Transfer</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Disposal">Disposal</option>
+                        </select>
+                        <div class="form-text">Optional, max 20 characters</div>
+                    </div>
+
+                    <!-- Transaction Date (Required) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Transaction Date <span class="text-danger">*</span></label>
+                        <input type="datetime-local" class="form-control" id="transactionDate" name="transactionDate" required>
+                        <div class="invalid-feedback">Transaction date is required</div>
+                    </div>
+
+                    <!-- Return Date (Optional) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Return Date</label>
+                        <input type="datetime-local" class="form-control" id="returnDate" name="returnDate">
+                        <div class="form-text">Optional</div>
+                    </div>
+
+                    <!-- Notes (Optional) -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" 
+                                  maxlength="500" rows="4" placeholder="Enter notes"></textarea>
+                        <div class="form-text">Optional, max 500 characters</div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger" id="btnSaveTransaction">
+                        <i class="fas fa-save me-2"></i>Save Transaction
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="btnCancelTransaction">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->

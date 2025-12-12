@@ -1,0 +1,78 @@
+<!-- Top Bar -->
+<div class="topbar">
+    <!-- Left Section -->
+    <div class="topbar-left d-flex align-items-center gap-3">
+        <!-- Menu Toggle -->
+        <button class="menu-toggle" id="menuToggle" data-action="toggle-sidebar" aria-label="Toggle sidebar menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Modern Search Box -->
+        <!-- Search Icon Only -->
+        <button type="button" class="topbar-icon" data-action="toggle-search" aria-label="Open search">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+    <!-- Right Section -->
+    <div class="topbar-right d-flex align-items-center gap-3">
+        <!-- Expand Icon -->
+        <div class="topbar-icon" role="button" aria-label="Toggle fullscreen" data-action="toggle-fullscreen">
+            <i class="fas fa-expand"></i>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="topbar-icon" role="button" aria-label="Toggle theme" data-action="toggle-theme">
+            <i class="fas fa-moon"></i>
+        </div>
+
+        <!-- Notifications -->
+        <div class="topbar-icon position-relative" role="button" aria-label="View notifications" data-action="show-notifications">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">5</span>
+        </div>
+
+        <!-- Messages -->
+        <div class="topbar-icon position-relative" role="button" aria-label="View messages" data-action="show-inbox">
+            <i class="fas fa-envelope"></i>
+            <span class="notification-badge">3</span>
+        </div>
+
+        <!-- User Profile Dropdown -->
+        <div class="user-profile dropdown">
+            <div class="d-flex align-items-center dropdown-toggle gap-2" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-label="User menu">
+                <div class="user-avatar">JD</div>
+                <div class="user-info d-none d-md-block">
+                    <div class="name">John Doe</div>
+                    <div class="role">Administrator</div>
+                </div>
+            </div>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" href="#" data-route="profile">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#" data-action="lock-screen">
+                        <i class="fas fa-lock"></i> Lock Screen
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#" data-route="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <a class="dropdown-item text-danger" href="#" data-action="logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

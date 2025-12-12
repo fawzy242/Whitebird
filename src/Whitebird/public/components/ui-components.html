@@ -1,0 +1,275 @@
+<!-- UI Components - Cards Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Cards</h4>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle me-2"></i>Basic Card
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Card Title</h5>
+                <p class="card-text">This is a basic card with some example text to demonstrate the card layout and styling.</p>
+                <button class="btn btn-primary btn-sm">Read More</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="https://via.placeholder.com/400x200/dc3545/ffffff?text=Card+Image" class="card-img-top" alt="Card image">
+            <div class="card-body">
+                <h5 class="card-title">Card with Image</h5>
+                <p class="card-text">Card with an image at the top and content below.</p>
+                <button class="btn btn-success btn-sm">View Details</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Card with Footer</h5>
+                <p class="card-text">This card includes a footer section for additional information.</p>
+            </div>
+            <div class="card-footer text-muted">
+                Last updated 3 mins ago
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dropdowns Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Dropdowns</h4>
+    </div>
+    <div class="col-12">
+        <div class="dropdown d-inline-block me-2">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Primary Dropdown
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Action</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-copy me-2"></i>Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-trash me-2"></i>Delete</a></li>
+            </ul>
+        </div>
+        <div class="dropdown d-inline-block me-2">
+            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Success Dropdown
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Option 1</a></li>
+                <li><a class="dropdown-item" href="#">Option 2</a></li>
+                <li><a class="dropdown-item" href="#">Option 3</a></li>
+            </ul>
+        </div>
+        <div class="dropdown d-inline-block">
+            <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Danger Dropdown
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Delete Item</a></li>
+                <li><a class="dropdown-item" href="#">Remove User</a></li>
+                <li><a class="dropdown-item" href="#">Clear Data</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Spinners Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Spinners & Loaders</h4>
+    </div>
+    <div class="col-12">
+        <div class="spinner-border text-primary me-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-border text-success me-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-border text-danger me-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-primary me-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-success me-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="spinner-grow text-danger" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs and Pills -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Tabs & Pills</h4>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Tabs Example</div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#tab1">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab2">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab3">Messages</a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="tab1">
+                        <p>Home tab content goes here.</p>
+                    </div>
+                    <div class="tab-pane fade" id="tab2">
+                        <p>Profile tab content goes here.</p>
+                    </div>
+                    <div class="tab-pane fade" id="tab3">
+                        <p>Messages tab content goes here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Pills Example</div>
+            <div class="card-body">
+                <ul class="nav nav-pills mb-3" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="pill" href="#pill1">Active</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#pill2">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="pill" href="#pill3">Another</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="pill1">
+                        <p>First pill content.</p>
+                    </div>
+                    <div class="tab-pane fade" id="pill2">
+                        <p>Second pill content.</p>
+                    </div>
+                    <div class="tab-pane fade" id="pill3">
+                        <p>Third pill content.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form Layouts -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Form Layouts</h4>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Vertical Form</div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" class="form-control" placeholder="Enter email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Option</label>
+                        <select class="form-select">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="check1">
+                        <label class="form-check-label" for="check1">Check me out</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">Horizontal Form</div>
+            <div class="card-body">
+                <form>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Select</label>
+                        <div class="col-sm-9">
+                            <select class="form-select">
+                                <option>Choose...</option>
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Radios</label>
+                        <div class="col-sm-9">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radio1" id="radio1">
+                                <label class="form-check-label" for="radio1">Option 1</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radio1" id="radio2">
+                                <label class="form-check-label" for="radio2">Option 2</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit Form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals Demo -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Modals</h4>
+    </div>
+    <div class="col-12">
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fas fa-window-maximize me-2"></i>Basic Modal
+        </button>
+        <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#successModal">
+            <i class="fas fa-check me-2"></i>Success Modal
+        </button>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="fas fa-trash me-2"></i>Delete Confirmation
+        </button>
+    </div>
+</div>

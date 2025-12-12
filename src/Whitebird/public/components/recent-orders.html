@@ -1,0 +1,109 @@
+<!-- Recent Orders Table Component -->
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Recent Orders</h5>
+        <button class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-2"></i>Add New Order
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="sortable">Order ID</th>
+                    <th class="sortable">Customer</th>
+                    <th class="sortable">Product</th>
+                    <th class="sortable">Amount</th>
+                    <th>Status</th>
+                    <th class="sortable">Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#ORD-1234</strong></td>
+                    <td>John Doe</td>
+                    <td>Premium Package</td>
+                    <td><strong>$459.00</strong></td>
+                    <td><span class="badge badge-success"><i class="fas fa-check me-1"></i>Completed</span></td>
+                    <td>Nov 4, 2025</td>
+                    <td>
+                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-1235</strong></td>
+                    <td>Jane Smith</td>
+                    <td>Standard Package</td>
+                    <td><strong>$289.50</strong></td>
+                    <td><span class="badge badge-warning"><i class="fas fa-clock me-1"></i>Pending</span></td>
+                    <td>Nov 4, 2025</td>
+                    <td>
+                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-1236</strong></td>
+                    <td>Mike Johnson</td>
+                    <td>Enterprise Package</td>
+                    <td><strong>$1,200.00</strong></td>
+                    <td><span class="badge badge-info"><i class="fas fa-shipping-fast me-1"></i>Shipping</span></td>
+                    <td>Nov 3, 2025</td>
+                    <td>
+                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-1237</strong></td>
+                    <td>Sarah Williams</td>
+                    <td>Basic Package</td>
+                    <td><strong>$99.00</strong></td>
+                    <td><span class="badge badge-danger"><i class="fas fa-times me-1"></i>Cancelled</span></td>
+                    <td>Nov 3, 2025</td>
+                    <td>
+                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-1238</strong></td>
+                    <td>David Brown</td>
+                    <td>Premium Package</td>
+                    <td><strong>$459.00</strong></td>
+                    <td><span class="badge badge-success"><i class="fas fa-check me-1"></i>Completed</span></td>
+                    <td>Nov 2, 2025</td>
+                    <td>
+                        <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="text-muted">Showing 1 to 5 of 127 entries</div>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">26</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

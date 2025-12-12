@@ -1,0 +1,327 @@
+<!-- Profile Page - UPDATED FOR CONSISTENCY -->
+<div id="profilePage">
+    <div class="page-header">
+        <h1>User Profile</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)" data-route="dashboard" class="auth-link">Home</a></li>
+                <li class="breadcrumb-item active">Profile</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <!-- Profile Header -->
+        <div class="card-body py-4 border-bottom">
+            <div class="d-flex align-items-center">
+                <div class="profile-avatar-large me-4">
+                    <div class="avatar-circle bg-primary text-white">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <h3 class="mb-1" id="profileName">John Doe</h3>
+                    <p class="text-muted mb-0" id="profileTitle">Administrator • Joined January 2024</p>
+                    <div class="mt-2">
+                        <span class="badge bg-primary me-2">Administrator</span>
+                        <span class="badge bg-success">Active</span>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cog me-2"></i>Settings
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="javascript:void(0)" id="changeAvatarBtn"><i
+                                    class="fas fa-camera me-2"></i>Change Avatar</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" id="changePasswordBtn"><i
+                                    class="fas fa-key me-2"></i>Change Password</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" data-route="settings"><i
+                                    class="fas fa-cogs me-2"></i>Account Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="card-body p-4">
+            <form id="profileForm">
+                <div class="row">
+                    <!-- Personal Information -->
+                    <div class="col-lg-6 mb-4">
+                        <h5 class="mb-3 border-bottom pb-2">
+                            <i class="fas fa-user-circle me-2 text-primary"></i>Personal Information
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="firstName" placeholder=" " value="John"
+                                        required>
+                                    <label for="firstName" class="form-label">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="lastName" placeholder=" " value="Doe"
+                                        required>
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="profileEmail" placeholder=" "
+                                    value="john.doe@example.com" required>
+                                <label for="profileEmail" class="form-label">Email Address</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="profilePhone" placeholder=" "
+                                    value="+1 (555) 123-4567">
+                                <label for="profilePhone" class="form-label">Phone Number</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="profileBio" placeholder=" "
+                                    style="height: 120px">Experienced administrator with expertise in system management and user support.</textarea>
+                                <label for="profileBio" class="form-label">Bio</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Information -->
+                    <div class="col-lg-6 mb-4">
+                        <h5 class="mb-3 border-bottom pb-2">
+                            <i class="fas fa-briefcase me-2 text-primary"></i>Account Information
+                        </h5>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <select class="form-select" id="profileDepartment">
+                                    <option selected>IT & Technology</option>
+                                    <option>Human Resources</option>
+                                    <option>Marketing</option>
+                                    <option>Sales</option>
+                                    <option>Finance</option>
+                                    <option>Operations</option>
+                                </select>
+                                <label for="profileDepartment" class="form-label">Department</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <select class="form-select" id="profileRole">
+                                    <option selected>Administrator</option>
+                                    <option>Manager</option>
+                                    <option>Editor</option>
+                                    <option>User</option>
+                                    <option>Viewer</option>
+                                </select>
+                                <label for="profileRole" class="form-label">Role</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="profileLocation" placeholder=" "
+                                    value="New York, USA">
+                                <label for="profileLocation" class="form-label">Location</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="profileTimezone" placeholder=" "
+                                    value="Eastern Time (ET)">
+                                <label for="profileTimezone" class="form-label">Timezone</label>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="card bg-light border">
+                            <div class="card-body p-3">
+                                <h6 class="mb-2"><i class="fas fa-chart-line me-2 text-primary"></i>Account Status</h6>
+                                <div class="row small">
+                                    <div class="col-6">
+                                        <div class="mb-2">
+                                            <span class="text-muted">Member Since:</span><br>
+                                            <strong>Jan 15, 2024</strong>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted">Last Login:</span><br>
+                                            <strong id="lastLogin">Today, 10:30 AM</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="mb-2">
+                                            <span class="text-muted">Total Logins:</span><br>
+                                            <strong>1,247</strong>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted">Account Status:</span><br>
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between border-top pt-4">
+                            <div>
+                                <button type="button" class="btn btn-outline-secondary" id="resetFormBtn">
+                                    <i class="fas fa-undo me-2"></i>Reset
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" id="cancelProfileBtn">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </button>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary px-4" id="saveProfileBtn">
+                                    <i class="fas fa-save me-2"></i>Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Profile Page Specific Styles */
+
+    /* Avatar Circle */
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        box-shadow: var(--shadow-md);
+        transition: all var(--transition-fast);
+    }
+
+    .avatar-circle:hover {
+        transform: scale(1.05);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Profile Header */
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-red) 0%, var(--dark-red) 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    /* Section Headers */
+    h5.border-bottom {
+        border-bottom: 2px solid var(--primary-red) !important;
+        padding-bottom: 0.75rem;
+    }
+
+    /* Form Groups */
+    .form-floating {
+        margin-bottom: 1rem;
+    }
+
+    /* Status Card */
+    .bg-light {
+        background-color: var(--gray-light) !important;
+    }
+
+    /* Badge Styling */
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.65em;
+        font-weight: var(--font-weight-medium);
+    }
+
+    /* Button Groups */
+    .btn-group {
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .d-flex.align-items-center {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-avatar-large {
+            margin-bottom: 1.5rem;
+            margin-right: 0 !important;
+        }
+
+        .dropdown {
+            margin-top: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+
+        .card-body.p-4 {
+            padding: 1.5rem !important;
+        }
+
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .d-flex.justify-content-between>div {
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .page-header h1 {
+            font-size: 1.75rem;
+        }
+
+        .avatar-circle {
+            width: 70px;
+            height: 70px;
+            font-size: 1.75rem;
+        }
+
+        .profile-header h3 {
+            font-size: 1.5rem;
+        }
+
+        .col-6 {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+

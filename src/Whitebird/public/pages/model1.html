@@ -1,0 +1,141 @@
+<!-- Model 1: Data Table Page - Complete Professional Implementation -->
+<div id="model1Page">
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-table me-2"></i>Data Table Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                    <li class="breadcrumb-item active">Data Table</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <button class="btn btn-outline-secondary me-2" id="btnImport">
+                <i class="fas fa-upload me-2"></i>Import
+            </button>
+            <button class="btn btn-outline-secondary me-2" id="btnExport">
+                <i class="fas fa-download me-2"></i>Export
+            </button>
+            <button class="btn btn-danger" id="btnAddEmployee">
+                <i class="fas fa-plus me-2"></i>Add Employee
+            </button>
+        </div>
+    </div>
+
+    <!-- Advanced Filters Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+                <i class="fas fa-filter me-2"></i>Advanced Filters
+                <i class="fas fa-chevron-down ms-2"></i>
+            </button>
+        </div>
+        <div class="collapse" id="filterCollapse">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="filterDepartment">
+                            <option value="">All Departments</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="HR">Human Resources</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Salary Range</label>
+                        <select class="form-select" id="filterSalary">
+                            <option value="">All Ranges</option>
+                            <option value="0-50000">$0 - $50,000</option>
+                            <option value="50000-80000">$50,000 - $80,000</option>
+                            <option value="80000-100000">$80,000 - $100,000</option>
+                            <option value="100000+">$100,000+</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-primary me-2" id="btnApplyFilters">
+                            <i class="fas fa-check me-2"></i>Apply
+                        </button>
+                        <button class="btn btn-outline-secondary" id="btnResetFilters">
+                            <i class="fas fa-redo me-2"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-users me-2"></i>Employee Management
+                <span class="badge bg-primary ms-2" id="totalEmployees">0</span>
+                <span class="badge bg-success ms-2" id="selectedCount" style="display: none;">0 selected</span>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-danger" id="btnBatchDelete" disabled>
+                    <i class="fas fa-trash me-2"></i>Delete Selected
+                </button>
+                <button class="btn btn-sm btn-outline-primary" id="btnBatchExport" disabled>
+                    <i class="fas fa-file-export me-2"></i>Export Selected
+                </button>
+                <div class="input-group" style="max-width: 250px;">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="employeeTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40px;">
+                                <input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Department</th>
+                            <th>Salary</th>
+                            <th>Status</th>
+                            <th style="width: 120px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="text-center py-5 d-none">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No employees found</p>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div class="text-muted">
+                Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> employees
+            </div>
+            <nav>
+                <ul class="pagination pagination-sm mb-0" id="pagination">
+                    <!-- Pagination will be generated here -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Module initialized by page-initializer.util.js -->
