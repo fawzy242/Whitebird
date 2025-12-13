@@ -4,7 +4,7 @@
  */
 
 import { confirmModal } from '../components/confirm-modal.component.js';
-import { whitebirdAPI } from '../services/api/whitebird-api.service.js';
+import WhitebirdAPI from '../services/api/index.js';
 
 export class TransactionsMenu {
   constructor() {
@@ -20,9 +20,9 @@ export class TransactionsMenu {
       this.loading = true;
       console.log('📡 Loading transactions from API...');
 
-      const response = await whitebirdAPI.getTransactions();
+      const response = await WhitebirdAPI.transactions.getTransactions();
 
-      if (response && response.success && response.data) {
+      if (response.isSuccess && response.data) {
         this.transactions = response.data;
         console.log(`✅ Loaded ${this.transactions.length} transactions from API`);
       } else {
@@ -39,20 +39,20 @@ export class TransactionsMenu {
   }
 
   generateSampleTransactions() {
-    const types = ['Checkout', 'Return', 'Transfer', 'Maintenance'];
+    const statuses = ['TRANSFER', 'ASSIGN', 'RETURN', 'REPAIR'];
     const assets = ['Dell Laptop', 'Office Chair', 'iPhone 15', 'Projector'];
     const people = ['John Doe', 'Jane Smith', 'Bob Johnson', 'Warehouse'];
-    const statuses = ['Completed', 'Pending', 'Approved'];
 
     return Array.from({ length: 20 }, (_, i) => ({
-      id: i + 1,
-      date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
+      transactionId: i + 1,
+      assetId: Math.floor(Math.random() * 100) + 1,
+      assetName: assets[Math.floor(Math.random() * assets.length)],
+      assetCode: `AST-${String(Math.floor(Math.random() * 1000)).padStart(4, '0')}`,
+      fromEmployeeName: people[Math.floor(Math.random() * people.length)],
+      toEmployeeName: people[Math.floor(Math.random() * people.length)],
+      transactionDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split('T')[0],
-      type: types[Math.floor(Math.random() * types.length)],
-      asset: assets[Math.floor(Math.random() * assets.length)],
-      from: people[Math.floor(Math.random() * people.length)],
-      to: people[Math.floor(Math.random() * people.length)],
       status: statuses[Math.floor(Math.random() * statuses.length)],
     }));
   }
@@ -103,15 +103,15 @@ export class TransactionsMenu {
 
   updateStats() {
     const today = new Date().toISOString().split('T')[0];
-    const todayTrans = this.transactions.filter((t) => t.date === today).length;
-    const checkouts = this.transactions.filter((t) => t.type === 'Checkout').length;
-    const returns = this.transactions.filter((t) => t.type === 'Return').length;
-    const transfers = this.transactions.filter((t) => t.type === 'Transfer').length;
+    const todayTrans = this.transactions.filter((t) => t.transactionDate === today).length;
+    const transfers = this.transactions.filter((t) => t.status === 'TRANSFER').length;
+    const assignments = this.transactions.filter((t) => t.status === 'ASSIGN').length;
+    const returns = this.transactions.filter((t) => t.status === 'RETURN').length;
 
     document.getElementById('todayTransactions').textContent = todayTrans;
-    document.getElementById('checkoutCount').textContent = checkouts;
-    document.getElementById('returnCount').textContent = returns;
     document.getElementById('transferCount').textContent = transfers;
+    document.getElementById('assignCount').textContent = assignments;
+    document.getElementById('returnCount').textContent = returns;
     document.getElementById('totalTransactions').textContent = this.transactions.length;
   }
 
@@ -120,33 +120,106 @@ export class TransactionsMenu {
     if (!tbody) return;
 
     const statusColors = {
-      Completed: 'success',
-      Pending: 'warning',
-      Approved: 'info',
+      TRANSFER: 'info',
+      ASSIGN: 'primary',
+      RETURN: 'success',
+      REPAIR: 'warning',
     };
 
     const html = this.transactions
       .slice(0, 10)
       .map(
         (trans) => `
-            <tr>
-                <td>${trans.date}</td>
-                <td><span class="badge bg-secondary">${trans.type}</span></td>
-                <td><strong>${trans.asset}</strong></td>
-                <td>${trans.from}</td>
-                <td>${trans.to}</td>
-                <td><span class="badge bg-${statusColors[trans.status]}">${trans.status}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary" title="View">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </td>
-            </tr>
+          <tr>
+            <td>${trans.transactionDate}</td>
+            <td><span class="badge bg-${statusColors[trans.status] || 'secondary'}">${trans.status}</span></td>
+            <td><strong>${trans.assetName}</strong> <small class="text-muted">(${trans.assetCode})</small></td>
+            <td>${trans.fromEmployeeName || 'N/A'}</td>
+            <td>${trans.toEmployeeName || 'N/A'}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary btn-view" data-id="${trans.transactionId || trans.id}" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${trans.transactionId || trans.id}" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
         `
       )
       .join('');
 
     tbody.innerHTML = html;
+
+    // Attach event listeners
+    this.attachRowEventListeners(tbody);
+  }
+
+  /**
+   * Attach row event listeners
+   */
+  attachRowEventListeners(tbody) {
+    tbody.querySelectorAll('.btn-view').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.currentTarget.dataset.id);
+        this.handleView(id);
+      });
+    });
+
+    tbody.querySelectorAll('.btn-delete').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(e.currentTarget.dataset.id);
+        await this.handleDelete(id);
+      });
+    });
+  }
+
+  /**
+   * Handle view transaction
+   */
+  handleView(id) {
+    console.log(`👁️ Viewing transaction ${id}`);
+    // You could implement a modal or navigate to detail page
+    const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
+    if (transaction) {
+      alert(
+        `Transaction Details:\nAsset: ${transaction.assetName}\nStatus: ${transaction.status}\nDate: ${transaction.transactionDate}`
+      );
+    }
+  }
+
+  /**
+   * Handle delete transaction
+   */
+  async handleDelete(id) {
+    const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
+    if (!transaction) return;
+
+    const result = await confirmModal.show({
+      type: 'danger',
+      title: 'Delete Transaction',
+      message: `Are you sure you want to delete this transaction? This action cannot be undone.`,
+      okText: 'Delete',
+      cancelText: 'Cancel',
+      okClass: 'btn-danger',
+    });
+
+    if (result) {
+      try {
+        // Delete from API
+        await WhitebirdAPI.transactions.deleteTransaction(id);
+
+        // Remove from local data
+        this.transactions = this.transactions.filter((t) => (t.transactionId || t.id) !== id);
+        this.updateStats();
+        this.render();
+
+        this.showNotification('success', 'Transaction deleted successfully');
+      } catch (error) {
+        console.error('❌ Failed to delete transaction:', error);
+        this.showNotification('danger', 'Failed to delete transaction');
+      }
+    }
   }
 
   async handleNew() {

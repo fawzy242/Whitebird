@@ -4,7 +4,7 @@
  */
 
 import { confirmModal } from '../components/confirm-modal.component.js';
-import { whitebirdAPI } from '../services/api/whitebird-api.service.js';
+import WhitebirdAPI from '../services/api/index.js';
 
 export class CategoriesMenu {
   constructor() {
@@ -29,9 +29,9 @@ export class CategoriesMenu {
       this.loading = true;
       console.log('📡 Loading categories from API...');
 
-      const response = await whitebirdAPI.getCategories();
+      const response = await WhitebirdAPI.category.getCategories();
 
-      if (response && response.success && response.data) {
+      if (response.isSuccess && response.data) {
         this.categories = response.data;
         console.log(`✅ Loaded ${this.categories.length} categories from API`);
       } else {
@@ -52,11 +52,16 @@ export class CategoriesMenu {
    */
   generateSampleCategories() {
     return [
-      { id: 1, name: 'Computer', description: 'Computers and laptops', items: 15 },
-      { id: 2, name: 'Furniture', description: 'Office furniture', items: 8 },
-      { id: 3, name: 'Vehicle', description: 'Company vehicles', items: 3 },
-      { id: 4, name: 'Equipment', description: 'Office equipment', items: 12 },
-      { id: 5, name: 'Mobile Device', description: 'Phones and tablets', items: 10 },
+      { categoryId: 1, categoryName: 'Computer', description: 'Computers and laptops', items: 15 },
+      { categoryId: 2, categoryName: 'Furniture', description: 'Office furniture', items: 8 },
+      { categoryId: 3, categoryName: 'Vehicle', description: 'Company vehicles', items: 3 },
+      { categoryId: 4, categoryName: 'Equipment', description: 'Office equipment', items: 12 },
+      {
+        categoryId: 5,
+        categoryName: 'Mobile Device',
+        description: 'Phones and tablets',
+        items: 10,
+      },
     ];
   }
 
@@ -102,20 +107,20 @@ export class CategoriesMenu {
     const html = this.categories
       .map(
         (cat, index) => `
-            <tr>
-                <td>${index + 1}</td>
-                <td><strong>${cat.name}</strong></td>
-                <td>${cat.description}</td>
-                <td><span class="badge bg-info">${cat.items}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary" onclick="categoriesMenu.handleEdit(${cat.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="categoriesMenu.handleDelete(${cat.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
+          <tr>
+            <td>${index + 1}</td>
+            <td><strong>${cat.categoryName}</strong></td>
+            <td>${cat.description || 'N/A'}</td>
+            <td><span class="badge ${cat.isActive ? 'bg-success' : 'bg-secondary'}">${cat.isActive ? 'Active' : 'Inactive'}</span></td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary" onclick="window.categoriesMenuInstance.handleEdit(${cat.categoryId || cat.id})">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" onclick="window.categoriesMenuInstance.handleDelete(${cat.categoryId || cat.id})">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
         `
       )
       .join('');
@@ -132,10 +137,10 @@ export class CategoriesMenu {
     new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: this.categories.map((c) => c.name),
+        labels: this.categories.map((c) => c.categoryName),
         datasets: [
           {
-            data: this.categories.map((c) => c.items),
+            data: this.categories.map((c) => c.items || 5), // Fallback if no items count
             backgroundColor: ['#dc2626', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
           },
         ],
@@ -158,7 +163,7 @@ export class CategoriesMenu {
   }
 
   async handleEdit(id) {
-    const category = this.categories.find((c) => c.id === id);
+    const category = this.categories.find((c) => (c.categoryId || c.id) === id);
     if (!category) return;
 
     console.log(`✏️ Navigating to categoriesupdate for ID: ${id}`);
@@ -167,24 +172,38 @@ export class CategoriesMenu {
       window.router.navigate('categoriesupdate', { id });
     } else {
       sessionStorage.setItem('crudId', id);
+      sessionStorage.setItem('crudMode', 'update');
       window.location.href = '/categoriesupdate';
     }
   }
 
   async handleDelete(id) {
-    const category = this.categories.find((c) => c.id === id);
+    const category = this.categories.find((c) => (c.categoryId || c.id) === id);
     if (!category) return;
+
     const result = await confirmModal.show({
       type: 'danger',
       title: 'Delete Category',
-      message: `Delete ${category.name}? This cannot be undone.`,
+      message: `Delete ${category.categoryName}? This cannot be undone.`,
       okText: 'Delete',
       okClass: 'btn-danger',
     });
+
     if (result) {
-      this.categories = this.categories.filter((c) => c.id !== id);
-      this.render();
-      this.showNotification('success', 'Category deleted successfully');
+      try {
+        // Delete from API
+        await WhitebirdAPI.category.deleteCategory(id);
+
+        // Remove from local data
+        this.categories = this.categories.filter((c) => (c.categoryId || c.id) !== id);
+        this.render();
+        this.renderChart();
+
+        this.showNotification('success', 'Category deleted successfully');
+      } catch (error) {
+        console.error('❌ Failed to delete category:', error);
+        this.showNotification('danger', 'Failed to delete category');
+      }
     }
   }
 
@@ -197,5 +216,13 @@ export class CategoriesMenu {
   }
 }
 
-window.categoriesMenu = new CategoriesMenu();
-export const categoriesMenu = window.categoriesMenu;
+// Create instance
+const categoriesMenuInstance = new CategoriesMenu();
+
+// Export for module usage
+export const categoriesMenu = categoriesMenuInstance;
+
+// Expose to window for onclick handlers
+if (typeof window !== 'undefined') {
+  window.categoriesMenuInstance = categoriesMenuInstance;
+}

@@ -3,13 +3,13 @@
  * Complete authentication management with test account support
  */
 
-import { apiService } from './api/axios.service.js';
+// Import dari API service yang baru
+import WhitebirdAPI from '../services/api/index.js';
 import { StorageService } from './storage.service.js';
-import { EventBus } from '../utils/event-bus.js';
 
-// Test credentials
+// Test credentials (sesuai dengan auth.api.js)
 const TEST_CREDENTIALS = {
-  username: 'testuser@redadmin.local',
+  email: 'test@example.com',
   password: 'Test@1234',
 };
 
@@ -31,90 +31,69 @@ class AuthServiceClass {
       this.currentUser = user;
       this.isAuthenticated = true;
       this.startTokenExpiryCheck();
-      EventBus.emit('auth:initialized', { user });
+
+      // Emit event jika ada EventBus
+      if (window.EventBus) {
+        window.EventBus.emit('auth:initialized', { user });
+      }
+
+      console.log('🔐 Auth service initialized with existing session');
     }
   }
 
   /**
    * Login with credentials
    */
-  async login(username, password, rememberMe = false) {
+  async login(email, password, rememberMe = false) {
     try {
-      // Check for test account
-      if (username === TEST_CREDENTIALS.username && password === TEST_CREDENTIALS.password) {
-        return this.handleTestAccountLogin(rememberMe);
+      console.log('🔐 Attempting login...');
+
+      // Gunakan API service baru
+      const response = await WhitebirdAPI.auth.login(email, password);
+
+      if (response.isSuccess && response.data?.token) {
+        return this.handleLoginSuccess(response.data);
+      } else {
+        throw new Error(response.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('❌ Login error:', error);
+
+      // Emit event jika ada EventBus
+      if (window.EventBus) {
+        window.EventBus.emit('auth:login-failed', error);
       }
 
-      // Real API login
-      const response = await apiService.post('/auth/login', {
-        username,
-        password,
-        remember_me: rememberMe,
-      });
-
-      return this.handleLoginSuccess(response, rememberMe);
-    } catch (error) {
-      EventBus.emit('auth:login-failed', error);
       throw error;
     }
   }
 
   /**
-   * Handle test account login
-   */
-  handleTestAccountLogin(rememberMe) {
-    const testUser = {
-      id: 1,
-      username: TEST_CREDENTIALS.username,
-      email: TEST_CREDENTIALS.username,
-      firstName: 'Test',
-      lastName: 'User',
-      role: 'admin',
-      avatar: null,
-      permissions: ['*'],
-    };
-
-    const testToken = 'test_token_' + Date.now();
-    const testRefreshToken = 'test_refresh_' + Date.now();
-
-    StorageService.setToken(testToken);
-    StorageService.setRefreshToken(testRefreshToken);
-    StorageService.setUser(testUser);
-
-    this.currentUser = testUser;
-    this.isAuthenticated = true;
-    this.startTokenExpiryCheck();
-
-    EventBus.emit('auth:login-success', { user: testUser, isTestAccount: true });
-
-    return {
-      success: true,
-      user: testUser,
-      token: testToken,
-      message: 'Test account login successful',
-    };
-  }
-
-  /**
    * Handle successful login
    */
-  handleLoginSuccess(response, rememberMe) {
-    const { token, refresh_token, user } = response;
+  handleLoginSuccess(loginData) {
+    const { token, user } = loginData;
 
+    // Simpan data
     StorageService.setToken(token);
-    StorageService.setRefreshToken(refresh_token);
     StorageService.setUser(user);
 
     this.currentUser = user;
     this.isAuthenticated = true;
     this.startTokenExpiryCheck();
 
-    EventBus.emit('auth:login-success', { user });
+    console.log('✅ Login successful:', user?.email);
+
+    // Emit event jika ada EventBus
+    if (window.EventBus) {
+      window.EventBus.emit('auth:login-success', { user });
+    }
 
     return {
-      success: true,
+      isSuccess: true,
       user,
       token,
+      message: 'Login successful',
     };
   }
 
@@ -123,59 +102,44 @@ class AuthServiceClass {
    */
   async logout() {
     try {
-      // Call logout API if not test account
-      if (!this.isTestAccount()) {
-        await apiService.post('/auth/logout');
+      // Clear storage
+      StorageService.clearAuth();
+
+      this.currentUser = null;
+      this.isAuthenticated = false;
+      this.stopTokenExpiryCheck();
+
+      console.log('👋 User logged out');
+
+      // Emit event jika ada EventBus
+      if (window.EventBus) {
+        window.EventBus.emit('auth:logout');
+      }
+
+      return { isSuccess: true, message: 'Logged out successfully' };
+    } catch (error) {
+      console.error('❌ Logout error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get current user
+   */
+  async getMe() {
+    try {
+      const response = await WhitebirdAPI.auth.getMe();
+
+      if (response.isSuccess && response.data) {
+        // Update stored user data
+        StorageService.setUser(response.data);
+        this.currentUser = response.data;
+        return response.data;
+      } else {
+        throw new Error(response.message || 'Failed to get user data');
       }
     } catch (error) {
-      console.error('Logout API error:', error);
-    } finally {
-      this.clearAuthData();
-      EventBus.emit('auth:logout');
-    }
-  }
-
-  /**
-   * Register new user
-   */
-  async register(userData) {
-    try {
-      const response = await apiService.post('/auth/register', userData);
-      EventBus.emit('auth:register-success', response);
-      return response;
-    } catch (error) {
-      EventBus.emit('auth:register-failed', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Request password reset
-   */
-  async forgotPassword(email) {
-    try {
-      const response = await apiService.post('/auth/forgot-password', { email });
-      EventBus.emit('auth:forgot-password-sent', { email });
-      return response;
-    } catch (error) {
-      EventBus.emit('auth:forgot-password-failed', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Reset password with token
-   */
-  async resetPassword(token, newPassword) {
-    try {
-      const response = await apiService.post('/auth/reset-password', {
-        token,
-        password: newPassword,
-      });
-      EventBus.emit('auth:password-reset-success');
-      return response;
-    } catch (error) {
-      EventBus.emit('auth:password-reset-failed', error);
+      console.error('❌ Failed to get user:', error);
       throw error;
     }
   }
@@ -183,46 +147,112 @@ class AuthServiceClass {
   /**
    * Change password
    */
-  async changePassword(currentPassword, newPassword) {
+  async changePassword(oldPassword, newPassword, confirmPassword) {
     try {
-      const response = await apiService.post('/auth/change-password', {
-        current_password: currentPassword,
-        new_password: newPassword,
+      const response = await WhitebirdAPI.auth.changePassword({
+        oldPassword,
+        newPassword,
+        confirmPassword,
       });
-      EventBus.emit('auth:password-changed');
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  }
 
-  /**
-   * Refresh authentication token
-   */
-  async refreshToken() {
-    try {
-      const refreshToken = StorageService.getRefreshToken();
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
+      if (response.isSuccess) {
+        console.log('🔑 Password changed successfully');
+
+        // Emit event jika ada EventBus
+        if (window.EventBus) {
+          window.EventBus.emit('auth:password-changed');
+        }
+
+        return response;
+      } else {
+        throw new Error(response.message || 'Failed to change password');
       }
-
-      const response = await apiService.post('/auth/refresh', {
-        refresh_token: refreshToken,
-      });
-
-      StorageService.setToken(response.token);
-      StorageService.setRefreshToken(response.refresh_token);
-
-      return response.token;
     } catch (error) {
-      this.clearAuthData();
-      EventBus.emit('auth:session-expired');
+      console.error('❌ Change password error:', error);
       throw error;
     }
   }
 
   /**
-   * Get current user
+   * Forgot password
+   */
+  async forgotPassword(email) {
+    try {
+      const response = await WhitebirdAPI.auth.forgotPassword(email);
+
+      if (response.isSuccess) {
+        console.log('📧 Forgot password request sent');
+
+        // Emit event jika ada EventBus
+        if (window.EventBus) {
+          window.EventBus.emit('auth:forgot-password-sent', { email });
+        }
+
+        return response;
+      } else {
+        throw new Error(response.message || 'Failed to send forgot password request');
+      }
+    } catch (error) {
+      console.error('❌ Forgot password error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Reset password
+   */
+  async resetPassword(currentPassword, newPassword, confirmPassword) {
+    try {
+      const response = await WhitebirdAPI.auth.resetPassword({
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      if (response.isSuccess) {
+        console.log('🔑 Password reset successfully');
+
+        // Emit event jika ada EventBus
+        if (window.EventBus) {
+          window.EventBus.emit('auth:password-reset-success');
+        }
+
+        return response;
+      } else {
+        throw new Error(response.message || 'Failed to reset password');
+      }
+    } catch (error) {
+      console.error('❌ Reset password error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Reset password with token
+   */
+  async resetPasswordWithToken(email, resetToken, newPassword, confirmPassword) {
+    try {
+      const response = await WhitebirdAPI.auth.resetPasswordWithToken({
+        email,
+        resetToken,
+        newPassword,
+        confirmPassword,
+      });
+
+      if (response.isSuccess) {
+        console.log('🔑 Password reset with token successfully');
+        return response;
+      } else {
+        throw new Error(response.message || 'Failed to reset password with token');
+      }
+    } catch (error) {
+      console.error('❌ Reset password with token error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get current user from storage
    */
   getCurrentUser() {
     if (!this.currentUser) {
@@ -237,7 +267,13 @@ class AuthServiceClass {
   updateCurrentUser(userData) {
     this.currentUser = { ...this.currentUser, ...userData };
     StorageService.setUser(this.currentUser);
-    EventBus.emit('auth:user-updated', this.currentUser);
+
+    // Emit event jika ada EventBus
+    if (window.EventBus) {
+      window.EventBus.emit('auth:user-updated', this.currentUser);
+    }
+
+    console.log('👤 User data updated');
   }
 
   /**
@@ -255,18 +291,30 @@ class AuthServiceClass {
    */
   isTestAccount() {
     const user = this.getCurrentUser();
-    return user?.username === TEST_CREDENTIALS.username;
+    return user?.email === TEST_CREDENTIALS.email;
   }
 
   /**
-   * Check permission
+   * Check permission (role-based)
    */
   hasPermission(permission) {
     const user = this.getCurrentUser();
     if (!user) return false;
 
-    if (user.permissions?.includes('*')) return true;
-    return user.permissions?.includes(permission) || false;
+    // Check role-based permissions
+    const userRole = user.roleId || user.role;
+
+    // Simple role-based permission check
+    const rolePermissions = {
+      admin: ['*', 'create', 'read', 'update', 'delete', 'manage_users'],
+      manager: ['create', 'read', 'update', 'manage_assets'],
+      user: ['read'],
+    };
+
+    const permissions = rolePermissions[userRole] || ['read'];
+
+    if (permissions.includes('*')) return true;
+    return permissions.includes(permission) || false;
   }
 
   /**
@@ -274,7 +322,8 @@ class AuthServiceClass {
    */
   hasRole(role) {
     const user = this.getCurrentUser();
-    return user?.role === role;
+    const userRole = user?.roleId || user?.role;
+    return userRole === role;
   }
 
   /**
@@ -285,6 +334,8 @@ class AuthServiceClass {
     this.currentUser = null;
     this.isAuthenticated = false;
     this.stopTokenExpiryCheck();
+
+    console.log('🧹 Auth data cleared');
   }
 
   /**
@@ -298,11 +349,16 @@ class AuthServiceClass {
       () => {
         if (!this.checkAuth()) {
           this.clearAuthData();
-          EventBus.emit('auth:session-expired');
+          console.log('⏰ Session expired');
+
+          // Emit event jika ada EventBus
+          if (window.EventBus) {
+            window.EventBus.emit('auth:session-expired');
+          }
         }
       },
       5 * 60 * 1000
-    );
+    ); // 5 minutes
   }
 
   /**
@@ -316,15 +372,36 @@ class AuthServiceClass {
   }
 
   /**
-   * Lock screen
+   * Validate token by checking with server
    */
-  lockScreen() {
-    StorageService.setTempData('screen_locked', true);
-    EventBus.emit('auth:screen-locked');
+  async validateToken() {
+    try {
+      await this.getMe();
+      return true;
+    } catch (error) {
+      if (error.status === 401) {
+        this.clearAuthData();
+        return false;
+      }
+      throw error;
+    }
   }
 
   /**
-   * Unlock screen
+   * Lock screen (simulate)
+   */
+  lockScreen() {
+    StorageService.setTempData('screen_locked', true);
+    console.log('🔒 Screen locked');
+
+    // Emit event jika ada EventBus
+    if (window.EventBus) {
+      window.EventBus.emit('auth:screen-locked');
+    }
+  }
+
+  /**
+   * Unlock screen (simulate)
    */
   async unlockScreen(password) {
     try {
@@ -333,20 +410,31 @@ class AuthServiceClass {
       // For test account
       if (this.isTestAccount() && password === TEST_CREDENTIALS.password) {
         StorageService.removeTempData('screen_locked');
-        EventBus.emit('auth:screen-unlocked');
-        return { success: true };
+        console.log('🔓 Screen unlocked (test account)');
+
+        if (window.EventBus) {
+          window.EventBus.emit('auth:screen-unlocked');
+        }
+
+        return { isSuccess: true };
       }
 
-      // Real API unlock
-      const response = await apiService.post('/auth/unlock', {
-        user_id: user.id,
-        password,
-      });
+      // In real scenario, you might want to verify the password
+      // For now, just unlock if there's a user
+      if (user) {
+        StorageService.removeTempData('screen_locked');
+        console.log('🔓 Screen unlocked');
 
-      StorageService.removeTempData('screen_locked');
-      EventBus.emit('auth:screen-unlocked');
-      return response;
+        if (window.EventBus) {
+          window.EventBus.emit('auth:screen-unlocked');
+        }
+
+        return { isSuccess: true };
+      }
+
+      throw new Error('Invalid credentials');
     } catch (error) {
+      console.error('❌ Unlock screen error:', error);
       throw error;
     }
   }
@@ -357,8 +445,40 @@ class AuthServiceClass {
   isScreenLocked() {
     return StorageService.getTempData('screen_locked') === true;
   }
+
+  /**
+   * Check if user can access route (role-based)
+   */
+  canAccessRoute(route) {
+    const user = this.getCurrentUser();
+    if (!user) return false;
+
+    const userRole = user.roleId || user.role;
+
+    // Route permissions mapping
+    const routePermissions = {
+      admin: ['*'], // Admin can access everything
+      manager: ['dashboard', 'assets', 'employees', 'categories', 'transactions'],
+      user: ['dashboard', 'assets'],
+    };
+
+    const allowedRoutes = routePermissions[userRole] || ['dashboard'];
+
+    if (allowedRoutes.includes('*')) return true;
+    return allowedRoutes.includes(route);
+  }
 }
 
 // Export singleton instance
 export const AuthService = new AuthServiceClass();
+
+// Initialize on export
+AuthService.init();
+
+// Expose to window for debugging
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  window.AuthService = AuthService;
+  console.log('🔧 AuthService exposed to window for debugging');
+}
+
 export default AuthService;

@@ -5,7 +5,7 @@
 
 import { AuthService } from './services/auth.service.js';
 import { StorageService } from './services/storage.service.js';
-import { apiService } from './services/api/axios.service.js';
+import WhitebirdAPI from './services/api/index.js'; // Update ini
 import { router } from './modules/router.module.js';
 import { state } from './modules/state.module.js';
 import { EventBus } from './utils/event-bus.js';
@@ -29,6 +29,7 @@ class RedAdminApp {
   constructor() {
     this.isInitialized = false;
     this.version = '2.0.0';
+    this.api = WhitebirdAPI; // Tambahkan reference ke API
   }
 
   /**
@@ -65,6 +66,11 @@ class RedAdminApp {
       this.hideLoadingScreen();
 
       EventBus.emit('app:initialized');
+
+      // Test API connection in development
+      if (import.meta.env.DEV) {
+        setTimeout(() => this.testAPIConnection(), 1000);
+      }
     } catch (error) {
       console.error('App initialization error:', error);
       this.showError('Application failed to initialize');
@@ -110,6 +116,48 @@ class RedAdminApp {
     EventBus.on('notification:info', (message) => {
       notification.info(message);
     });
+
+    // Setup API error handling
+    EventBus.on('api:error', (error) => {
+      console.error('API Error:', error);
+      this.handleAPIError(error);
+    });
+  }
+
+  /**
+   * Handle API errors
+   */
+  handleAPIError(error) {
+    if (error.status === 401) {
+      // Already handled by axios interceptor
+      return;
+    }
+
+    if (error.status === 404) {
+      notification.error('Resource not found');
+    } else if (error.status === 500) {
+      notification.error('Server error occurred. Please try again later.');
+    } else {
+      notification.error(error.message || 'An error occurred');
+    }
+  }
+
+  /**
+   * Test API connection
+   */
+  async testAPIConnection() {
+    try {
+      console.log('🔍 Testing API Connection...');
+      const result = await this.api.testConnection();
+
+      if (result.success) {
+        console.log('✅ API Connection Successful');
+      } else {
+        console.warn('⚠️ API Connection Warning:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ API Connection Test Failed:', error);
+    }
   }
 
   /**
@@ -123,6 +171,8 @@ class RedAdminApp {
       const sidebarContainer = document.getElementById('sidebar-container');
       if (sidebarContainer) {
         sidebarContainer.innerHTML = sidebarHTML;
+        // Initialize sidebar after loading
+        setTimeout(() => enhancedSidebar?.init?.(), 100);
       }
 
       // Load topbar
@@ -131,10 +181,42 @@ class RedAdminApp {
       const topbarContainer = document.getElementById('topbar-container');
       if (topbarContainer) {
         topbarContainer.innerHTML = topbarHTML;
+        // Initialize topbar components
+        this.initializeTopbar();
       }
     } catch (error) {
       console.error('Layout loading error:', error);
+      // Fallback to inline layout if fetch fails
+      this.showLayoutFallback();
     }
+  }
+
+  /**
+   * Initialize topbar components
+   */
+  initializeTopbar() {
+    // Update user info in topbar
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      const userElements = document.querySelectorAll('.user-name, .user-email');
+      userElements.forEach((el) => {
+        if (el.classList.contains('user-name')) {
+          el.textContent = user.fullName || user.email;
+        }
+        if (el.classList.contains('user-email')) {
+          el.textContent = user.email;
+        }
+      });
+    }
+  }
+
+  /**
+   * Fallback layout if fetch fails
+   */
+  showLayoutFallback() {
+    console.warn('Using fallback layout');
+    // You could add inline HTML fallback here
+    // Or show error message
   }
 
   /**
@@ -212,6 +294,12 @@ class RedAdminApp {
     // Escape: Close modals/dropdowns
     if (e.key === 'Escape') {
       this.handleEscape();
+    }
+
+    // F5: Refresh (prevent default in production maybe)
+    if (e.key === 'F5' && import.meta.env.PROD) {
+      e.preventDefault();
+      // You could show custom refresh dialog
     }
   }
 
@@ -318,6 +406,9 @@ class RedAdminApp {
   initializeTheme() {
     const savedTheme = state.getTheme();
     document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // Apply theme to body for CSS specificity
+    document.body.setAttribute('data-bs-theme', savedTheme);
   }
 
   /**
@@ -332,12 +423,17 @@ class RedAdminApp {
       // Mobile: toggle show/hide
       sidebar?.classList.toggle('show');
       overlay?.classList.toggle('show');
+      body.classList.toggle('sidebar-mobile-open');
     } else {
       // Desktop: toggle collapse with fluid layout
       sidebar?.classList.toggle('collapsed');
       body.classList.toggle('sidebar-collapsed');
       state.toggleSidebar();
     }
+
+    EventBus.emit('sidebar:toggled', {
+      collapsed: sidebar?.classList.contains('collapsed') || false,
+    });
   }
 
   /**
@@ -347,6 +443,12 @@ class RedAdminApp {
     const currentTheme = state.getTheme();
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     state.setTheme(newTheme);
+
+    // Apply immediately
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.body.setAttribute('data-bs-theme', newTheme);
+
+    EventBus.emit('theme:changed', { theme: newTheme });
   }
 
   /**
@@ -356,6 +458,9 @@ class RedAdminApp {
     const searchInput = document.querySelector('.search-box input');
     if (searchInput) {
       searchInput.focus();
+    } else {
+      // If search box not found, open search modal
+      searchModal.show();
     }
   }
 
@@ -388,7 +493,7 @@ class RedAdminApp {
     // Close any open Bootstrap modals
     const openModals = document.querySelectorAll('.modal.show');
     openModals.forEach((modal) => {
-      const bsModal = bootstrap.Modal.getInstance(modal);
+      const bsModal = bootstrap.Modal?.getInstance?.(modal);
       if (bsModal) bsModal.hide();
     });
 
@@ -412,9 +517,19 @@ class RedAdminApp {
    */
   async handleLogout() {
     try {
-      await AuthService.logout();
-      notification.success('Logged out successfully');
+      const confirmed = await confirmModal.show({
+        title: 'Confirm Logout',
+        message: 'Are you sure you want to logout?',
+        confirmText: 'Logout',
+        confirmColor: 'danger',
+      });
+
+      if (confirmed) {
+        await AuthService.logout();
+        notification.success('Logged out successfully');
+      }
     } catch (error) {
+      console.error('Logout error:', error);
       notification.error('Logout failed');
     }
   }
@@ -431,6 +546,7 @@ class RedAdminApp {
           </div>
           <h4 class="mt-3">RedAdmin Pro</h4>
           <p class="text-muted">Loading application...</p>
+          <small class="version">v${this.version}</small>
         </div>
       </div>
     `;
@@ -444,7 +560,11 @@ class RedAdminApp {
     const loadingScreen = document.getElementById('app-loading-screen');
     if (loadingScreen) {
       loadingScreen.classList.add('fade-out');
-      setTimeout(() => loadingScreen.remove(), 300);
+      setTimeout(() => {
+        if (loadingScreen.parentNode) {
+          loadingScreen.parentNode.removeChild(loadingScreen);
+        }
+      }, 300);
     }
   }
 
@@ -470,6 +590,12 @@ class RedAdminApp {
     const loader = document.getElementById('page-loader');
     if (loader) {
       loader.classList.remove('show');
+      // Remove after animation if needed
+      setTimeout(() => {
+        if (loader && !loader.classList.contains('show')) {
+          loader.remove();
+        }
+      }, 300);
     }
   }
 
@@ -494,10 +620,30 @@ class RedAdminApp {
     return {
       version: this.version,
       initialized: this.isInitialized,
-      currentRoute: router.getCurrentRoute(),
-      user: state.getUser(),
-      theme: state.getTheme(),
+      currentRoute: router?.getCurrentRoute?.(),
+      user: state?.getUser?.(),
+      theme: state?.getTheme?.(),
+      apiConnected: this.api ? 'connected' : 'disconnected',
     };
+  }
+
+  /**
+   * Cleanup method for SPA
+   */
+  destroy() {
+    // Remove all event listeners
+    EventBus.off('auth:login-success');
+    EventBus.off('auth:logout');
+    EventBus.off('auth:session-expired');
+    EventBus.off('notification:success');
+    EventBus.off('notification:error');
+    EventBus.off('notification:warning');
+    EventBus.off('notification:info');
+    EventBus.off('app:loading');
+    EventBus.off('api:error');
+
+    this.isInitialized = false;
+    console.log('App destroyed');
   }
 }
 
@@ -508,9 +654,17 @@ const app = new RedAdminApp();
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => app.init());
 } else {
-  app.init();
+  // DOM already loaded
+  setTimeout(() => app.init(), 0);
 }
 
 // Export for external use
 window.RedAdminApp = app;
+
+// Debug helpers in development
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  window.app = app;
+  console.log('🔧 RedAdminApp exposed to window for debugging');
+}
+
 export default app;

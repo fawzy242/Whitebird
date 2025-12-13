@@ -3,7 +3,6 @@ import legacy from '@vitejs/plugin-legacy';
 import { resolve } from 'path';
 
 export default defineConfig(({ mode }) => {
-  // Mode akan otomatis dari command: 'development' atau 'production'
   const isProduction = mode === 'production';
 
   return {
@@ -40,7 +39,6 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       open: true,
       cors: true,
-      // Proxy hanya untuk development
       proxy: !isProduction
         ? {
             '/api': {
@@ -56,6 +54,22 @@ export default defineConfig(({ mode }) => {
           }
         : undefined,
     },
+    preview: {
+      port: 3000,
+      open: true,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/health': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
     plugins: [
       legacy({
         targets: ['defaults', 'not IE 11'],
@@ -67,10 +81,8 @@ export default defineConfig(({ mode }) => {
         '@components': resolve(__dirname, 'src/components'),
         '@services': resolve(__dirname, 'src/services'),
         '@utils': resolve(__dirname, 'src/utils'),
-        '@config': resolve(__dirname, 'src/config'),
       },
     },
-    // Define global constants
     define: {
       'import.meta.env.PROD': JSON.stringify(isProduction),
       'import.meta.env.DEV': JSON.stringify(!isProduction),

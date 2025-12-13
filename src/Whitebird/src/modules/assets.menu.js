@@ -5,7 +5,7 @@
  */
 
 import { confirmModal } from '../components/confirm-modal.component.js';
-import { whitebirdAPI } from '../services/api/whitebird-api.service.js';
+import WhitebirdAPI from '../services/api/index.js';
 
 export class AssetsMenu {
   constructor() {
@@ -40,12 +40,12 @@ export class AssetsMenu {
       this.showLoading(true);
 
       console.log('📡 Loading assets from API...');
-      const response = await whitebirdAPI.getAssetsGrid({
+      const response = await WhitebirdAPI.asset.getAssetsGrid({
         page: 1,
-        pageSize: 1000, // Get all for now
+        pageSize: 1000,
       });
 
-      if (response && response.success && response.data) {
+      if (response.isSuccess && response.data) {
         this.assets = response.data;
         this.filteredData = [...this.assets];
         console.log(`✅ Loaded ${this.assets.length} assets from API`);
@@ -71,10 +71,10 @@ export class AssetsMenu {
   async loadCategories() {
     try {
       console.log('📡 Loading categories from API...');
-      const response = await whitebirdAPI.getActiveCategories();
+      const response = await WhitebirdAPI.category.getActiveCategories();
 
-      if (response && response.success && response.data) {
-        this.categories = response.data.map((cat) => cat.name || cat);
+      if (response.isSuccess && response.data) {
+        this.categories = response.data.map((cat) => cat.categoryName || cat.name || cat);
         console.log(`✅ Loaded ${this.categories.length} categories from API`);
       } else {
         console.warn('⚠️ API returned no categories, using fallback');
@@ -115,17 +115,18 @@ export class AssetsMenu {
         const status = statuses[Math.floor(Math.random() * statuses.length)];
         const asset = {
           id: id++,
-          name: name,
-          code: `AST-${String(id).padStart(4, '0')}`,
-          category: category,
+          assetId: id,
+          assetName: name,
+          assetCode: `AST-${String(id).padStart(4, '0')}`,
+          categoryName: category,
           status: status,
           purchaseDate: this.randomDate(),
-          value: Math.floor(Math.random() * 5000) + 500,
-          assignedTo:
+          purchasePrice: Math.floor(Math.random() * 5000) + 500,
+          currentHolderName:
             status === 'In Use' ? employees[Math.floor(Math.random() * employees.length)] : null,
           assignedDate: status === 'In Use' ? this.randomDate() : null,
-          issue:
-            status === 'Maintenance' ? issues[Math.floor(Math.random() * issues.length)] : null,
+          condition:
+            status === 'Maintenance' ? issues[Math.floor(Math.random() * issues.length)] : 'Good',
           maintenanceDate: status === 'Maintenance' ? this.randomDate() : null,
         };
         assets.push(asset);
@@ -189,7 +190,6 @@ export class AssetsMenu {
         refreshBtn.disabled = true;
 
         try {
-          // Reload from API
           await this.loadFromAPI();
           await this.loadCategories();
           this.loadAndRender();
@@ -291,14 +291,14 @@ export class AssetsMenu {
       if (searchQuery) {
         match =
           match &&
-          (asset.name.toLowerCase().includes(searchQuery) ||
-            asset.code.toLowerCase().includes(searchQuery) ||
-            asset.category.toLowerCase().includes(searchQuery));
+          (asset.assetName?.toLowerCase().includes(searchQuery) ||
+            asset.assetCode?.toLowerCase().includes(searchQuery) ||
+            asset.categoryName?.toLowerCase().includes(searchQuery));
       }
 
       // Category filter
       if (categoryFilter) {
-        match = match && asset.category === categoryFilter;
+        match = match && asset.categoryName === categoryFilter;
       }
 
       // Status filter
@@ -403,55 +403,55 @@ export class AssetsMenu {
 
       if (this.currentTab === 'available') {
         tr.innerHTML = `
-                    <td>${start + index + 1}</td>
-                    <td><strong>${asset.name}</strong></td>
-                    <td><code>${asset.code}</code></td>
-                    <td><span class="badge bg-info">${asset.category}</span></td>
-                    <td>${asset.purchaseDate}</td>
-                    <td>$${asset.value.toLocaleString()}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+          <td>${start + index + 1}</td>
+          <td><strong>${asset.assetName}</strong></td>
+          <td><code>${asset.assetCode}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName}</span></td>
+          <td>${asset.purchaseDate || 'N/A'}</td>
+          <td>$${(asset.purchasePrice || 0).toLocaleString()}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
       } else if (this.currentTab === 'inuse') {
         tr.innerHTML = `
-                    <td>${start + index + 1}</td>
-                    <td><strong>${asset.name}</strong></td>
-                    <td><code>${asset.code}</code></td>
-                    <td><span class="badge bg-info">${asset.category}</span></td>
-                    <td>${asset.assignedTo}</td>
-                    <td>${asset.assignedDate}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+          <td>${start + index + 1}</td>
+          <td><strong>${asset.assetName}</strong></td>
+          <td><code>${asset.assetCode}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName}</span></td>
+          <td>${asset.currentHolderName || 'N/A'}</td>
+          <td>${asset.assignedDate || 'N/A'}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
       } else {
         tr.innerHTML = `
-                    <td>${start + index + 1}</td>
-                    <td><strong>${asset.name}</strong></td>
-                    <td><code>${asset.code}</code></td>
-                    <td><span class="badge bg-info">${asset.category}</span></td>
-                    <td>${asset.issue}</td>
-                    <td>${asset.maintenanceDate}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+          <td>${start + index + 1}</td>
+          <td><strong>${asset.assetName}</strong></td>
+          <td><code>${asset.assetCode}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName}</span></td>
+          <td>${asset.condition || 'N/A'}</td>
+          <td>${asset.maintenanceDate || 'N/A'}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
       }
 
       fragment.appendChild(tr);
@@ -476,9 +476,9 @@ export class AssetsMenu {
     });
 
     tbody.querySelectorAll('.btn-delete').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const id = parseInt(e.currentTarget.dataset.id);
-        this.handleDelete(id);
+        await this.handleDelete(id);
       });
     });
   }
@@ -486,13 +486,9 @@ export class AssetsMenu {
   /**
    * Handle add
    */
-  /**
-   * Handle add
-   */
   handleAdd() {
     console.log('➕ Navigating to assetscreate');
 
-    // Use router.navigate for smooth SPA navigation
     if (window.router) {
       window.router.navigate('assetscreate');
     } else {
@@ -504,16 +500,13 @@ export class AssetsMenu {
    * Handle edit
    */
   handleEdit(id) {
-    const asset = this.assets.find((a) => a.id === id);
-    if (!asset) return;
-
     console.log(`✏️ Navigating to assetsupdate for ID: ${id}`);
 
-    // Use router.navigate with ID parameter
     if (window.router) {
       window.router.navigate('assetsupdate', { id });
     } else {
       sessionStorage.setItem('crudId', id);
+      sessionStorage.setItem('crudMode', 'update');
       window.location.href = '/assetsupdate';
     }
   }
@@ -522,22 +515,32 @@ export class AssetsMenu {
    * Handle delete
    */
   async handleDelete(id) {
-    const asset = this.assets.find((a) => a.id === id);
+    const asset = this.assets.find((a) => (a.assetId || a.id) === id);
     if (!asset) return;
 
     const result = await confirmModal.show({
       type: 'danger',
       title: 'Delete Asset',
-      message: `Are you sure you want to delete ${asset.name}? This action cannot be undone.`,
+      message: `Are you sure you want to delete ${asset.assetName}? This action cannot be undone.`,
       okText: 'Delete',
       cancelText: 'Cancel',
       okClass: 'btn-danger',
     });
 
     if (result) {
-      this.assets = this.assets.filter((a) => a.id !== id);
-      this.applyFilters();
-      this.showNotification('success', 'Asset deleted successfully');
+      try {
+        // Delete from API
+        await WhitebirdAPI.asset.deleteAsset(id);
+
+        // Remove from local data
+        this.assets = this.assets.filter((a) => (a.assetId || a.id) !== id);
+        this.applyFilters();
+
+        this.showNotification('success', 'Asset deleted successfully');
+      } catch (error) {
+        console.error('❌ Failed to delete asset:', error);
+        this.showNotification('danger', 'Failed to delete asset');
+      }
     }
   }
 

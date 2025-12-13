@@ -3,7 +3,7 @@
  * Matches assetcrud.html structure
  */
 
-import { whitebirdAPI } from '../services/api/whitebird-api.service.js';
+import WhitebirdAPI from '../services/api/index.js';
 
 export class AssetCrudModule {
   constructor() {
@@ -11,12 +11,15 @@ export class AssetCrudModule {
     this.assetId = null;
     this.asset = null;
     this.categories = [];
+    this.initialized = false;
   }
 
   /**
    * Initialize CRUD page
    */
   async initialize() {
+    if (this.initialized) return;
+
     console.log('📝 Asset CRUD Page Initializing...');
 
     try {
@@ -25,6 +28,9 @@ export class AssetCrudModule {
       this.assetId = sessionStorage.getItem('crudId');
 
       console.log(`Mode: ${this.mode}, ID: ${this.assetId}`);
+
+      // Tunggu DOM siap sepenuhnya
+      await this.waitForDOM();
 
       // Load categories for dropdown
       await this.loadCategories();
@@ -36,10 +42,25 @@ export class AssetCrudModule {
         await this.loadAsset(parseInt(this.assetId));
       }
 
+      this.initialized = true;
       console.log('✅ Asset CRUD page initialized');
     } catch (error) {
       console.error('❌ Asset CRUD initialization error:', error);
+      this.showError('Failed to initialize page');
     }
+  }
+
+  /**
+   * Wait for DOM to be fully ready
+   */
+  waitForDOM() {
+    return new Promise((resolve) => {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', resolve);
+      } else {
+        setTimeout(resolve, 100);
+      }
+    });
   }
 
   /**
@@ -47,13 +68,17 @@ export class AssetCrudModule {
    */
   async loadCategories() {
     try {
-      const response = await whitebirdAPI.getActiveCategories();
-      if (response && response.success && response.data) {
+      const response = await WhitebirdAPI.category.getActiveCategories();
+
+      if (response.isSuccess && response.data) {
         this.categories = response.data;
         this.populateCategoryDropdown();
+      } else {
+        throw new Error(response.message || 'Failed to load categories');
       }
     } catch (error) {
       console.error('❌ Failed to load categories:', error);
+      this.showError('Failed to load categories');
     }
   }
 
@@ -62,7 +87,10 @@ export class AssetCrudModule {
    */
   populateCategoryDropdown() {
     const select = document.getElementById('categoryId');
-    if (!select) return;
+    if (!select) {
+      console.warn('Category select element not found');
+      return;
+    }
 
     // Clear existing options except first
     select.innerHTML = '<option value="">Select Category</option>';
@@ -73,43 +101,75 @@ export class AssetCrudModule {
       option.textContent = cat.categoryName;
       select.appendChild(option);
     });
+
+    console.log(`✅ Loaded ${this.categories.length} categories`);
   }
 
   /**
    * Setup event listeners
    */
   setupEventListeners() {
-    const form = document.getElementById('assetForm');
-    const btnSave = document.getElementById('btnSaveAsset');
-    const btnCancel = document.getElementById('btnCancelAsset');
-    const btnBack = document.getElementById('btnBackToAssets');
+    console.log('🔗 Setting up event listeners...');
 
-    if (!form) {
-      console.error('❌ Asset form not found!');
-      return;
-    }
+    let attempts = 0;
+    const maxAttempts = 10;
 
-    // Form submit
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.handleSubmit();
-    });
+    const trySetup = () => {
+      attempts++;
 
-    // Cancel button
-    if (btnCancel) {
-      btnCancel.addEventListener('click', () => {
-        this.handleCancel();
+      const form = document.getElementById('assetForm');
+      const btnSave = document.getElementById('btnSaveAsset');
+      const btnCancel = document.getElementById('btnCancelAsset');
+      const btnBack = document.getElementById('btnBackToAssets');
+
+      console.log('Looking for elements...', {
+        form: form?.id,
+        btnSave: btnSave?.id,
+        btnCancel: btnCancel?.id,
+        btnBack: btnBack?.id,
       });
-    }
 
-    // Back button
-    if (btnBack) {
-      btnBack.addEventListener('click', () => {
-        this.handleCancel();
+      if (!form || !btnSave || !btnCancel) {
+        if (attempts < maxAttempts) {
+          console.log(`Elements not found, retrying... (${attempts}/${maxAttempts})`);
+          setTimeout(trySetup, 100);
+          return;
+        } else {
+          console.error('❌ Form elements not found after multiple attempts!');
+          this.showError('Form elements not found. Please refresh the page.');
+          return;
+        }
+      }
+
+      // Form submit - HAPUS event listener lama dulu
+      form.removeEventListener('submit', this.handleSubmitBound);
+      this.handleSubmitBound = this.handleSubmit.bind(this);
+      form.addEventListener('submit', this.handleSubmitBound);
+
+      // Cancel button
+      btnCancel.removeEventListener('click', this.handleCancelBound);
+      this.handleCancelBound = this.handleCancel.bind(this);
+      btnCancel.addEventListener('click', this.handleCancelBound);
+
+      // Back button
+      if (btnBack) {
+        btnBack.removeEventListener('click', this.handleCancelBound);
+        btnBack.addEventListener('click', this.handleCancelBound);
+      }
+
+      // Tambahkan click listener langsung ke save button sebagai fallback
+      btnSave.removeEventListener('click', this.handleSubmitBound);
+      btnSave.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Save button clicked directly');
+        this.handleSubmit();
       });
-    }
 
-    console.log('✅ Event listeners attached');
+      console.log('✅ Event listeners attached successfully');
+    };
+
+    trySetup();
   }
 
   /**
@@ -143,19 +203,18 @@ export class AssetCrudModule {
     try {
       console.log(`📡 Loading asset ${id} from API...`);
 
-      const response = await whitebirdAPI.getAsset(id);
+      const response = await WhitebirdAPI.asset.getAsset(id);
 
-      if (response && response.success && response.data) {
+      if (response.isSuccess && response.data) {
         this.asset = response.data;
         this.populateForm(this.asset);
         console.log('✅ Asset data loaded');
       } else {
-        throw new Error('Failed to load asset');
+        throw new Error(response.message || 'Failed to load asset');
       }
     } catch (error) {
       console.error('❌ Failed to load asset:', error);
-      alert('Failed to load asset data. Please try again.');
-      this.handleCancel();
+      this.showError('Failed to load asset data');
     }
   }
 
@@ -163,39 +222,106 @@ export class AssetCrudModule {
    * Populate form with asset data
    */
   populateForm(asset) {
-    document.getElementById('assetName').value = asset.assetName || '';
-    document.getElementById('serialNumber').value = asset.serialNumber || '';
-    document.getElementById('categoryId').value = asset.categoryId || '';
-    document.getElementById('condition').value = asset.condition || '';
+    console.log('Populating form with:', asset);
 
+    const formFields = {
+      assetName: asset.assetName || '',
+      serialNumber: asset.serialNumber || '',
+      categoryId: asset.categoryId || '',
+      condition: asset.condition || '',
+      purchasePrice: asset.purchasePrice || '',
+      status: asset.status || 'active',
+    };
+
+    // Set form values
+    Object.entries(formFields).forEach(([id, value]) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.value = value;
+        console.log(`Set ${id} to:`, value);
+      } else {
+        console.warn(`Element #${id} not found`);
+      }
+    });
+
+    // Handle date separately
     if (asset.purchaseDate) {
-      document.getElementById('purchaseDate').value = asset.purchaseDate.split('T')[0];
+      const dateElement = document.getElementById('purchaseDate');
+      if (dateElement) {
+        const date = new Date(asset.purchaseDate);
+        dateElement.value = date.toISOString().split('T')[0];
+        console.log('Set purchaseDate to:', dateElement.value);
+      }
     }
 
-    document.getElementById('purchasePrice').value = asset.purchasePrice || '';
+    // Handle isActive checkbox
+    const isActiveCheckbox = document.getElementById('isActive');
+    if (isActiveCheckbox) {
+      isActiveCheckbox.checked = asset.isActive || false;
+      console.log('Set isActive to:', asset.isActive || false);
+    }
   }
 
   /**
    * Get form data
    */
   getFormData() {
-    const data = {
-      assetName: document.getElementById('assetName').value.trim(),
-      categoryId: parseInt(document.getElementById('categoryId').value),
-      serialNumber: document.getElementById('serialNumber').value.trim() || null,
-      condition: document.getElementById('condition').value || null,
+    const getValue = (id, defaultValue = null) => {
+      const element = document.getElementById(id);
+      const value = element ? element.value.trim() : defaultValue;
+      console.log(`Getting ${id}:`, value);
+      return value;
     };
 
-    const purchaseDate = document.getElementById('purchaseDate').value;
+    const getCheckboxValue = (id) => {
+      const element = document.getElementById(id);
+      const value = element ? element.checked : true;
+      console.log(`Getting checkbox ${id}:`, value);
+      return value;
+    };
+
+    const data = {
+      assetName: getValue('assetName', ''),
+      categoryId: parseInt(getValue('categoryId', '0')),
+      serialNumber: getValue('serialNumber', null),
+      condition: getValue('condition', null),
+    };
+
+    // Handle purchase date
+    const purchaseDate = getValue('purchaseDate', '');
     if (purchaseDate) {
       data.purchaseDate = new Date(purchaseDate).toISOString();
+    } else {
+      data.purchaseDate = null;
     }
 
-    const purchasePrice = document.getElementById('purchasePrice').value;
+    // Handle purchase price
+    const purchasePrice = getValue('purchasePrice', '');
     if (purchasePrice) {
-      data.purchasePrice = parseFloat(purchasePrice);
+      const price = parseFloat(purchasePrice);
+      if (!isNaN(price)) {
+        data.purchasePrice = price;
+      } else {
+        data.purchasePrice = null;
+      }
+    } else {
+      data.purchasePrice = null;
     }
 
+    // Untuk update mode, tambahkan field yang diperlukan sesuai Swagger
+    if (this.mode === 'update') {
+      data.isActive = getCheckboxValue('isActive');
+      data.status = getValue('status', 'active');
+
+      // currentHolderId bisa diambil dari data aset jika ada
+      if (this.asset && this.asset.currentHolderId) {
+        data.currentHolderId = this.asset.currentHolderId;
+      } else {
+        data.currentHolderId = null;
+      }
+    }
+
+    console.log('Form data collected:', data);
     return data;
   }
 
@@ -203,24 +329,121 @@ export class AssetCrudModule {
    * Validate form data
    */
   validateFormData(data) {
-    if (!data.assetName) {
-      alert('Asset Name is required');
+    console.log('Validating form data:', data);
+    const errors = [];
+
+    if (!data.assetName || data.assetName.trim() === '') {
+      errors.push('Asset Name is required');
+      this.highlightField('assetName', true);
+    } else {
+      this.highlightField('assetName', false);
+    }
+
+    if (!data.categoryId || data.categoryId <= 0) {
+      errors.push('Category is required');
+      this.highlightField('categoryId', true);
+    } else {
+      this.highlightField('categoryId', false);
+    }
+
+    // Untuk update, pastikan status ada
+    if (this.mode === 'update' && !data.status) {
+      errors.push('Status is required');
+      this.highlightField('status', true);
+    } else if (this.mode === 'update') {
+      this.highlightField('status', false);
+    }
+
+    if (errors.length > 0) {
+      console.log('Validation errors:', errors);
+      this.showError(errors.join('<br>'));
       return false;
     }
 
-    if (!data.categoryId) {
-      alert('Category is required');
-      return false;
-    }
-
+    console.log('✅ Form validation passed');
     return true;
+  }
+
+  /**
+   * Highlight form field
+   */
+  highlightField(fieldId, hasError) {
+    const element = document.getElementById(fieldId);
+    if (!element) {
+      console.warn(`Cannot highlight field #${fieldId} - element not found`);
+      return;
+    }
+
+    if (hasError) {
+      element.classList.add('is-invalid');
+      element.classList.remove('is-valid');
+    } else {
+      element.classList.remove('is-invalid');
+      element.classList.add('is-valid');
+    }
+  }
+
+  /**
+   * Show error message
+   */
+  showError(message) {
+    console.error('Showing error:', message);
+
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      const toastEl = document.getElementById('errorToast');
+      if (toastEl) {
+        const toastBody = toastEl.querySelector('.toast-body');
+        if (toastBody) toastBody.innerHTML = message;
+
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+        return;
+      }
+    }
+
+    // Fallback to alert
+    alert(message);
+  }
+
+  /**
+   * Show success message
+   */
+  showSuccess(message) {
+    console.log('Showing success:', message);
+
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      const toastEl = document.getElementById('successToast');
+      if (toastEl) {
+        const toastBody = toastEl.querySelector('.toast-body');
+        if (toastBody) toastBody.textContent = message;
+
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+        return;
+      }
+    }
+
+    // Fallback to alert
+    alert(message);
   }
 
   /**
    * Handle form submit
    */
-  async handleSubmit() {
+  async handleSubmit(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log('🔄 Submitting asset form...');
+
     const btnSave = document.getElementById('btnSaveAsset');
+    if (!btnSave) {
+      console.error('Save button not found!');
+      this.showError('Save button not found. Please refresh the page.');
+      return;
+    }
 
     try {
       // Get form data
@@ -228,57 +451,109 @@ export class AssetCrudModule {
 
       // Validate
       if (!this.validateFormData(formData)) {
+        console.log('Form validation failed');
         return;
       }
 
-      // Disable button
+      // Disable button and show loading
       const originalText = btnSave.innerHTML;
       btnSave.disabled = true;
       btnSave.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
 
       let response;
       if (this.mode === 'update') {
-        console.log(`📤 Updating asset ${this.assetId}...`);
-        response = await whitebirdAPI.updateAsset(this.assetId, formData);
+        console.log(`📤 Updating asset ${this.assetId}...`, formData);
+        response = await WhitebirdAPI.asset.updateAsset(this.assetId, formData);
       } else {
-        console.log('📤 Creating new asset...');
-        response = await whitebirdAPI.createAsset(formData);
+        console.log('📤 Creating new asset...', formData);
+        response = await WhitebirdAPI.asset.createAsset(formData);
       }
 
-      if (response && response.success) {
-        console.log('✅ Asset saved successfully');
-        alert(
+      console.log('API Response:', response);
+
+      if (response.isSuccess) {
+        console.log('✅ Asset saved successfully:', response);
+        this.showSuccess(
           this.mode === 'update' ? 'Asset updated successfully!' : 'Asset created successfully!'
         );
 
         // Navigate back to assets list
-        if (window.router) {
-          window.router.navigate('assets');
-        } else {
-          window.location.href = '/assets';
-        }
+        setTimeout(() => {
+          if (window.router) {
+            window.router.navigate('assets');
+          } else {
+            window.location.href = '/assets';
+          }
+        }, 1500);
       } else {
         throw new Error(response.message || 'Failed to save asset');
       }
     } catch (error) {
       console.error('❌ Failed to save asset:', error);
-      alert('Failed to save asset. Please try again.');
-
+      this.showError(error.message || 'Failed to save asset. Please try again.');
+    } finally {
       // Re-enable button
-      btnSave.disabled = false;
-      btnSave.innerHTML = '<i class="fas fa-save me-2"></i>Save Asset';
+      if (btnSave) {
+        btnSave.disabled = false;
+        btnSave.innerHTML = '<i class="fas fa-save me-2"></i>Save Asset';
+      }
     }
   }
 
   /**
    * Handle cancel
    */
-  handleCancel() {
+  handleCancel(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log('🚫 Cancelling asset form...');
+
+    // Clear session storage
+    sessionStorage.removeItem('crudMode');
+    sessionStorage.removeItem('crudId');
+
+    // Navigate back
     if (window.router) {
       window.router.navigate('assets');
     } else {
       window.location.href = '/assets';
     }
+  }
+
+  /**
+   * Clean up event listeners
+   */
+  destroy() {
+    console.log('🧹 Cleaning up asset event listeners...');
+
+    const form = document.getElementById('assetForm');
+    const btnSave = document.getElementById('btnSaveAsset');
+    const btnCancel = document.getElementById('btnCancelAsset');
+    const btnBack = document.getElementById('btnBackToAssets');
+
+    if (this.handleSubmitBound && form) {
+      form.removeEventListener('submit', this.handleSubmitBound);
+    }
+
+    if (this.handleCancelBound && btnCancel) {
+      btnCancel.removeEventListener('click', this.handleCancelBound);
+    }
+
+    if (this.handleCancelBound && btnBack) {
+      btnBack.removeEventListener('click', this.handleCancelBound);
+    }
+
+    if (btnSave) {
+      // Remove the direct click listener (we need to track it separately)
+      const newBtnSave = btnSave.cloneNode(true);
+      btnSave.parentNode.replaceChild(newBtnSave, btnSave);
+    }
+
+    this.initialized = false;
+    console.log('✅ Asset CRUD module cleaned up');
   }
 }
 
