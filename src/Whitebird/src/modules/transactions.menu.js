@@ -117,7 +117,9 @@ export class TransactionsMenu {
 
   render() {
     const tbody = document.getElementById('transactionsTableBody');
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     const statusColors = {
       TRANSFER: 'info',
@@ -193,12 +195,14 @@ export class TransactionsMenu {
    */
   async handleDelete(id) {
     const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
-    if (!transaction) return;
+    if (!transaction) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'danger',
       title: 'Delete Transaction',
-      message: `Are you sure you want to delete this transaction? This action cannot be undone.`,
+      message: 'Are you sure you want to delete this transaction? This action cannot be undone.',
       okText: 'Delete',
       cancelText: 'Cancel',
       okClass: 'btn-danger',

@@ -18,7 +18,9 @@ export class AssetCrudModule {
    * Initialize CRUD page
    */
   async initialize() {
-    if (this.initialized) return;
+    if (this.initialized) {
+      return;
+    }
 
     console.log('📝 Asset CRUD Page Initializing...');
 
@@ -393,7 +395,9 @@ export class AssetCrudModule {
       const toastEl = document.getElementById('errorToast');
       if (toastEl) {
         const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) toastBody.innerHTML = message;
+        if (toastBody) {
+          toastBody.innerHTML = message;
+        }
 
         const toast = new bootstrap.Toast(toastEl);
         toast.show();
@@ -415,7 +419,9 @@ export class AssetCrudModule {
       const toastEl = document.getElementById('successToast');
       if (toastEl) {
         const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) toastBody.textContent = message;
+        if (toastBody) {
+          toastBody.textContent = message;
+        }
 
         const toast = new bootstrap.Toast(toastEl);
         toast.show();

@@ -14,10 +14,6 @@
         "action": "openExternally",
         "pattern": "Now listening on: (https?://\\S+)"
       },
-      "launchBrowser": {
-        "enabled": true,
-        "args": "${auto-detect-url}"
-      },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

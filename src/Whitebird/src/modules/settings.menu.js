@@ -115,7 +115,9 @@ export class SettingsMenu {
    */
   setInputValue(id, value) {
     const el = document.getElementById(id);
-    if (el) el.value = value || '';
+    if (el) {
+      el.value = value || '';
+    }
   }
 
   /**
@@ -123,7 +125,9 @@ export class SettingsMenu {
    */
   setCheckboxValue(id, value) {
     const el = document.getElementById(id);
-    if (el) el.checked = Boolean(value);
+    if (el) {
+      el.checked = Boolean(value);
+    }
   }
 
   /**

@@ -62,7 +62,9 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
-    if (DEBUG) console.error('❌ Request error:', error);
+    if (DEBUG) {
+      console.error('❌ Request error:', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -94,7 +96,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Enhanced error logging
     if (DEBUG) {
-      console.error(`💥 API Error:`, {
+      console.error('💥 API Error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         url: error.config?.url,

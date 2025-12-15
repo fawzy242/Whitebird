@@ -136,7 +136,9 @@ class SearchModalComponent {
     `;
 
     const existing = document.getElementById('searchModal');
-    if (existing) existing.remove();
+    if (existing) {
+      existing.remove();
+    }
 
     document.body.insertAdjacentHTML('beforeend', modalHTML);
   }
@@ -303,7 +305,9 @@ class SearchModalComponent {
 
     // Focus input after modal is shown (better UX)
     setTimeout(() => {
-      if (searchInput) searchInput.focus();
+      if (searchInput) {
+        searchInput.focus();
+      }
     }, 300);
   }
 }

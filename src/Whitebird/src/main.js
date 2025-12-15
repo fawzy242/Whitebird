@@ -55,7 +55,9 @@ class RedAdminApp {
    * Initialize application
    */
   async init() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {
+      return;
+    }
 
     try {
       // Show loading screen
@@ -424,13 +426,17 @@ class RedAdminApp {
         document.querySelectorAll('.has-submenu.open').forEach((item) => {
           item.classList.remove('open');
           const sub = item.querySelector('.submenu');
-          if (sub) sub.classList.remove('show');
+          if (sub) {
+            sub.classList.remove('show');
+          }
         });
 
         // Toggle current submenu
         if (!wasOpen) {
           parentLi.classList.add('open');
-          if (submenu) submenu.classList.add('show');
+          if (submenu) {
+            submenu.classList.add('show');
+          }
         }
       }
     });
@@ -530,7 +536,9 @@ class RedAdminApp {
     const openModals = document.querySelectorAll('.modal.show');
     openModals.forEach((modal) => {
       const bsModal = bootstrap.Modal?.getInstance?.(modal);
-      if (bsModal) bsModal.hide();
+      if (bsModal) {
+        bsModal.hide();
+      }
     });
 
     // Close dropdowns

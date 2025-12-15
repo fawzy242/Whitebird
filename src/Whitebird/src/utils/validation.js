@@ -16,7 +16,9 @@ export class Validation {
    * Validate password strength
    */
   static isStrongPassword(password, minLength = 8) {
-    if (password.length < minLength) return false;
+    if (password.length < minLength) {
+      return false;
+    }
 
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
@@ -50,7 +52,9 @@ export class Validation {
    * Sanitize input
    */
   static sanitizeInput(input) {
-    if (typeof input !== 'string') return input;
+    if (typeof input !== 'string') {
+      return input;
+    }
 
     return input
       .trim()
@@ -102,7 +106,9 @@ export class Validation {
    * Validate file type
    */
   static isValidFileType(file, allowedTypes = []) {
-    if (allowedTypes.length === 0) return true;
+    if (allowedTypes.length === 0) {
+      return true;
+    }
     return allowedTypes.some((type) => file.type.includes(type));
   }
 
@@ -111,7 +117,9 @@ export class Validation {
    */
   static isValidCreditCard(cardNumber) {
     const cleaned = cardNumber.replace(/\s/g, '');
-    if (!/^\d{13,19}$/.test(cleaned)) return false;
+    if (!/^\d{13,19}$/.test(cleaned)) {
+      return false;
+    }
 
     let sum = 0;
     let isEven = false;
@@ -121,7 +129,9 @@ export class Validation {
 
       if (isEven) {
         digit *= 2;
-        if (digit > 9) digit -= 9;
+        if (digit > 9) {
+          digit -= 9;
+        }
       }
 
       sum += digit;

@@ -219,7 +219,9 @@ class StateModule {
     const cache = this.get('cache');
     const cached = cache[key];
 
-    if (!cached) return null;
+    if (!cached) {
+      return null;
+    }
 
     const now = Date.now();
     if (now - cached.timestamp > cached.ttl) {

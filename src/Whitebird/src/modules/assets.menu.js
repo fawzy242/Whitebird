@@ -107,7 +107,7 @@ export class AssetsMenu {
     const employees = ['John Doe', 'Jane Smith', 'Bob Johnson', 'Alice Williams'];
     const issues = ['Screen broken', 'Battery replacement', 'Software update', 'Hardware check'];
 
-    let assets = [];
+    const assets = [];
     let id = 1;
 
     Object.keys(assetNames).forEach((category) => {
@@ -161,7 +161,9 @@ export class AssetsMenu {
    */
   populateCategories() {
     const select = document.getElementById('filterCategory');
-    if (!select) return;
+    if (!select) {
+      return;
+    }
 
     this.categories.forEach((cat) => {
       const option = document.createElement('option');
@@ -379,7 +381,9 @@ export class AssetsMenu {
     const tbody = document.getElementById(tbodyId);
     const emptyState = document.getElementById(emptyId);
 
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     // Pagination
     const start = (this.currentPage - 1) * this.pageSize;
@@ -389,11 +393,15 @@ export class AssetsMenu {
     // Show/hide empty state
     if (pageData.length === 0) {
       tbody.closest('.table-responsive').classList.add('d-none');
-      if (emptyState) emptyState.classList.remove('d-none');
+      if (emptyState) {
+        emptyState.classList.remove('d-none');
+      }
       return;
     } else {
       tbody.closest('.table-responsive').classList.remove('d-none');
-      if (emptyState) emptyState.classList.add('d-none');
+      if (emptyState) {
+        emptyState.classList.add('d-none');
+      }
     }
 
     // Build rows
@@ -516,7 +524,9 @@ export class AssetsMenu {
    */
   async handleDelete(id) {
     const asset = this.assets.find((a) => (a.assetId || a.id) === id);
-    if (!asset) return;
+    if (!asset) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'danger',

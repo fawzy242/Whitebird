@@ -269,7 +269,9 @@ export class Model1Manager {
    */
   async handleEdit(id) {
     const employee = this.data.find((e) => e.id === id);
-    if (!employee) return;
+    if (!employee) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'confirm',
@@ -292,7 +294,9 @@ export class Model1Manager {
    */
   async handleDelete(id) {
     const employee = this.data.find((e) => e.id === id);
-    if (!employee) return;
+    if (!employee) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'danger',
@@ -316,7 +320,9 @@ export class Model1Manager {
    * Handle batch delete
    */
   async handleBatchDelete() {
-    if (this.selectedIds.size === 0) return;
+    if (this.selectedIds.size === 0) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'danger',
@@ -396,7 +402,9 @@ export class Model1Manager {
     const tbody = document.getElementById('employeeTableBody');
     const emptyState = document.getElementById('emptyState');
 
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
@@ -405,12 +413,16 @@ export class Model1Manager {
     // Show/hide empty state
     if (pageData.length === 0) {
       tbody.closest('.table-responsive').classList.add('d-none');
-      if (emptyState) emptyState.classList.remove('d-none');
+      if (emptyState) {
+        emptyState.classList.remove('d-none');
+      }
       this.updateStats();
       return;
     } else {
       tbody.closest('.table-responsive').classList.remove('d-none');
-      if (emptyState) emptyState.classList.add('d-none');
+      if (emptyState) {
+        emptyState.classList.add('d-none');
+      }
     }
 
     // Build table rows using DocumentFragment for performance
@@ -490,9 +502,15 @@ export class Model1Manager {
     const showingEl = document.getElementById('showingCount');
     const totalCountEl = document.getElementById('totalCount');
 
-    if (totalEl) totalEl.textContent = this.data.length;
-    if (showingEl) showingEl.textContent = this.filteredData.length;
-    if (totalCountEl) totalCountEl.textContent = this.data.length;
+    if (totalEl) {
+      totalEl.textContent = this.data.length;
+    }
+    if (showingEl) {
+      showingEl.textContent = this.filteredData.length;
+    }
+    if (totalCountEl) {
+      totalCountEl.textContent = this.data.length;
+    }
   }
 
   /**
@@ -505,8 +523,12 @@ export class Model1Manager {
 
     const hasSelection = this.selectedIds.size > 0;
 
-    if (batchDeleteBtn) batchDeleteBtn.disabled = !hasSelection;
-    if (batchExportBtn) batchExportBtn.disabled = !hasSelection;
+    if (batchDeleteBtn) {
+      batchDeleteBtn.disabled = !hasSelection;
+    }
+    if (batchExportBtn) {
+      batchExportBtn.disabled = !hasSelection;
+    }
 
     if (selectedCountBadge) {
       if (hasSelection) {
@@ -523,7 +545,9 @@ export class Model1Manager {
    */
   updateSelectAllCheckbox() {
     const selectAllCheckbox = document.getElementById('selectAll');
-    if (!selectAllCheckbox) return;
+    if (!selectAllCheckbox) {
+      return;
+    }
 
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
@@ -552,7 +576,9 @@ export class Model1Manager {
     const pagination = document.getElementById('pagination');
 
     if (!pagination || totalPages <= 1) {
-      if (pagination) pagination.innerHTML = '';
+      if (pagination) {
+        pagination.innerHTML = '';
+      }
       return;
     }
 
@@ -570,7 +596,7 @@ export class Model1Manager {
                     <button class="page-link" data-page="${i}">${i}</button>
                 </li>`;
       } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
-        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
       }
     }
 

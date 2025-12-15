@@ -42,7 +42,9 @@ class ConfirmModalComponent {
     `;
 
     const existing = document.getElementById('confirmModal');
-    if (existing) existing.remove();
+    if (existing) {
+      existing.remove();
+    }
 
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     this.modal = document.getElementById('confirmModal');

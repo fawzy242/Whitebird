@@ -74,8 +74,8 @@
 
   // Re-initialize after dynamic content loads
   if (typeof MutationObserver !== 'undefined') {
-    const observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
         if (mutation.addedNodes.length > 0) {
           initPasswordToggles();
         }
@@ -84,7 +84,7 @@
 
     // Start observing after DOM is ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener('DOMContentLoaded', () => {
         observer.observe(document.body, {
           childList: true,
           subtree: true,

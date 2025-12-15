@@ -299,7 +299,9 @@ class AuthServiceClass {
    */
   hasPermission(permission) {
     const user = this.getCurrentUser();
-    if (!user) return false;
+    if (!user) {
+      return false;
+    }
 
     // Check role-based permissions
     const userRole = user.roleId || user.role;
@@ -313,7 +315,9 @@ class AuthServiceClass {
 
     const permissions = rolePermissions[userRole] || ['read'];
 
-    if (permissions.includes('*')) return true;
+    if (permissions.includes('*')) {
+      return true;
+    }
     return permissions.includes(permission) || false;
   }
 
@@ -451,7 +455,9 @@ class AuthServiceClass {
    */
   canAccessRoute(route) {
     const user = this.getCurrentUser();
-    if (!user) return false;
+    if (!user) {
+      return false;
+    }
 
     const userRole = user.roleId || user.role;
 
@@ -464,7 +470,9 @@ class AuthServiceClass {
 
     const allowedRoutes = routePermissions[userRole] || ['dashboard'];
 
-    if (allowedRoutes.includes('*')) return true;
+    if (allowedRoutes.includes('*')) {
+      return true;
+    }
     return allowedRoutes.includes(route);
   }
 }

@@ -202,7 +202,9 @@ export class EmployeesMenu {
    */
   async handleDelete(id) {
     const employee = this.employees.find((e) => (e.employeeId || e.id) === id);
-    if (!employee) return;
+    if (!employee) {
+      return;
+    }
 
     const confirmed = confirm(
       `Delete employee "${employee.fullName}"?\n\nThis action cannot be undone.`
@@ -311,7 +313,9 @@ export class EmployeesMenu {
     const tbody = document.getElementById(tbodyId);
     const emptyState = document.getElementById(emptyId);
 
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     // Show/hide empty state
     if (data.length === 0) {
@@ -332,7 +336,9 @@ export class EmployeesMenu {
     const fragment = document.createDocumentFragment();
 
     pageData.forEach((emp, index) => {
-      if (!emp || !emp.fullName) return;
+      if (!emp || !emp.fullName) {
+        return;
+      }
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
@@ -397,7 +403,9 @@ export class EmployeesMenu {
    */
   renderPagination(totalItems) {
     const pagination = document.getElementById('pagination');
-    if (!pagination) return;
+    if (!pagination) {
+      return;
+    }
 
     const totalPages = Math.ceil(totalItems / this.pageSize);
 
@@ -420,7 +428,7 @@ export class EmployeesMenu {
     // Page numbers (show max 5 pages)
     const maxPages = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
-    let endPage = Math.min(totalPages, startPage + maxPages - 1);
+    const endPage = Math.min(totalPages, startPage + maxPages - 1);
 
     if (endPage - startPage < maxPages - 1) {
       startPage = Math.max(1, endPage - maxPages + 1);
@@ -474,7 +482,9 @@ export class EmployeesMenu {
         : this.filteredData.filter((e) => !e.isActive).length) / this.pageSize
     );
 
-    if (page < 1 || page > totalPages) return;
+    if (page < 1 || page > totalPages) {
+      return;
+    }
 
     this.currentPage = page;
     this.renderCurrentTab();

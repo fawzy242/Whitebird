@@ -38,7 +38,9 @@ class EventBusClass {
    * Unsubscribe from an event
    */
   off(event, callback) {
-    if (!this.events[event]) return;
+    if (!this.events[event]) {
+      return;
+    }
 
     this.events[event] = this.events[event].filter((cb) => cb !== callback);
 
@@ -51,7 +53,9 @@ class EventBusClass {
    * Emit an event
    */
   emit(event, data) {
-    if (!this.events[event]) return;
+    if (!this.events[event]) {
+      return;
+    }
 
     this.events[event].forEach((callback) => {
       try {

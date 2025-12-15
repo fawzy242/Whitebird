@@ -60,7 +60,9 @@ class EmptyState {
     const containerEl = document.querySelector(container);
     if (containerEl) {
       const emptyState = containerEl.querySelector('.empty-state');
-      if (emptyState) emptyState.remove();
+      if (emptyState) {
+        emptyState.remove();
+      }
     }
   }
 }

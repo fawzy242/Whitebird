@@ -115,7 +115,9 @@ export class InboxModalComponent {
    * Render pagination
    */
   renderPagination() {
-    if (this.totalPages <= 1) return '';
+    if (this.totalPages <= 1) {
+      return '';
+    }
 
     const pages = [];
     for (let i = 1; i <= this.totalPages; i++) {

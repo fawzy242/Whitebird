@@ -43,7 +43,9 @@ class LoadingSpinner {
       this.spinner = null;
     } else {
       const existing = document.getElementById('loadingSpinner');
-      if (existing) existing.remove();
+      if (existing) {
+        existing.remove();
+      }
     }
   }
 
@@ -54,7 +56,9 @@ class LoadingSpinner {
    */
   showInline(selector, size = 'sm') {
     const element = document.querySelector(selector);
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const sizeClass = size === 'sm' ? 'spinner-border-sm' : '';
     const spinnerHTML = `
@@ -72,10 +76,14 @@ class LoadingSpinner {
    */
   hideInline(selector) {
     const element = document.querySelector(selector);
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const spinner = element.querySelector('.inline-spinner');
-    if (spinner) spinner.remove();
+    if (spinner) {
+      spinner.remove();
+    }
   }
 }
 

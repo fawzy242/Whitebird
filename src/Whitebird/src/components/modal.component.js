@@ -314,7 +314,7 @@ export class ModalManager {
    * Get active modal
    */
   getActive() {
-    for (let [id, modal] of this.modals) {
+    for (const [id, modal] of this.modals) {
       if (modal.isVisible) {
         return modal;
       }

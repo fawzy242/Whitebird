@@ -134,7 +134,7 @@ class StorageServiceClass {
     const targetStorage = useSession ? this.sessionStorage : this.storage;
     let size = 0;
 
-    for (let key in targetStorage) {
+    for (const key in targetStorage) {
       if (targetStorage.hasOwnProperty(key) && key.startsWith(this.prefix)) {
         size += targetStorage[key].length + key.length;
       }

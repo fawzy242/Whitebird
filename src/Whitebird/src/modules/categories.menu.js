@@ -102,7 +102,9 @@ export class CategoriesMenu {
 
   render() {
     const tbody = document.getElementById('categoriesTableBody');
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     const html = this.categories
       .map(
@@ -131,7 +133,9 @@ export class CategoriesMenu {
 
   renderChart() {
     const canvas = document.getElementById('categoryChart');
-    if (!canvas || typeof Chart === 'undefined') return;
+    if (!canvas || typeof Chart === 'undefined') {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     new Chart(ctx, {
@@ -164,7 +168,9 @@ export class CategoriesMenu {
 
   async handleEdit(id) {
     const category = this.categories.find((c) => (c.categoryId || c.id) === id);
-    if (!category) return;
+    if (!category) {
+      return;
+    }
 
     console.log(`✏️ Navigating to categoriesupdate for ID: ${id}`);
 
@@ -179,7 +185,9 @@ export class CategoriesMenu {
 
   async handleDelete(id) {
     const category = this.categories.find((c) => (c.categoryId || c.id) === id);
-    if (!category) return;
+    if (!category) {
+      return;
+    }
 
     const result = await confirmModal.show({
       type: 'danger',

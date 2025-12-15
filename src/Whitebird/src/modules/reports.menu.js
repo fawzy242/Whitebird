@@ -53,7 +53,9 @@ export class ReportsMenu {
 
   render() {
     const tbody = document.getElementById('recentReportsBody');
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     const html = this.recentReports
       .map(

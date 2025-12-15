@@ -17,7 +17,9 @@ class RouterModule {
   }
 
   init() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {
+      return;
+    }
 
     this.registerRoutes();
     this.setupEventListeners();
@@ -408,13 +410,19 @@ class RouterModule {
     const mainContent = document.querySelector('.main-content');
     const footer = document.querySelector('.footer');
 
-    if (sidebar) sidebar.style.display = 'none';
-    if (topbar) topbar.style.display = 'none';
+    if (sidebar) {
+      sidebar.style.display = 'none';
+    }
+    if (topbar) {
+      topbar.style.display = 'none';
+    }
     if (mainContent) {
       mainContent.style.marginLeft = '0';
       mainContent.style.marginTop = '0';
     }
-    if (footer) footer.style.display = 'none';
+    if (footer) {
+      footer.style.display = 'none';
+    }
   }
 
   showDefaultLayout() {
@@ -423,13 +431,19 @@ class RouterModule {
     const mainContent = document.querySelector('.main-content');
     const footer = document.querySelector('.footer');
 
-    if (sidebar) sidebar.style.display = 'flex';
-    if (topbar) topbar.style.display = 'flex';
+    if (sidebar) {
+      sidebar.style.display = 'flex';
+    }
+    if (topbar) {
+      topbar.style.display = 'flex';
+    }
     if (mainContent) {
       mainContent.style.marginLeft = '';
       mainContent.style.marginTop = '';
     }
-    if (footer) footer.style.display = 'block';
+    if (footer) {
+      footer.style.display = 'block';
+    }
   }
 
   updateActiveMenu(path) {

@@ -71,7 +71,9 @@ export class DashboardMenu {
    */
   generateStatsCards() {
     const container = document.getElementById('statsCardsContainer');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const stats = [
       {
@@ -228,7 +230,9 @@ export class DashboardMenu {
   generateRecentOrders() {
     const tbody = document.getElementById('recentOrdersBody');
     const countBadge = document.getElementById('ordersCount');
-    if (!tbody) return;
+    if (!tbody) {
+      return;
+    }
 
     const orders = [
       {
@@ -273,7 +277,9 @@ export class DashboardMenu {
       },
     ];
 
-    if (countBadge) countBadge.textContent = orders.length;
+    if (countBadge) {
+      countBadge.textContent = orders.length;
+    }
 
     const statusColors = {
       Delivered: 'success',
@@ -313,7 +319,9 @@ export class DashboardMenu {
    */
   generateTopProducts() {
     const container = document.getElementById('topProductsList');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const products = [
       { name: 'Laptop Pro X1', sales: 145, revenue: '$188,355', trend: 'up' },
@@ -355,7 +363,9 @@ export class DashboardMenu {
    */
   generatePerformanceMetrics() {
     const container = document.getElementById('performanceMetrics');
-    if (!container) return;
+    if (!container) {
+      return;
+    }
 
     const metrics = [
       { label: 'Customer Satisfaction', value: 94, color: 'success' },
@@ -402,7 +412,9 @@ export class DashboardMenu {
    */
   initSalesChart() {
     const canvas = document.getElementById('salesChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
 
@@ -452,7 +464,9 @@ export class DashboardMenu {
    */
   initRevenueChart() {
     const canvas = document.getElementById('revenueChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
 
@@ -489,7 +503,9 @@ export class DashboardMenu {
    */
   initTrafficChart() {
     const canvas = document.getElementById('trafficChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
 
@@ -526,7 +542,9 @@ export class DashboardMenu {
    * Update sales chart based on period
    */
   updateSalesChart() {
-    if (!this.chartInstances.sales) return;
+    if (!this.chartInstances.sales) {
+      return;
+    }
 
     const data = {
       week: {

@@ -72,10 +72,14 @@ export class FileUploadComponent {
    * Get accepted file types
    */
   getAcceptedTypes() {
-    if (this.options.allowedTypes.length === 0) return '*';
+    if (this.options.allowedTypes.length === 0) {
+      return '*';
+    }
     return this.options.allowedTypes
       .map((type) => {
-        if (type.startsWith('.')) return type;
+        if (type.startsWith('.')) {
+          return type;
+        }
         return `.${type}`;
       })
       .join(',');
@@ -131,7 +135,9 @@ export class FileUploadComponent {
   handleFiles(files) {
     const validFiles = files.filter((file) => this.validateFile(file));
 
-    if (validFiles.length === 0) return;
+    if (validFiles.length === 0) {
+      return;
+    }
 
     this.files = this.options.multiple ? [...this.files, ...validFiles] : validFiles;
 
@@ -275,7 +281,9 @@ export class FileUploadComponent {
    * Format file size
    */
   formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) {
+      return '0 Bytes';
+    }
 
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -299,8 +307,12 @@ export class FileUploadComponent {
     const preview = this.container.querySelector('[data-preview]');
     const input = this.container.querySelector('.file-input');
 
-    if (preview) preview.innerHTML = '';
-    if (input) input.value = '';
+    if (preview) {
+      preview.innerHTML = '';
+    }
+    if (input) {
+      input.value = '';
+    }
   }
 
   /**

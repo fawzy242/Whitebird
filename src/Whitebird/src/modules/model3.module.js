@@ -68,8 +68,12 @@ export class Model3Manager {
     const fromDate = document.getElementById('fromDate');
     const toDate = document.getElementById('toDate');
 
-    if (fromDate) fromDate.valueAsDate = lastWeek;
-    if (toDate) toDate.valueAsDate = today;
+    if (fromDate) {
+      fromDate.valueAsDate = lastWeek;
+    }
+    if (toDate) {
+      toDate.valueAsDate = today;
+    }
   }
 
   /**
@@ -140,7 +144,9 @@ export class Model3Manager {
    */
   initLineChart() {
     const canvas = document.getElementById('lineChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     this.charts.line = new Chart(ctx, {
@@ -186,7 +192,9 @@ export class Model3Manager {
    */
   initPieChart() {
     const canvas = document.getElementById('pieChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     this.charts.pie = new Chart(ctx, {
@@ -215,7 +223,9 @@ export class Model3Manager {
    */
   initBarChart() {
     const canvas = document.getElementById('barChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     this.charts.bar = new Chart(ctx, {
@@ -258,7 +268,9 @@ export class Model3Manager {
    */
   initRadarChart() {
     const canvas = document.getElementById('radarChart');
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     this.charts.radar = new Chart(ctx, {
@@ -332,7 +344,9 @@ export class Model3Manager {
    */
   exportChart(type) {
     const chart = this.charts[type];
-    if (!chart) return;
+    if (!chart) {
+      return;
+    }
 
     const url = chart.toBase64Image();
     const link = document.createElement('a');
@@ -410,7 +424,9 @@ export class Model3Manager {
    * Start real-time updates
    */
   startRealTimeUpdates() {
-    if (this.realTimeInterval) return;
+    if (this.realTimeInterval) {
+      return;
+    }
 
     this.realTimeInterval = setInterval(() => {
       // Update live stats with null checks

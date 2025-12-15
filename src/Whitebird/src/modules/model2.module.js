@@ -84,7 +84,9 @@ export class Model2Manager {
     const value = field.value;
     const rules = this.validationRules[fieldName];
 
-    if (!rules) return true;
+    if (!rules) {
+      return true;
+    }
 
     let isValid = true;
     let errorMessage = '';
@@ -164,7 +166,9 @@ export class Model2Manager {
       this.showErrorMessage('Product name is required');
       // Focus on Basic Info tab
       const basicTab = document.querySelector('a[href="#basicInfo"]');
-      if (basicTab) basicTab.click();
+      if (basicTab) {
+        basicTab.click();
+      }
       return;
     }
 
@@ -281,7 +285,9 @@ export class Model2Manager {
 
       categoryInput.addEventListener('input', (e) => {
         const value = e.target.value.toLowerCase();
-        if (value.length < 2) return;
+        if (value.length < 2) {
+          return;
+        }
 
         const matches = categories.filter((cat) => cat.toLowerCase().includes(value));
 
