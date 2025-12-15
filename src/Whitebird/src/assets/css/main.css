@@ -1,43 +1,43 @@
-@import "./base/_reset.css";
-@import "./base/_variables.css";
-@import "./base/_global.css";
-@import "./base/_typography.css";
+@import './base/_reset.css';
+@import './base/_variables.css';
+@import './base/_global.css';
+@import './base/_typography.css';
 
-@import "./layout/_topbar.css";
-@import "./layout/_sidebar.css";
-@import "./layout/_footer.css";
-@import "./layout/_main-content.css";
-@import "./layout/_header.css";
+@import './layout/_topbar.css';
+@import './layout/_sidebar.css';
+@import './layout/_footer.css';
+@import './layout/_main-content.css';
+@import './layout/_header.css';
 
 /* @import "./components/_components.css"; */
 
-@import "./components/_alerts.css";
-@import "./components/_badges.css";
-@import "./components/_buttons.css";
-@import "./components/_cards.css";
-@import "./components/_charts.css";
-@import "./components/_dropdown.css";
-@import "./components/_forms.css";
+@import './components/_alerts.css';
+@import './components/_badges.css';
+@import './components/_buttons.css';
+@import './components/_cards.css';
+@import './components/_charts.css';
+@import './components/_dropdown.css';
+@import './components/_forms.css';
 /* @import "./components/_kendo-ui.css"; */
-@import "./components/_loading.css";
-@import "./components/_modals.css";
-@import "./components/_notification-modal.css";
-@import "./components/_inbox-modal.css";
-@import "./components/_search-modal.css";
-@import "./components/_confirm-modal.css";
-@import "./components/_pagination.css";
-@import "./components/_progress-bar.css";
-@import "./components/_stats-card.css";
-@import "./components/_tables.css";
-@import "./components/_tabs.css";
-@import "./components/_timeline.css";
+@import './components/_loading.css';
+@import './components/_modals.css';
+@import './components/_notification-modal.css';
+@import './components/_inbox-modal.css';
+@import './components/_search-modal.css';
+@import './components/_confirm-modal.css';
+@import './components/_pagination.css';
+@import './components/_progress-bar.css';
+@import './components/_stats-card.css';
+@import './components/_tables.css';
+@import './components/_tabs.css';
+@import './components/_timeline.css';
 
-@import "./pages/_auth.css";
+@import './pages/_auth.css';
 
-@import "./utilities/_text.css";
-@import "./utilities/_shadow.css";
-@import "./utilities/_rounded.css";
-@import "./utilities/_responsive.css";
-@import "./utilities/_theme.css";
-@import "./utilities/_theme-extended.css";
-@import "./utilities/_theme-floating-labels.css";
+@import './utilities/_text.css';
+@import './utilities/_shadow.css';
+@import './utilities/_rounded.css';
+@import './utilities/_responsive.css';
+@import './utilities/_theme.css';
+@import './utilities/_theme-extended.css';
+@import './utilities/_theme-floating-labels.css';

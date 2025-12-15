@@ -2,47 +2,47 @@
    MODALS & DIALOGS - ENHANCED
    ==================================== */
 .modal-content {
-    border-radius: var(--radius-lg);
-    border: none;
-    box-shadow: var(--shadow-xl);
-    animation: modalSlideIn 0.3s ease;
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: var(--shadow-xl);
+  animation: modalSlideIn 0.3s ease;
 }
 
 @keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .modal-backdrop {
-    backdrop-filter: blur(4px);
-    background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
-    border-bottom: 2px solid var(--gray-light);
-    padding: var(--space-lg);
-    background: var(--gray-light);
+  border-bottom: 2px solid var(--gray-light);
+  padding: var(--space-lg);
+  background: var(--gray-light);
 }
 
 .modal-title {
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-    font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  font-size: var(--font-size-xl);
 }
 
 .modal-body {
-    padding: var(--space-lg);
+  padding: var(--space-lg);
 }
 
 .modal-footer {
-    border-top: 2px solid var(--gray-light);
-    padding: var(--space-md) var(--space-lg);
-    background: var(--gray-light);
+  border-top: 2px solid var(--gray-light);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--gray-light);
 }

@@ -1,137 +1,155 @@
 /* 4K Displays (2560px and above) */
 @media (min-width: 2560px) {
-    .stats-card h3 { font-size: 2.75rem; }
-    .page-header h1 { font-size: 2.5rem; }
-    .sidebar-logo h3 { font-size: 1.75rem; }
+  .stats-card h3 {
+    font-size: 2.75rem;
+  }
+  .page-header h1 {
+    font-size: 2.5rem;
+  }
+  .sidebar-logo h3 {
+    font-size: 1.75rem;
+  }
 }
 
 /* QHD Displays (1440px - 2559px) */
 @media (min-width: 1440px) and (max-width: 2559px) {
-    .stats-card h3 { font-size: 2.5rem; }
-    .content-area { padding: 2.5rem; }
+  .stats-card h3 {
+    font-size: 2.5rem;
+  }
+  .content-area {
+    padding: 2.5rem;
+  }
 }
 
 /* FHD Displays (1920px - 1439px) - Default styles apply */
 
 /* HD Displays (1366px - 1919px) */
 @media (max-width: 1366px) {
-    .sidebar { width: 240px; }
-    .main-content { margin-left: 240px; }
-    .search-box { max-width: 300px; }
-    .stats-card h3 { font-size: 2rem; }
+  .sidebar {
+    width: 240px;
+  }
+  .main-content {
+    margin-left: 240px;
+  }
+  .search-box {
+    max-width: 300px;
+  }
+  .stats-card h3 {
+    font-size: 2rem;
+  }
 }
 
 /* Tablets (768px - 1365px) */
 @media (max-width: 1024px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
+  .sidebar {
+    transform: translateX(-100%);
+  }
 
-    .sidebar.show {
-        transform: translateX(0);
-    }
+  .sidebar.show {
+    transform: translateX(0);
+  }
 
-    .main-content {
-        margin-left: 0;
-    }
+  .main-content {
+    margin-left: 0;
+  }
 
-    .main-content.expanded {
-        margin-left: 0;
-    }
+  .main-content.expanded {
+    margin-left: 0;
+  }
 
-    .topbar {
-        padding: 0 1rem;
-    }
+  .topbar {
+    padding: 0 1rem;
+  }
 
-    .search-box {
-        max-width: 200px;
-    }
+  .search-box {
+    max-width: 200px;
+  }
 
-    .search-box input {
-        padding: 0.5rem 0.75rem 0.5rem 2.25rem;
-    }
+  .search-box input {
+    padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  }
 
-    .user-info {
-        display: none;
-    }
+  .user-info {
+    display: none;
+  }
 
-    .stats-card h3 {
-        font-size: 1.75rem;
-    }
+  .stats-card h3 {
+    font-size: 1.75rem;
+  }
 }
 
 /* Mobile Devices (up to 767px) */
 @media (max-width: 767px) {
-    .sidebar {
-        width: 280px;
-        transform: translateX(-100%);
-    }
+  .sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+  }
 
-    .topbar {
-        padding: 0 1rem;
-    }
+  .topbar {
+    padding: 0 1rem;
+  }
 
-    .search-box {
-        display: none;
-    }
+  .search-box {
+    display: none;
+  }
 
-    .topbar-right {
-        gap: 0.75rem;
-    }
+  .topbar-right {
+    gap: 0.75rem;
+  }
 
-    .page-header h1 {
-        font-size: 1.5rem;
-    }
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
 
-    .stats-card {
-        margin-bottom: 1rem;
-    }
+  .stats-card {
+    margin-bottom: 1rem;
+  }
 
-    .stats-card h3 {
-        font-size: 1.5rem;
-    }
+  .stats-card h3 {
+    font-size: 1.5rem;
+  }
 
-    .card-header {
-        padding: 1rem;
-    }
+  .card-header {
+    padding: 1rem;
+  }
 
-    .card-body {
-        padding: 1rem;
-    }
+  .card-body {
+    padding: 1rem;
+  }
 
-    .table-container {
-        padding: 1rem;
-    }
+  .table-container {
+    padding: 1rem;
+  }
 
-    .login-container {
-        padding: 2rem;
-        margin: 1rem;
-    }
+  .login-container {
+    padding: 2rem;
+    margin: 1rem;
+  }
 
-    .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-    }
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
 }
 
 /* Small Mobile (up to 375px) */
 @media (max-width: 375px) {
-    .topbar-icon {
-        width: 36px;
-        height: 36px;
-    }
+  .topbar-icon {
+    width: 36px;
+    height: 36px;
+  }
 
-    .user-avatar {
-        width: 36px;
-        height: 36px;
-        font-size: 0.875rem;
-    }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.875rem;
+  }
 
-    .stats-card {
-        padding: 1.25rem;
-    }
+  .stats-card {
+    padding: 1.25rem;
+  }
 
-    .stats-card h3 {
-        font-size: 1.25rem;
-    }
+  .stats-card h3 {
+    font-size: 1.25rem;
+  }
 }

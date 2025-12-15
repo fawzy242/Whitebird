@@ -10,26 +10,57 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .js",
     "lint:fix": "eslint src --ext .js --fix",
-    "format": "prettier --write \"src/**/*.{js,css,html}\"",
-    "test": "echo \"Tests will be implemented\" && exit 0"
+    "format": "prettier --write \"src/**/*.{js,css,html,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html,json,md}\"",
+    "clean": "rm -rf wwwroot && rm -rf .vite",
+    "build:prod": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest --watch"
   },
-  "keywords": ["dashboard", "admin", "template", "enterprise", "spa", "bootstrap", "axios"],
+  "keywords": [
+    "dashboard",
+    "admin",
+    "template",
+    "enterprise",
+    "spa",
+    "bootstrap",
+    "axios"
+  ],
   "author": "RedAdmin Pro Team",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
-    "@popperjs/core": "^2.11.8",
     "chart.js": "^4.4.0"
   },
   "devDependencies": {
-    "vite": "^5.0.8",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@vitejs/plugin-legacy": "^5.2.0",
+    "@vitest/ui": "^1.2.2",
+    "autoprefixer": "^10.4.17",
     "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jsdom": "^24.0.0",
+    "postcss": "^8.4.33",
     "prettier": "^3.1.1",
-    "@vitejs/plugin-legacy": "^5.2.0"
+    "sass": "^1.69.7",
+    "vite": "^5.0.8",
+    "vitest": "^1.2.2"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all",
+    "last 2 versions",
+    "Firefox ESR"
+  ]
 }

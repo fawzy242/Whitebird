@@ -253,7 +253,9 @@ html {
 .page-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  transition:
+    opacity var(--transition-normal),
+    transform var(--transition-normal);
 }
 
 .page-exit {
@@ -264,7 +266,9 @@ html {
 .page-exit-active {
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  transition:
+    opacity var(--transition-normal),
+    transform var(--transition-normal);
 }
 
 /* ---------------------------------------------------------
@@ -329,17 +333,17 @@ html {
   .no-print {
     display: none !important;
   }
-  
+
   .print-only {
     display: block !important;
   }
-  
+
   .app-main {
     margin: 0 !important;
     padding: 0 !important;
     max-height: none !important;
   }
-  
+
   .page-wrapper {
     box-shadow: none !important;
     padding: 0 !important;
@@ -349,17 +353,17 @@ html {
 /* ---------------------------------------------------------
    13. DARK MODE SPECIFIC ADJUSTMENTS
    --------------------------------------------------------- */
-[data-theme="dark"] {
+[data-theme='dark'] {
   /* Dark mode specific overrides */
   --scrollbar-thumb: #495057;
   --scrollbar-thumb-hover: #6c757d;
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb, #495057);
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover, #6c757d);
 }
 
@@ -392,7 +396,7 @@ html {
   .mobile-only {
     display: block !important;
   }
-  
+
   .desktop-only {
     display: none !important;
   }

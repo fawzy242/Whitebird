@@ -69,31 +69,79 @@ h6 {
 }
 
 /* Heading utility classes */
-.heading-1 { font-size: var(--font-size-xxxl); font-weight: var(--font-weight-extrabold); }
-.heading-2 { font-size: var(--font-size-xxl); font-weight: var(--font-weight-bold); }
-.heading-3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); }
-.heading-4 { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
-.heading-5 { font-size: var(--font-size-base); font-weight: var(--font-weight-medium); }
-.heading-6 { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.heading-1 {
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-extrabold);
+}
+.heading-2 {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+}
+.heading-3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+.heading-4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+.heading-5 {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+.heading-6 {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
 
 /* Responsive Headings - Improved */
 @media (max-width: 1366px) {
-  h1, .heading-1 { font-size: calc(var(--font-size-xxxl) * 0.95); }
-  h2, .heading-2 { font-size: calc(var(--font-size-xxl) * 0.95); }
-  h3, .heading-3 { font-size: calc(var(--font-size-xl) * 0.95); }
+  h1,
+  .heading-1 {
+    font-size: calc(var(--font-size-xxxl) * 0.95);
+  }
+  h2,
+  .heading-2 {
+    font-size: calc(var(--font-size-xxl) * 0.95);
+  }
+  h3,
+  .heading-3 {
+    font-size: calc(var(--font-size-xl) * 0.95);
+  }
 }
 
 @media (max-width: 992px) {
-  h1, .heading-1 { font-size: calc(var(--font-size-xxxl) * 0.85); }
-  h2, .heading-2 { font-size: calc(var(--font-size-xxl) * 0.85); }
-  h3, .heading-3 { font-size: calc(var(--font-size-xl) * 0.85); }
+  h1,
+  .heading-1 {
+    font-size: calc(var(--font-size-xxxl) * 0.85);
+  }
+  h2,
+  .heading-2 {
+    font-size: calc(var(--font-size-xxl) * 0.85);
+  }
+  h3,
+  .heading-3 {
+    font-size: calc(var(--font-size-xl) * 0.85);
+  }
 }
 
 @media (max-width: 768px) {
-  h1, .heading-1 { font-size: calc(var(--font-size-xxxl) * 0.75); }
-  h2, .heading-2 { font-size: calc(var(--font-size-xxl) * 0.75); }
-  h3, .heading-3 { font-size: calc(var(--font-size-xl) * 0.75); }
-  h4, .heading-4 { font-size: calc(var(--font-size-lg) * 0.9); }
+  h1,
+  .heading-1 {
+    font-size: calc(var(--font-size-xxxl) * 0.75);
+  }
+  h2,
+  .heading-2 {
+    font-size: calc(var(--font-size-xxl) * 0.75);
+  }
+  h3,
+  .heading-3 {
+    font-size: calc(var(--font-size-xl) * 0.75);
+  }
+  h4,
+  .heading-4 {
+    font-size: calc(var(--font-size-lg) * 0.9);
+  }
 }
 
 /* ------------------------------
@@ -335,7 +383,7 @@ blockquote footer {
 }
 
 blockquote footer::before {
-  content: "— ";
+  content: '— ';
 }
 
 /* ------------------------------
@@ -458,7 +506,7 @@ li:last-child {
   body {
     font-size: calc(var(--font-size-base) * 0.95);
   }
-  
+
   .lead {
     font-size: calc(var(--font-size-lg) * 0.95);
   }
@@ -469,11 +517,11 @@ li:last-child {
     font-size: calc(var(--font-size-base) * 0.9);
     line-height: var(--line-height-relaxed);
   }
-  
+
   .lead {
     font-size: calc(var(--font-size-lg) * 0.9);
   }
-  
+
   p {
     max-width: 100%; /* Remove max-width on mobile */
   }
@@ -489,27 +537,33 @@ li:last-child {
     color: #000;
     background-color: #fff;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     color: #000;
     page-break-after: avoid;
   }
-  
+
   a {
     color: #000;
     text-decoration: underline;
   }
-  
+
   a[href]::after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
     font-size: 90%;
   }
-  
-  pre, blockquote {
+
+  pre,
+  blockquote {
     page-break-inside: avoid;
     border: 1px solid #999;
   }
-  
+
   img {
     page-break-inside: avoid;
     max-width: 100% !important;
@@ -519,11 +573,11 @@ li:last-child {
 /* ------------------------------
    RTL Support (Optional for enterprise)
    ------------------------------ */
-[dir="rtl"] {
+[dir='rtl'] {
   text-align: right;
 }
 
-[dir="rtl"] blockquote {
+[dir='rtl'] blockquote {
   border-left: none;
   border-right: 4px solid var(--primary-red);
   padding-left: 0;
@@ -531,15 +585,15 @@ li:last-child {
   border-radius: var(--radius-md) 0 0 var(--radius-md);
 }
 
-[dir="rtl"] ul,
-[dir="rtl"] ol {
+[dir='rtl'] ul,
+[dir='rtl'] ol {
   margin: 0 var(--space-lg) var(--space-md) 0;
 }
 
-[dir="rtl"] .text-left {
+[dir='rtl'] .text-left {
   text-align: right !important;
 }
 
-[dir="rtl"] .text-right {
+[dir='rtl'] .text-right {
   text-align: left !important;
 }

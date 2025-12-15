@@ -3,9 +3,22 @@
  * Version 2.0.0 - Enterprise Refactored
  */
 
+// ===== IMPORT LIBRARIES FROM NPM (HAPUS CDN) =====
+import * as bootstrap from 'bootstrap';
+import { Chart, registerables } from 'chart.js';
+
+// Register Chart.js components
+Chart.register(...registerables);
+
+// Import global styles
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css'; // ← TAMBAHKAN INI
+import './assets/css/main.css';
+
+// Import application modules
 import { AuthService } from './services/auth.service.js';
 import { StorageService } from './services/storage.service.js';
-import WhitebirdAPI from './services/api/index.js'; // Update ini
+import WhitebirdAPI from './services/api/index.js';
 import { router } from './modules/router.module.js';
 import { state } from './modules/state.module.js';
 import { EventBus } from './utils/event-bus.js';
@@ -29,7 +42,13 @@ class RedAdminApp {
   constructor() {
     this.isInitialized = false;
     this.version = '2.0.0';
-    this.api = WhitebirdAPI; // Tambahkan reference ke API
+    this.api = WhitebirdAPI;
+
+    // Make libraries available globally for debugging in development
+    if (import.meta.env.DEV) {
+      window.bootstrap = bootstrap;
+      window.Chart = Chart;
+    }
   }
 
   /**
@@ -41,6 +60,13 @@ class RedAdminApp {
     try {
       // Show loading screen
       this.showLoadingScreen();
+
+      // Log environment info (using import.meta.env)
+      console.log(`🚀 RedAdmin Pro v${this.version}`);
+      console.log(`🌍 Environment: ${import.meta.env.VITE_APP_ENV || 'development'}`);
+      console.log(`🔗 API URL: ${import.meta.env.VITE_API_URL || 'Not set'}`);
+      console.log(`⚡ API Timeout: ${import.meta.env.VITE_API_TIMEOUT || 30000}ms`);
+      console.log(`🐛 Debug Mode: ${import.meta.env.VITE_DEBUG === 'true' ? 'ON' : 'OFF'}`);
 
       // Initialize core services
       await this.initializeServices();
@@ -68,7 +94,7 @@ class RedAdminApp {
       EventBus.emit('app:initialized');
 
       // Test API connection in development
-      if (import.meta.env.DEV) {
+      if (import.meta.env.DEV || import.meta.env.VITE_DEBUG === 'true') {
         setTimeout(() => this.testAPIConnection(), 1000);
       }
     } catch (error) {
@@ -129,7 +155,7 @@ class RedAdminApp {
    */
   handleAPIError(error) {
     if (error.status === 401) {
-      // Already handled by axios interceptor
+      // Already handled by axios interceptor in axios.instance.js
       return;
     }
 
@@ -152,11 +178,21 @@ class RedAdminApp {
 
       if (result.success) {
         console.log('✅ API Connection Successful');
+        console.log('📊 API Info:', {
+          baseURL: import.meta.env.VITE_API_URL,
+          timeout: import.meta.env.VITE_API_TIMEOUT,
+          environment: import.meta.env.VITE_APP_ENV,
+        });
       } else {
         console.warn('⚠️ API Connection Warning:', result.error);
       }
     } catch (error) {
       console.error('❌ API Connection Test Failed:', error);
+      console.error('Debug Info:', {
+        env: import.meta.env.VITE_APP_ENV,
+        apiUrl: import.meta.env.VITE_API_URL,
+        debugMode: import.meta.env.VITE_DEBUG,
+      });
     }
   }
 
@@ -490,7 +526,7 @@ class RedAdminApp {
    * Handle escape key
    */
   handleEscape() {
-    // Close any open Bootstrap modals
+    // Close any open Bootstrap modals (using imported bootstrap)
     const openModals = document.querySelectorAll('.modal.show');
     openModals.forEach((modal) => {
       const bsModal = bootstrap.Modal?.getInstance?.(modal);
@@ -624,6 +660,9 @@ class RedAdminApp {
       user: state?.getUser?.(),
       theme: state?.getTheme?.(),
       apiConnected: this.api ? 'connected' : 'disconnected',
+      environment: import.meta.env.VITE_APP_ENV || 'development',
+      apiUrl: import.meta.env.VITE_API_URL || 'Not set',
+      debugMode: import.meta.env.VITE_DEBUG === 'true',
     };
   }
 

@@ -2,163 +2,163 @@
    STATISTICS CARDS - ENHANCED
    ==================================== */
 .stats-card {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    padding: var(--space-xl);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-normal);
-    border-left: 4px solid;
-    height: 100%;
-    animation: var(--animation-fade);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  border-left: 4px solid;
+  height: 100%;
+  animation: var(--animation-fade);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .stats-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: inherit;
-    opacity: 0.1;
-    transition: opacity var(--transition-normal);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: inherit;
+  opacity: 0.1;
+  transition: opacity var(--transition-normal);
 }
 
 .stats-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
 }
 
 .stats-card:hover::before {
-    opacity: 0.2;
+  opacity: 0.2;
 }
 
 /* Color Variants */
 .stats-card.red {
-    border-left-color: var(--primary-red);
+  border-left-color: var(--primary-red);
 }
 
 .stats-card.red::before {
-    background: var(--primary-red);
+  background: var(--primary-red);
 }
 
 .stats-card.blue {
-    border-left-color: var(--blue);
+  border-left-color: var(--blue);
 }
 
 .stats-card.blue::before {
-    background: var(--blue);
+  background: var(--blue);
 }
 
 .stats-card.green {
-    border-left-color: var(--green);
+  border-left-color: var(--green);
 }
 
 .stats-card.green::before {
-    background: var(--green);
+  background: var(--green);
 }
 
 .stats-card.orange {
-    border-left-color: var(--orange);
+  border-left-color: var(--orange);
 }
 
 .stats-card.orange::before {
-    background: var(--orange);
+  background: var(--orange);
 }
 
 .stats-card.purple {
-    border-left-color: var(--purple);
+  border-left-color: var(--purple);
 }
 
 .stats-card.purple::before {
-    background: var(--purple);
+  background: var(--purple);
 }
 
 /* Icon Wrapper */
 .stats-card .icon-wrapper {
-    width: 64px;
-    height: 64px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-md);
-    transition: all var(--transition-fast);
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-fast);
 }
 
 .stats-card.red .icon-wrapper {
-    background: rgba(220, 53, 69, 0.1);
-    color: var(--primary-red);
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--primary-red);
 }
 
 .stats-card.blue .icon-wrapper {
-    background: rgba(13, 110, 253, 0.1);
-    color: var(--blue);
+  background: rgba(13, 110, 253, 0.1);
+  color: var(--blue);
 }
 
 .stats-card.green .icon-wrapper {
-    background: rgba(40, 167, 69, 0.1);
-    color: var(--green);
+  background: rgba(40, 167, 69, 0.1);
+  color: var(--green);
 }
 
 .stats-card.orange .icon-wrapper {
-    background: rgba(253, 126, 20, 0.1);
-    color: var(--orange);
+  background: rgba(253, 126, 20, 0.1);
+  color: var(--orange);
 }
 
 .stats-card.purple .icon-wrapper {
-    background: rgba(111, 66, 193, 0.1);
-    color: var(--purple);
+  background: rgba(111, 66, 193, 0.1);
+  color: var(--purple);
 }
 
 .stats-card:hover .icon-wrapper {
-    transform: scale(1.1) rotate(5deg);
+  transform: scale(1.1) rotate(5deg);
 }
 
 .stats-card .icon-wrapper i {
-    font-size: 1.75rem;
+  font-size: 1.75rem;
 }
 
 /* Typography */
 .stats-card h3 {
-    font-size: 2.25rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
-    margin-bottom: var(--space-xs);
-    line-height: 1;
-    font-feature-settings: "tnum";
-    font-variant-numeric: tabular-nums;
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+  line-height: 1;
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
 }
 
 .stats-card p {
-    color: var(--text-secondary);
-    margin-bottom: var(--space-sm);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Trend Indicators */
 .stats-card .trend {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    padding: 0.25rem 0.625rem;
-    border-radius: var(--radius-sm);
-    margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-sm);
+  margin-top: auto;
 }
 
 .stats-card .trend.up {
-    background: rgba(25, 135, 84, 0.1);
-    color: #198754;
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
 }
 
 .stats-card .trend.down {
-    background: rgba(220, 53, 69, 0.1);
-    color: var(--primary-red);
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--primary-red);
 }
