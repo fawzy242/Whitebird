@@ -1,19 +1,39 @@
 <!-- Asset CRUD Page - Add/Edit Asset -->
 <div id="assetCrudPage">
     <div class="page-header mb-4">
-        <div>
-            <h1 id="crudTitle"><i class="fas fa-box me-2"></i>Add New Asset</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#" data-route="assets">Assets</a></li>
-                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
-                </ol>
-            </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 id="crudTitle"><i class="fas fa-box me-2"></i>Add New Asset</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#" data-route="assets">Assets</a></li>
+                        <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn btn-outline-secondary" id="btnBackToAssets">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </button>
         </div>
-        <button class="btn btn-outline-secondary" id="btnBackToAssets">
-            <i class="fas fa-arrow-left me-2"></i>Back to List
-        </button>
+    </div>
+
+    <!-- Toast Messages -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
     </div>
 
     <div class="card">
@@ -23,20 +43,20 @@
                     <!-- Asset Name (Required) -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Asset Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="assetName" name="assetName" 
-                               maxlength="100" required placeholder="Enter asset name">
+                        <input type="text" class="form-control" id="assetName" name="assetName" maxlength="100" required
+                            placeholder="Enter asset name">
                         <div class="invalid-feedback">Asset name is required (max 100 characters)</div>
                     </div>
 
                     <!-- Serial Number (Optional) -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Serial Number</label>
-                        <input type="text" class="form-control" id="serialNumber" name="serialNumber" 
-                               maxlength="50" placeholder="Enter serial number">
+                        <input type="text" class="form-control" id="serialNumber" name="serialNumber" maxlength="50"
+                            placeholder="Enter serial number">
                         <div class="form-text">Optional, max 50 characters</div>
                     </div>
 
-                    <!-- Category (Required, will load from API) -->
+                    <!-- Category (Required) -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Category <span class="text-danger">*</span></label>
                         <select class="form-select" id="categoryId" name="categoryId" required>
@@ -57,7 +77,7 @@
                             <option value="Poor">Poor</option>
                             <option value="Damaged">Damaged</option>
                         </select>
-                        <div class="form-text">Optional, max 20 characters</div>
+                        <div class="form-text">Optional</div>
                     </div>
 
                     <!-- Purchase Date (Optional) -->
@@ -69,14 +89,34 @@
 
                     <!-- Purchase Price (Optional) -->
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Purchase Price</label>
-                        <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" 
-                               min="0" step="0.01" placeholder="0.00">
+                        <label class="form-label">Purchase Price ($)</label>
+                        <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" min="0"
+                            step="0.01" placeholder="0.00">
                         <div class="form-text">Optional, minimum 0</div>
                     </div>
+
+                    <!-- Status (For Update Mode Only) -->
+                    <div class="col-md-6 mb-3 d-none" id="statusField">
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="Available">Available</option>
+                            <option value="In Use">In Use</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                        <div class="invalid-feedback">Status is required</div>
+                    </div>
+
+                    <!-- Is Active (For Update Mode Only) -->
+                    <div class="col-md-6 mb-3 d-none" id="isActiveField">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
+                            <label class="form-check-label" for="isActive">
+                                Active Status
+                            </label>
+                            <div class="form-text">Uncheck to deactivate asset</div>
+                        </div>
+                    </div>
                 </div>
-                                <input type="date" class="form-control" id="assignedDate">
-                            </div>
 
                 <div class="mt-4">
                     <button type="submit" class="btn btn-danger" id="btnSaveAsset">

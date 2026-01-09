@@ -1,6 +1,5 @@
 /**
- * Asset API Service
- * Asset management endpoints using axios
+ * Asset API Service - DIPERBAIKI
  */
 
 import { axiosInstance } from './axios.instance.js';
@@ -10,6 +9,7 @@ class AssetAPI {
     ASSET: '/api/asset',
     ASSET_BY_ID: '/api/asset/{id}',
     ASSET_GRID: '/api/asset/grid',
+    ASSET_SEARCH: '/api/asset/search', // Endpoint ini TIDAK ADA di Swagger, jadi dihapus
   };
 
   replaceParams(endpoint, params) {
@@ -73,13 +73,33 @@ class AssetAPI {
     }
   }
 
+  // DIPERBAIKI: Gunakan ASSET_GRID dengan parameter search
   async searchAssets(searchTerm, page = 1, pageSize = 10) {
-    return this.getAssetsGrid({
-      search: searchTerm,
-      page,
-      pageSize,
-    });
+    try {
+      const response = await axiosInstance.get(this.endpoints.ASSET_GRID, {
+        params: {
+          search: searchTerm,
+          page,
+          pageSize,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
+
+  // HAPUS method ini karena tidak ada di Swagger
+  // async getAssetsByCategory(categoryId) {
+  //   try {
+  //     const response = await axiosInstance.get(this.endpoints.ASSET, {
+  //       params: { categoryId }
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }
 
 // Export singleton instance

@@ -1,22 +1,42 @@
 <!-- Transaction CRUD Page - Add/Edit Transaction -->
 <div id="transactionCrudPage">
     <div class="page-header mb-4">
-        <div>
-            <h1 id="crudTitle"><i class="fas fa-exchange-alt me-2"></i>Add New Transaction</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#" data-route="transactions">Transactions</a></li>
-                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
-                </ol>
-            </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 id="crudTitle"><i class="fas fa-exchange-alt me-2"></i>Add New Transaction</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#" data-route="transactions">Transactions</a></li>
+                        <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn btn-outline-secondary" id="btnBackToTransactions">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </button>
         </div>
-        <button class="btn btn-outline-secondary" id="btnBackToTransactions">
-            <i class="fas fa-arrow-left me-2"></i>Back to List
-        </button>
     </div>
 
-    <div class="card">
+    <!-- Toast Messages -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
         <div class="card-body">
             <form id="transactionForm">
                 <div class="row">
@@ -30,49 +50,54 @@
                         <div class="invalid-feedback">Please select an asset</div>
                     </div>
 
-                    <!-- Employee (Optional, will load from API) -->
+                    <!-- From Employee (Optional) -->
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Employee</label>
-                        <select class="form-select" id="employeeId" name="employeeId">
+                        <label class="form-label">From Employee</label>
+                        <select class="form-select" id="fromEmployeeId" name="fromEmployeeId">
                             <option value="">Select Employee</option>
                             <!-- Will be loaded from API -->
                         </select>
-                        <div class="form-text">Optional</div>
+                        <div class="form-text">Optional - who is transferring</div>
                     </div>
 
-                    <!-- Transaction Type (Optional) -->
+                    <!-- To Employee (Optional) -->
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Transaction Type</label>
-                        <select class="form-select" id="transactionType" name="transactionType">
-                            <option value="">Select Type</option>
-                            <option value="Checkout">Checkout</option>
-                            <option value="Return">Return</option>
-                            <option value="Transfer">Transfer</option>
-                            <option value="Maintenance">Maintenance</option>
-                            <option value="Disposal">Disposal</option>
+                        <label class="form-label">To Employee</label>
+                        <select class="form-select" id="toEmployeeId" name="toEmployeeId">
+                            <option value="">Select Employee</option>
+                            <!-- Will be loaded from API -->
                         </select>
-                        <div class="form-text">Optional, max 20 characters</div>
+                        <div class="form-text">Optional - who is receiving</div>
+                    </div>
+
+                    <!-- Status (Required) -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="">Select Status</option>
+                            <option value="TRANSFER">Transfer</option>
+                            <option value="ASSIGN">Assign</option>
+                            <option value="RETURN">Return</option>
+                            <option value="REPAIR">Repair</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="COMPLETED">Completed</option>
+                        </select>
+                        <div class="invalid-feedback">Status is required</div>
                     </div>
 
                     <!-- Transaction Date (Required) -->
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Transaction Date <span class="text-danger">*</span></label>
-                        <input type="datetime-local" class="form-control" id="transactionDate" name="transactionDate" required>
+                        <input type="datetime-local" class="form-control" id="transactionDate" name="transactionDate"
+                            required>
                         <div class="invalid-feedback">Transaction date is required</div>
-                    </div>
-
-                    <!-- Return Date (Optional) -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Return Date</label>
-                        <input type="datetime-local" class="form-control" id="returnDate" name="returnDate">
-                        <div class="form-text">Optional</div>
                     </div>
 
                     <!-- Notes (Optional) -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Notes</label>
-                        <textarea class="form-control" id="notes" name="notes" 
-                                  maxlength="500" rows="4" placeholder="Enter notes"></textarea>
+                        <textarea class="form-control" id="notes" name="notes" maxlength="500" rows="3"
+                            placeholder="Enter notes (optional)"></textarea>
                         <div class="form-text">Optional, max 500 characters</div>
                     </div>
                 </div>

@@ -1,66 +1,70 @@
 <!-- Categories Management Page -->
 <div id="categoriesPage">
-    <div class="page-header">
-        <div>
-            <h1><i class="fas fa-tags me-2"></i>Category Management</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item active">Categories</li>
-                </ol>
-            </nav>
-        </div>
-        <div>
-            <button class="btn btn-outline-secondary me-2" id="btnRefreshCategories">
-                <i class="fas fa-sync-alt me-2"></i>Refresh
-            </button>
-            <button class="btn btn-danger" id="btnAddCategory">
-                <i class="fas fa-plus me-2"></i>Add Category
-            </button>
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-tags me-2"></i>Category Management</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Categories</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary me-2" id="btnRefreshCategories">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+                <button class="btn btn-danger" id="btnAddCategory">
+                    <i class="fas fa-plus me-2"></i>Add Category
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Advanced Filters -->
-    <div class="card mb-4">
-        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#categoryFilters" style="cursor: pointer;">
-            <i class="fas fa-filter me-2"></i>Advanced Filters
-            <i class="fas fa-chevron-down float-end"></i>
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filters</h6>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#categoryFilterCollapse">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
         </div>
-        <div class="collapse" id="categoryFilters">
-            <div class="card-body">
-                <div class="row g-3">
+        <div class="collapse show" id="categoryFilterCollapse">
+            <div class="card-body pt-0">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Search</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchCategory"
+                                placeholder="Search categories...">
+                        </div>
+                    </div>
                     <div class="col-md-3">
                         <label class="form-label">Status</label>
-                        <select class="form-select" id="filterStatus">
+                        <select class="form-select" id="filterCategoryStatus">
                             <option value="">All Status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Items Count</label>
-                        <select class="form-select" id="filterItemCount">
-                            <option value="">All</option>
-                            <option value="0">Empty (0 items)</option>
-                            <option value="1-10">1-10 items</option>
-                            <option value="11-50">11-50 items</option>
-                            <option value="51+">51+ items</option>
+                        <label class="form-label">Sort By</label>
+                        <select class="form-select" id="sortCategory">
+                            <option value="name">Name (A-Z)</option>
+                            <option value="name_desc">Name (Z-A)</option>
+                            <option value="active">Active First</option>
+                            <option value="inactive">Inactive First</option>
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Search</label>
-                        <input type="text" class="form-control" id="filterSearch" placeholder="Search by name or description...">
-                    </div>
                     <div class="col-md-2">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-danger" id="btnApplyFilters">
-                                <i class="fas fa-check me-1"></i>Apply
-                            </button>
-                            <button class="btn btn-outline-secondary" id="btnResetFilters">
-                                <i class="fas fa-redo me-1"></i>Reset
-                            </button>
-                        </div>
+                        <button class="btn btn-outline-secondary w-100" id="btnResetFilters">
+                            <i class="fas fa-redo me-1"></i>Reset
+                        </button>
                     </div>
                 </div>
             </div>
@@ -68,38 +72,96 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-list me-2"></i>All Categories
-                    <span class="badge bg-primary ms-2" id="totalCategories">0</span>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-list me-2"></i>All Categories</h6>
+                        <span class="badge bg-primary" id="totalCategories">0</span>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th style="width: 60px;">#</th>
-                                    <th>Category Name</th>
-                                    <th>Description</th>
-                                    <th>Items</th>
-                                    <th style="width: 150px;">Actions</th>
+                                    <th width="5%">#</th>
+                                    <th width="25%">Category Name</th>
+                                    <th width="40%">Description</th>
+                                    <th width="15%">Status</th>
+                                    <th width="15%">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="categoriesTableBody"></tbody>
+                            <tbody id="categoriesTableBody">
+                                <!-- Data will be loaded by JavaScript -->
+                            </tbody>
                         </table>
+                    </div>
+                    <div id="categoriesEmpty" class="text-center py-5 d-none">
+                        <div class="text-muted">
+                            <i class="fas fa-tags fa-3x mb-3 opacity-50"></i>
+                            <p class="mb-0">No categories found</p>
+                            <button class="btn btn-danger btn-sm mt-2" id="btnAddFirstCategory">
+                                <i class="fas fa-plus me-1"></i>Add First Category
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination Footer -->
+                <div class="card-footer bg-white border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            Showing <span id="showingCategories">0</span> of <span id="totalFilteredCategories">0</span>
+                            categories
+                        </div>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0" id="categoriesPagination">
+                                <!-- Pagination will be generated by JavaScript -->
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-chart-pie me-2"></i>Category Distribution
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Category Distribution</h6>
                 </div>
                 <div class="card-body">
-                    <canvas id="categoryChart"></canvas>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="mt-3 small text-muted">
+                        <p class="mb-1">Shows top 5 categories by item count</p>
+                        <p class="mb-0">Hover over segments for details</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                            <span>Active Categories</span>
+                            <span class="badge bg-success" id="activeCategoriesCount">0</span>
+                        </div>
+                        <div
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                            <span>Inactive Categories</span>
+                            <span class="badge bg-secondary" id="inactiveCategoriesCount">0</span>
+                        </div>
+                        <div
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 py-2">
+                            <span>Total Items</span>
+                            <span class="badge bg-primary" id="totalItemsCount">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

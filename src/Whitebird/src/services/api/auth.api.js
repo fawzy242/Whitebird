@@ -66,6 +66,7 @@ class AuthAPI {
 
       return response.data;
     } catch (error) {
+      console.error('❌ Login failed:', error);
       throw error;
     }
   }
@@ -78,6 +79,7 @@ class AuthAPI {
       const response = await axiosInstance.get(this.endpoints.ME);
       return response.data;
     } catch (error) {
+      console.error('❌ Get user failed:', error);
       throw error;
     }
   }
@@ -90,6 +92,7 @@ class AuthAPI {
       const response = await axiosInstance.post(this.endpoints.CHANGE_PASSWORD, data);
       return response.data;
     } catch (error) {
+      console.error('❌ Change password failed:', error);
       throw error;
     }
   }
@@ -102,6 +105,7 @@ class AuthAPI {
       const response = await axiosInstance.post(this.endpoints.FORGOT_PASSWORD, { email });
       return response.data;
     } catch (error) {
+      console.error('❌ Forgot password failed:', error);
       throw error;
     }
   }
@@ -114,6 +118,7 @@ class AuthAPI {
       const response = await axiosInstance.post(this.endpoints.RESET_PASSWORD, data);
       return response.data;
     } catch (error) {
+      console.error('❌ Reset password failed:', error);
       throw error;
     }
   }
@@ -126,6 +131,7 @@ class AuthAPI {
       const response = await axiosInstance.post(this.endpoints.RESET_PASSWORD_WITH_TOKEN, data);
       return response.data;
     } catch (error) {
+      console.error('❌ Reset password with token failed:', error);
       throw error;
     }
   }
@@ -150,6 +156,23 @@ class AuthAPI {
    */
   getCurrentUser() {
     return StorageService.getUser();
+  }
+
+  /**
+   * Refresh token (if needed in future)
+   */
+  async refreshToken() {
+    try {
+      // Implementation depends on backend
+      const response = await axiosInstance.post('/api/auth/refresh');
+      if (response.data.token) {
+        StorageService.setToken(response.data.token);
+      }
+      return response.data;
+    } catch (error) {
+      console.error('❌ Token refresh failed:', error);
+      throw error;
+    }
   }
 }
 

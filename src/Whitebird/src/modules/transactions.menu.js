@@ -1,5 +1,5 @@
 /**
- * Transactions Menu Module
+ * Transactions Menu Module - Fixed and Optimized
  * Connected to Whitebird API
  */
 
@@ -9,7 +9,24 @@ import WhitebirdAPI from '../services/api/index.js';
 export class TransactionsMenu {
   constructor() {
     this.transactions = [];
+    this.filteredData = [];
+    this.currentPage = 1;
+    this.pageSize = 10;
+    this.totalItems = 0;
+    this.totalPages = 1;
     this.loading = false;
+  }
+
+  /**
+   * Initialize transactions menu
+   */
+  async initialize() {
+    console.log('🔄 Transactions Menu Initializing...');
+    this.setupEventListeners();
+    await this.loadFromAPI();
+    this.updateStats();
+    this.render();
+    console.log('✅ Transactions Menu Initialized!');
   }
 
   /**
@@ -24,48 +41,27 @@ export class TransactionsMenu {
 
       if (response.isSuccess && response.data) {
         this.transactions = response.data;
+        this.totalItems = this.transactions.length;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        this.filteredData = [...this.transactions];
         console.log(`✅ Loaded ${this.transactions.length} transactions from API`);
       } else {
-        console.warn('⚠️ API returned no data, using fallback');
-        this.transactions = this.generateSampleTransactions();
+        console.warn('⚠️ API returned no data');
+        this.transactions = [];
+        this.filteredData = [];
       }
     } catch (error) {
       console.error('❌ Failed to load transactions from API:', error);
-      console.log('📦 Using sample data as fallback');
-      this.transactions = this.generateSampleTransactions();
+      this.transactions = [];
+      this.filteredData = [];
     } finally {
       this.loading = false;
     }
   }
 
-  generateSampleTransactions() {
-    const statuses = ['TRANSFER', 'ASSIGN', 'RETURN', 'REPAIR'];
-    const assets = ['Dell Laptop', 'Office Chair', 'iPhone 15', 'Projector'];
-    const people = ['John Doe', 'Jane Smith', 'Bob Johnson', 'Warehouse'];
-
-    return Array.from({ length: 20 }, (_, i) => ({
-      transactionId: i + 1,
-      assetId: Math.floor(Math.random() * 100) + 1,
-      assetName: assets[Math.floor(Math.random() * assets.length)],
-      assetCode: `AST-${String(Math.floor(Math.random() * 1000)).padStart(4, '0')}`,
-      fromEmployeeName: people[Math.floor(Math.random() * people.length)],
-      toEmployeeName: people[Math.floor(Math.random() * people.length)],
-      transactionDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split('T')[0],
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-    }));
-  }
-
-  async initialize() {
-    console.log('🔄 Transactions Menu Initializing...');
-    await this.loadFromAPI();
-    this.setupEventListeners();
-    this.updateStats();
-    this.render();
-    console.log('✅ Transactions Menu Initialized!');
-  }
-
+  /**
+   * Setup event listeners
+   */
   setupEventListeners() {
     const newBtn = document.getElementById('btnNewTransaction');
     if (newBtn) {
@@ -84,77 +80,292 @@ export class TransactionsMenu {
           await this.loadFromAPI();
           this.updateStats();
           this.render();
-
-          if (window.showNotification) {
-            window.showNotification('success', '✅ Transactions refreshed successfully from API');
-          }
+          this.showNotification('success', '✅ Transactions refreshed successfully');
         } catch (error) {
           console.error('❌ Refresh failed:', error);
-          if (window.showNotification) {
-            window.showNotification('danger', '❌ Failed to refresh transactions');
-          }
+          this.showNotification('danger', '❌ Failed to refresh transactions');
         } finally {
           refreshBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Refresh';
           refreshBtn.disabled = false;
         }
       });
     }
+
+    // Search functionality
+    const searchInput = document.getElementById('searchTransactions');
+    if (searchInput) {
+      let searchTimeout;
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          this.applyFilters();
+        }, 300);
+      });
+    }
+
+    // Status filter
+    const statusFilter = document.getElementById('filterTransactionStatus');
+    if (statusFilter) {
+      statusFilter.addEventListener('change', () => this.applyFilters());
+    }
   }
 
+  /**
+   * Apply filters
+   */
+  applyFilters() {
+    const searchQuery = document.getElementById('searchTransactions')?.value.toLowerCase() || '';
+    const statusFilter = document.getElementById('filterTransactionStatus')?.value || '';
+
+    this.filteredData = this.transactions.filter((trans) => {
+      let match = true;
+
+      // Search filter
+      if (searchQuery) {
+        match =
+          match &&
+          (trans.assetName?.toLowerCase().includes(searchQuery) ||
+            trans.assetCode?.toLowerCase().includes(searchQuery) ||
+            trans.fromEmployeeName?.toLowerCase().includes(searchQuery) ||
+            trans.toEmployeeName?.toLowerCase().includes(searchQuery) ||
+            trans.status?.toLowerCase().includes(searchQuery));
+      }
+
+      // Status filter
+      if (statusFilter) {
+        match = match && trans.status === statusFilter;
+      }
+
+      return match;
+    });
+
+    this.currentPage = 1;
+    this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
+    this.render();
+  }
+
+  /**
+   * Update stats - FIXED: Check if elements exist before updating
+   */
   updateStats() {
     const today = new Date().toISOString().split('T')[0];
-    const todayTrans = this.transactions.filter((t) => t.transactionDate === today).length;
+    const todayTrans = this.transactions.filter((t) => 
+      t.transactionDate && t.transactionDate.startsWith(today)
+    ).length;
+    
     const transfers = this.transactions.filter((t) => t.status === 'TRANSFER').length;
     const assignments = this.transactions.filter((t) => t.status === 'ASSIGN').length;
     const returns = this.transactions.filter((t) => t.status === 'RETURN').length;
 
-    document.getElementById('todayTransactions').textContent = todayTrans;
-    document.getElementById('transferCount').textContent = transfers;
-    document.getElementById('assignCount').textContent = assignments;
-    document.getElementById('returnCount').textContent = returns;
-    document.getElementById('totalTransactions').textContent = this.transactions.length;
+    // Safe element updates
+    const updateElement = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+      }
+    };
+
+    updateElement('todayTransactions', todayTrans);
+    updateElement('transferCount', transfers);
+    updateElement('assignCount', assignments);
+    updateElement('returnCount', returns);
+    updateElement('totalTransactions', this.transactions.length);
   }
 
+  /**
+   * Render transactions table
+   */
   render() {
     const tbody = document.getElementById('transactionsTableBody');
-    if (!tbody) {
-      return;
-    }
+    if (!tbody) return;
 
+    // Pagination
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    const pageData = this.filteredData.slice(start, end);
+
+    // Status badge colors
     const statusColors = {
       TRANSFER: 'info',
       ASSIGN: 'primary',
       RETURN: 'success',
       REPAIR: 'warning',
+      PENDING: 'secondary',
+      COMPLETED: 'success',
+      CANCELLED: 'danger'
     };
 
-    const html = this.transactions
-      .slice(0, 10)
-      .map(
-        (trans) => `
-          <tr>
-            <td>${trans.transactionDate}</td>
-            <td><span class="badge bg-${statusColors[trans.status] || 'secondary'}">${trans.status}</span></td>
-            <td><strong>${trans.assetName}</strong> <small class="text-muted">(${trans.assetCode})</small></td>
-            <td>${trans.fromEmployeeName || 'N/A'}</td>
-            <td>${trans.toEmployeeName || 'N/A'}</td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary btn-view" data-id="${trans.transactionId || trans.id}" title="View">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${trans.transactionId || trans.id}" title="Delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        `
-      )
-      .join('');
+    if (pageData.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="text-center py-4">
+            <div class="text-muted">
+              <i class="fas fa-inbox fa-2x mb-2"></i>
+              <p>No transactions found</p>
+            </div>
+          </td>
+        </tr>
+      `;
+      this.renderPagination();
+      return;
+    }
 
-    tbody.innerHTML = html;
+    // Build rows
+    const fragment = document.createDocumentFragment();
+    pageData.forEach((trans, index) => {
+      const tr = document.createElement('tr');
+      
+      tr.innerHTML = `
+        <td>${start + index + 1}</td>
+        <td>${this.formatDate(trans.transactionDate)}</td>
+        <td>
+          <span class="badge bg-${statusColors[trans.status] || 'secondary'}">
+            ${trans.status || 'N/A'}
+          </span>
+        </td>
+        <td>
+          <strong>${trans.assetName || 'N/A'}</strong>
+          <small class="text-muted d-block">${trans.assetCode || 'No Code'}</small>
+        </td>
+        <td>${trans.fromEmployeeName || 'N/A'}</td>
+        <td>${trans.toEmployeeName || 'N/A'}</td>
+        <td>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-primary btn-view" 
+                    data-id="${trans.transactionId || trans.id}" 
+                    title="View Details">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-delete" 
+                    data-id="${trans.transactionId || trans.id}" 
+                    title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      `;
+
+      fragment.appendChild(tr);
+    });
+
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
 
     // Attach event listeners
     this.attachRowEventListeners(tbody);
+    
+    // Render pagination
+    this.renderPagination();
+    
+    // Update showing count
+    this.updateShowingCount();
+  }
+
+  /**
+   * Format date
+   */
+  formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    } catch {
+      return dateString;
+    }
+  }
+
+  /**
+   * Render pagination
+   */
+  renderPagination() {
+    const pagination = document.getElementById('transactionsPagination');
+    if (!pagination) return;
+
+    if (this.totalPages <= 1) {
+      pagination.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+
+    // Previous button
+    html += `
+      <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${this.currentPage - 1}">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      </li>
+    `;
+
+    // Page numbers
+    const maxPages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
+
+    if (endPage - startPage < maxPages - 1) {
+      startPage = Math.max(1, endPage - maxPages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      html += `
+        <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+          <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>
+      `;
+    }
+
+    // Next button
+    html += `
+      <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${this.currentPage + 1}">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </li>
+    `;
+
+    pagination.innerHTML = html;
+
+    // Attach pagination listeners
+    this.attachPaginationListeners(pagination);
+  }
+
+  /**
+   * Attach pagination listeners
+   */
+  attachPaginationListeners(pagination) {
+    pagination.querySelectorAll('.page-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = parseInt(e.currentTarget.dataset.page);
+        if (!isNaN(page)) {
+          this.goToPage(page);
+        }
+      });
+    });
+  }
+
+  /**
+   * Go to page
+   */
+  goToPage(page) {
+    if (page < 1 || page > this.totalPages) return;
+    
+    this.currentPage = page;
+    this.render();
+  }
+
+  /**
+   * Update showing count
+   */
+  updateShowingCount() {
+    const start = (this.currentPage - 1) * this.pageSize + 1;
+    const end = Math.min(this.currentPage * this.pageSize, this.filteredData.length);
+    
+    const showingEl = document.getElementById('showingTransactions');
+    const totalEl = document.getElementById('totalFilteredTransactions');
+    
+    if (showingEl) showingEl.textContent = `${start}-${end}`;
+    if (totalEl) totalEl.textContent = this.filteredData.length;
   }
 
   /**
@@ -181,11 +392,16 @@ export class TransactionsMenu {
    */
   handleView(id) {
     console.log(`👁️ Viewing transaction ${id}`);
-    // You could implement a modal or navigate to detail page
     const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
     if (transaction) {
       alert(
-        `Transaction Details:\nAsset: ${transaction.assetName}\nStatus: ${transaction.status}\nDate: ${transaction.transactionDate}`
+        `Transaction Details:\n\n` +
+        `ID: ${transaction.transactionId}\n` +
+        `Asset: ${transaction.assetName} (${transaction.assetCode})\n` +
+        `Status: ${transaction.status}\n` +
+        `From: ${transaction.fromEmployeeName || 'N/A'}\n` +
+        `To: ${transaction.toEmployeeName || 'N/A'}\n` +
+        `Date: ${this.formatDate(transaction.transactionDate)}`
       );
     }
   }
@@ -195,14 +411,12 @@ export class TransactionsMenu {
    */
   async handleDelete(id) {
     const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
-    if (!transaction) {
-      return;
-    }
+    if (!transaction) return;
 
     const result = await confirmModal.show({
       type: 'danger',
       title: 'Delete Transaction',
-      message: 'Are you sure you want to delete this transaction? This action cannot be undone.',
+      message: `Are you sure you want to delete this transaction?\n\nAsset: ${transaction.assetName}\nDate: ${this.formatDate(transaction.transactionDate)}`,
       okText: 'Delete',
       cancelText: 'Cancel',
       okClass: 'btn-danger',
@@ -210,14 +424,10 @@ export class TransactionsMenu {
 
     if (result) {
       try {
-        // Delete from API
         await WhitebirdAPI.transactions.deleteTransaction(id);
-
-        // Remove from local data
-        this.transactions = this.transactions.filter((t) => (t.transactionId || t.id) !== id);
+        await this.loadFromAPI();
         this.updateStats();
         this.render();
-
         this.showNotification('success', 'Transaction deleted successfully');
       } catch (error) {
         console.error('❌ Failed to delete transaction:', error);
@@ -226,23 +436,36 @@ export class TransactionsMenu {
     }
   }
 
+  /**
+   * Handle new transaction
+   */
   async handleNew() {
     console.log('➕ Navigating to transactionscreate');
+    this.navigateTo('transactionscreate');
+  }
 
+  /**
+   * Navigate helper
+   */
+  navigateTo(page) {
     if (window.router) {
-      window.router.navigate('transactionscreate');
+      window.router.navigate(page);
     } else {
-      window.location.href = '/transactionscreate';
+      window.location.href = `/${page}`;
     }
   }
 
+  /**
+   * Show notification
+   */
   showNotification(type, message) {
     if (window.showNotification) {
       window.showNotification(type, message);
     } else {
-      console.log(`[${type}] ${message}`);
+      alert(message);
     }
   }
 }
 
+// Export singleton instance
 export const transactionsMenu = new TransactionsMenu();

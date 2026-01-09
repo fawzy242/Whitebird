@@ -210,6 +210,10 @@ export class AssetCrudModule {
       if (response.isSuccess && response.data) {
         this.asset = response.data;
         this.populateForm(this.asset);
+        
+        // Tampilkan field status dan isActive untuk edit mode
+        this.showUpdateFields();
+        
         console.log('✅ Asset data loaded');
       } else {
         throw new Error(response.message || 'Failed to load asset');
@@ -221,25 +225,46 @@ export class AssetCrudModule {
   }
 
   /**
+   * Show update-specific fields
+   */
+  showUpdateFields() {
+    const statusField = document.getElementById('statusField');
+    const isActiveField = document.getElementById('isActiveField');
+    
+    if (statusField) statusField.classList.remove('d-none');
+    if (isActiveField) isActiveField.classList.remove('d-none');
+  }
+
+  /**
    * Populate form with asset data
    */
   populateForm(asset) {
     console.log('Populating form with:', asset);
 
+    // Basic fields
     const formFields = {
       assetName: asset.assetName || '',
       serialNumber: asset.serialNumber || '',
       categoryId: asset.categoryId || '',
       condition: asset.condition || '',
       purchasePrice: asset.purchasePrice || '',
-      status: asset.status || 'active',
     };
+
+    // Untuk update mode
+    if (this.mode === 'update') {
+      formFields.status = asset.status || 'Available';
+      formFields.isActive = asset.isActive || true;
+    }
 
     // Set form values
     Object.entries(formFields).forEach(([id, value]) => {
       const element = document.getElementById(id);
       if (element) {
-        element.value = value;
+        if (element.type === 'checkbox') {
+          element.checked = Boolean(value);
+        } else {
+          element.value = value;
+        }
         console.log(`Set ${id} to:`, value);
       } else {
         console.warn(`Element #${id} not found`);
@@ -250,18 +275,17 @@ export class AssetCrudModule {
     if (asset.purchaseDate) {
       const dateElement = document.getElementById('purchaseDate');
       if (dateElement) {
-        const date = new Date(asset.purchaseDate);
-        dateElement.value = date.toISOString().split('T')[0];
-        console.log('Set purchaseDate to:', dateElement.value);
+        try {
+          const date = new Date(asset.purchaseDate);
+          dateElement.value = date.toISOString().split('T')[0];
+          console.log('Set purchaseDate to:', dateElement.value);
+        } catch (e) {
+          console.warn('Invalid purchase date:', asset.purchaseDate);
+        }
       }
     }
 
-    // Handle isActive checkbox
-    const isActiveCheckbox = document.getElementById('isActive');
-    if (isActiveCheckbox) {
-      isActiveCheckbox.checked = asset.isActive || false;
-      console.log('Set isActive to:', asset.isActive || false);
-    }
+    console.log('✅ Form populated');
   }
 
   /**
@@ -270,16 +294,14 @@ export class AssetCrudModule {
   getFormData() {
     const getValue = (id, defaultValue = null) => {
       const element = document.getElementById(id);
-      const value = element ? element.value.trim() : defaultValue;
-      console.log(`Getting ${id}:`, value);
-      return value;
-    };
-
-    const getCheckboxValue = (id) => {
-      const element = document.getElementById(id);
-      const value = element ? element.checked : true;
-      console.log(`Getting checkbox ${id}:`, value);
-      return value;
+      if (!element) return defaultValue;
+      
+      if (element.type === 'checkbox') {
+        return element.checked;
+      }
+      
+      const value = element.value.trim();
+      return value !== '' ? value : defaultValue;
     };
 
     const data = {
@@ -292,7 +314,16 @@ export class AssetCrudModule {
     // Handle purchase date
     const purchaseDate = getValue('purchaseDate', '');
     if (purchaseDate) {
-      data.purchaseDate = new Date(purchaseDate).toISOString();
+      try {
+        const date = new Date(purchaseDate);
+        if (!isNaN(date.getTime())) {
+          data.purchaseDate = date.toISOString();
+        } else {
+          data.purchaseDate = null;
+        }
+      } catch (e) {
+        data.purchaseDate = null;
+      }
     } else {
       data.purchaseDate = null;
     }
@@ -301,7 +332,7 @@ export class AssetCrudModule {
     const purchasePrice = getValue('purchasePrice', '');
     if (purchasePrice) {
       const price = parseFloat(purchasePrice);
-      if (!isNaN(price)) {
+      if (!isNaN(price) && price >= 0) {
         data.purchasePrice = price;
       } else {
         data.purchasePrice = null;
@@ -312,9 +343,9 @@ export class AssetCrudModule {
 
     // Untuk update mode, tambahkan field yang diperlukan sesuai Swagger
     if (this.mode === 'update') {
-      data.isActive = getCheckboxValue('isActive');
-      data.status = getValue('status', 'active');
-
+      data.status = getValue('status', 'Available');
+      data.isActive = getValue('isActive', true);
+      
       // currentHolderId bisa diambil dari data aset jika ada
       if (this.asset && this.asset.currentHolderId) {
         data.currentHolderId = this.asset.currentHolderId;
@@ -334,6 +365,7 @@ export class AssetCrudModule {
     console.log('Validating form data:', data);
     const errors = [];
 
+    // Validation for both create and update
     if (!data.assetName || data.assetName.trim() === '') {
       errors.push('Asset Name is required');
       this.highlightField('assetName', true);
@@ -348,12 +380,14 @@ export class AssetCrudModule {
       this.highlightField('categoryId', false);
     }
 
-    // Untuk update, pastikan status ada
-    if (this.mode === 'update' && !data.status) {
-      errors.push('Status is required');
-      this.highlightField('status', true);
-    } else if (this.mode === 'update') {
-      this.highlightField('status', false);
+    // Additional validation for UPDATE mode
+    if (this.mode === 'update') {
+      if (!data.status || data.status.trim() === '') {
+        errors.push('Status is required');
+        this.highlightField('status', true);
+      } else {
+        this.highlightField('status', false);
+      }
     }
 
     if (errors.length > 0) {

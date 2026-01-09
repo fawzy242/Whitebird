@@ -1,5 +1,5 @@
 /**
- * Category API Service
+ * Category API Service - DIPERBAIKI
  */
 
 import { axiosInstance } from './axios.instance.js';
@@ -9,15 +9,16 @@ class CategoryAPI {
     CATEGORY: '/api/category',
     CATEGORY_BY_ID: '/api/category/{id}',
     CATEGORY_ACTIVE: '/api/category/active',
+    // CATEGORY_SEARCH: '/api/category/search', // ❌ HAPUS - Tidak ada di Swagger
   };
 
   replaceParams(endpoint, params) {
     return endpoint.replace(/{(\w+)}/g, (_, key) => params[key] || '');
   }
 
-  async getCategories() {
+  async getCategories(params = {}) { // ✅ Tambah params
     try {
-      const response = await axiosInstance.get(this.endpoints.CATEGORY);
+      const response = await axiosInstance.get(this.endpoints.CATEGORY, { params });
       return response.data;
     } catch (error) {
       throw error;
@@ -66,6 +67,18 @@ class CategoryAPI {
     try {
       const endpoint = this.replaceParams(this.endpoints.CATEGORY_BY_ID, { id });
       const response = await axiosInstance.delete(endpoint);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // DIPERBAIKI: Gunakan endpoint utama dengan parameter
+  async searchCategories(searchTerm) {
+    try {
+      const response = await axiosInstance.get(this.endpoints.CATEGORY, {
+        params: { search: searchTerm }
+      });
       return response.data;
     } catch (error) {
       throw error;

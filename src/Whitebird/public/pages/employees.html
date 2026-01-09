@@ -1,179 +1,168 @@
-<!-- Employees Page with Tabs - Approved/Pending -->
+<!-- Employees Management Page -->
 <div id="employeesPage">
-    <div class="page-header d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1><i class="fas fa-users me-2"></i>Employees Management</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item active">Employees</li>
-                </ol>
-            </nav>
-        </div>
-        <div>
-            <button class="btn btn-outline-secondary me-2" id="btnRefreshEmployees">
-                <i class="fas fa-sync-alt me-2"></i>Refresh
-            </button>
-            <button class="btn btn-danger me-2" id="btnAddEmployee">
-                <i class="fas fa-plus me-2"></i>Add New Employee
-            </button>
-            <button class="btn btn-success" id="btnExportExcel">
-                <i class="fas fa-file-excel me-2"></i>Export to Excel
-            </button>
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-users me-2"></i>Employee Management</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Employees</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary me-2" id="btnRefreshEmployees">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+                <button class="btn btn-danger" id="btnAddEmployee">
+                    <i class="fas fa-plus me-2"></i>Add Employee
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Filters Card -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#employeeFilterCollapse">
-                <i class="fas fa-filter me-2"></i>Advanced Filters
-                <i class="fas fa-chevron-down ms-2"></i>
-            </button>
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filters</h6>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#employeeFilterCollapse">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
         </div>
-        <div class="collapse" id="employeeFilterCollapse">
-            <div class="card-body">
+        <div class="collapse show" id="employeeFilterCollapse">
+            <div class="card-body pt-0">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
                         <label class="form-label">Search</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" class="form-control" id="searchEmployee" 
-                                   placeholder="Search by name, email, position...">
+                            <input type="text" class="form-control" id="searchEmployee"
+                                placeholder="Search employees...">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Department</label>
                         <select class="form-select" id="filterDepartment">
                             <option value="">All Departments</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Sales">Sales</option>
-                            <option value="HR">Human Resources</option>
+                            <option value="IT">IT</option>
+                            <option value="HR">HR</option>
                             <option value="Finance">Finance</option>
+                            <option value="Marketing">Marketing</option>
                             <option value="Operations">Operations</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Salary Range</label>
-                        <select class="form-select" id="filterSalary">
-                            <option value="">All Ranges</option>
-                            <option value="0-50000">$0 - $50,000</option>
-                            <option value="50000-75000">$50,000 - $75,000</option>
-                            <option value="75000-100000">$75,000 - $100,000</option>
-                            <option value="100000+">$100,000+</option>
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
                         </select>
                     </div>
                     <div class="col-md-2">
                         <button class="btn btn-outline-secondary w-100" id="btnResetFilters">
-                            <i class="fas fa-redo me-2"></i>Reset
+                            <i class="fas fa-redo me-1"></i>Reset
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Tabs: Approved / Pending -->
-    <div class="card">
-        <div class="card-header bg-white">
-            <ul class="nav nav-tabs card-header-tabs" id="employeeTabs" role="tablist">
+    <!-- Tabs -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+            <ul class="nav nav-tabs card-header-tabs border-0" id="employeeTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="approved-tab" data-bs-toggle="tab" 
-                            data-bs-target="#approved-pane" type="button" role="tab">
-                        <i class="fas fa-check-circle me-2"></i>
-                        Approved (Active)
-                        <span class="badge bg-success ms-2" id="approvedCount">0</span>
+                    <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active-pane"
+                        type="button" role="tab">
+                        <i class="fas fa-check-circle me-1"></i>Active
+                        <span class="badge bg-success ms-2" id="activeCount">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" 
-                            data-bs-target="#pending-pane" type="button" role="tab">
-                        <i class="fas fa-clock me-2"></i>
-                        Pending (Inactive)
-                        <span class="badge bg-warning ms-2" id="pendingCount">0</span>
+                    <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive-pane"
+                        type="button" role="tab">
+                        <i class="fas fa-clock me-1"></i>Inactive
+                        <span class="badge bg-secondary ms-2" id="inactiveCount">0</span>
                     </button>
                 </li>
             </ul>
         </div>
-        
+
         <div class="card-body p-0">
-            <div class="tab-content" id="employeeTabContent">
-                <!-- Approved Tab -->
-                <div class="tab-pane fade show active" id="approved-pane" role="tabpanel">
+            <div class="tab-content">
+                <!-- Active Tab -->
+                <div class="tab-pane fade show active" id="active-pane" role="tabpanel">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="approvedTable">
+                        <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="20%">Name</th>
+                                    <th width="25%">Employee</th>
                                     <th width="20%">Email</th>
                                     <th width="15%">Position</th>
-                                    <th width="12%">Department</th>
-                                    <th width="10%">Salary</th>
-                                    <th width="8%">Join Date</th>
-                                    <th width="10%" class="text-center">Actions</th>
+                                    <th width="15%">Department</th>
+                                    <th width="10%">Status</th>
+                                    <th width="10%">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="approvedTableBody">
-                                <!-- Approved employees will be loaded here -->
+                            <tbody id="activeTableBody">
+                                <!-- Data will be loaded by JavaScript -->
                             </tbody>
                         </table>
                     </div>
-                    
-                    <!-- Empty State for Approved -->
-                    <div id="approvedEmpty" class="text-center py-5 d-none">
-                        <i class="fas fa-users fa-3x text-muted opacity-50 mb-3"></i>
-                        <h5>No Approved Employees</h5>
-                        <p class="text-muted">All active employees will appear here</p>
+                    <div id="activeEmpty" class="text-center py-5 d-none">
+                        <div class="text-muted">
+                            <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                            <p class="mb-0">No active employees</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Pending Tab -->
-                <div class="tab-pane fade" id="pending-pane" role="tabpanel">
+                <!-- Inactive Tab -->
+                <div class="tab-pane fade" id="inactive-pane" role="tabpanel">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="pendingTable">
+                        <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="20%">Name</th>
+                                    <th width="25%">Employee</th>
                                     <th width="20%">Email</th>
                                     <th width="15%">Position</th>
-                                    <th width="12%">Department</th>
-                                    <th width="10%">Salary</th>
-                                    <th width="8%">Join Date</th>
-                                    <th width="10%" class="text-center">Actions</th>
+                                    <th width="15%">Department</th>
+                                    <th width="10%">Status</th>
+                                    <th width="10%">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="pendingTableBody">
-                                <!-- Pending employees will be loaded here -->
+                            <tbody id="inactiveTableBody">
+                                <!-- Data will be loaded by JavaScript -->
                             </tbody>
                         </table>
                     </div>
-                    
-                    <!-- Empty State for Pending -->
-                    <div id="pendingEmpty" class="text-center py-5 d-none">
-                        <i class="fas fa-clock fa-3x text-muted opacity-50 mb-3"></i>
-                        <h5>No Pending Employees</h5>
-                        <p class="text-muted">Inactive employees will appear here</p>
+                    <div id="inactiveEmpty" class="text-center py-5 d-none">
+                        <div class="text-muted">
+                            <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                            <p class="mb-0">No inactive employees</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Pagination Footer -->
-        <div class="card-footer bg-white">
+        <div class="card-footer bg-white border-0">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="text-muted small">
-                    Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> employees
+                <div class="text-muted">
+                    Showing <span id="showingEmployees">0</span> of <span id="totalFilteredEmployees">0</span> employees
                 </div>
                 <nav>
-                    <ul class="pagination pagination-sm mb-0" id="pagination">
-                        <!-- Pagination will be generated here -->
+                    <ul class="pagination pagination-sm mb-0" id="employeesPagination">
+                        <!-- Pagination will be generated by JavaScript -->
                     </ul>
                 </nav>
             </div>

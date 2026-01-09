@@ -1,5 +1,5 @@
 /**
- * Employee API Service
+ * Employee API Service - DIPERBAIKI
  */
 
 import { axiosInstance } from './axios.instance.js';
@@ -10,15 +10,16 @@ class EmployeeAPI {
     EMPLOYEE_BY_ID: '/api/employee/{id}',
     EMPLOYEE_ACTIVE: '/api/employee/active',
     EMPLOYEE_GRID: '/api/employee/grid',
+    // EMPLOYEE_SEARCH: '/api/employee/search', // ❌ HAPUS - Tidak ada di Swagger
   };
 
   replaceParams(endpoint, params) {
     return endpoint.replace(/{(\w+)}/g, (_, key) => params[key] || '');
   }
 
-  async getEmployees() {
+  async getEmployees(params = {}) { // ✅ Tambah params
     try {
-      const response = await axiosInstance.get(this.endpoints.EMPLOYEE);
+      const response = await axiosInstance.get(this.endpoints.EMPLOYEE, { params });
       return response.data;
     } catch (error) {
       throw error;
@@ -81,6 +82,33 @@ class EmployeeAPI {
       throw error;
     }
   }
+
+  async searchEmployees(searchTerm, page = 1, pageSize = 10) {
+    try {
+      const response = await axiosInstance.get(this.endpoints.EMPLOYEE_GRID, {
+        params: {
+          search: searchTerm,
+          page,
+          pageSize,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // HAPUS method ini karena tidak ada di Swagger
+  // async getEmployeesByDepartment(department) {
+  //   try {
+  //     const response = await axiosInstance.get(this.endpoints.EMPLOYEE, {
+  //       params: { department }
+  //     });
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }
 
 export const employeeAPI = new EmployeeAPI();

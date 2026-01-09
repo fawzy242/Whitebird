@@ -1,107 +1,136 @@
 <!-- Asset Transactions Page -->
 <div id="transactionsPage">
-    <div class="page-header">
-        <div>
-            <h1><i class="fas fa-exchange-alt me-2"></i>Asset Transactions</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item active">Transactions</li>
-                </ol>
-            </nav>
-        </div>
-        <div>
-            <button class="btn btn-outline-secondary me-2" id="btnRefreshTransactions">
-                <i class="fas fa-sync-alt me-2"></i>Refresh
-            </button>
-            <button class="btn btn-danger" id="btnNewTransaction">
-                <i class="fas fa-plus me-2"></i>New Transaction
-            </button>
+    <div class="page-header mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-exchange-alt me-2"></i>Asset Transactions</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Transactions</li>
+                    </ol>
+                </nav>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary me-2" id="btnRefreshTransactions">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+                <button class="btn btn-danger" id="btnNewTransaction">
+                    <i class="fas fa-plus me-2"></i>New Transaction
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Stats -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Today's Transactions</h6>
-                    <h3 id="todayTransactions">0</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Today's</p>
+                            <h2 class="mb-0" id="todayTransactions">0</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle">
+                            <i class="fas fa-calendar-day fa-lg text-primary"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Checkouts</h6>
-                    <h3 id="checkoutCount">0</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Transfers</p>
+                            <h2 class="mb-0" id="transferCount">0</h2>
+                        </div>
+                        <div class="bg-info bg-opacity-10 p-3 rounded-circle">
+                            <i class="fas fa-exchange-alt fa-lg text-info"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Returns</h6>
-                    <h3 id="returnCount">0</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Assignments</p>
+                            <h2 class="mb-0" id="assignCount">0</h2>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-circle">
+                            <i class="fas fa-user-check fa-lg text-success"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <h6 class="text-muted">Transfers</h6>
-                    <h3 id="transferCount">0</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Returns</p>
+                            <h2 class="mb-0" id="returnCount">0</h2>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-circle">
+                            <i class="fas fa-undo fa-lg text-warning"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Advanced Filters -->
-    <div class="card mb-4">
-        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#transactionFilters" style="cursor: pointer;">
-            <i class="fas fa-filter me-2"></i>Advanced Filters
-            <i class="fas fa-chevron-down float-end"></i>
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filters</h6>
+                <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#transactionFilterCollapse">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
         </div>
-        <div class="collapse" id="transactionFilters">
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-2">
-                        <label class="form-label">Transaction Type</label>
-                        <select class="form-select" id="filterType">
-                            <option value="">All Types</option>
-                            <option value="checkout">Checkout</option>
-                            <option value="checkin">Check-in</option>
-                            <option value="transfer">Transfer</option>
-                            <option value="maintenance">Maintenance</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
+        <div class="collapse show" id="transactionFilterCollapse">
+            <div class="card-body pt-0">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
                         <label class="form-label">Status</label>
-                        <select class="form-select" id="filterStatus">
+                        <select class="form-select" id="filterTransactionStatus">
                             <option value="">All Status</option>
-                            <option value="completed">Completed</option>
-                            <option value="pending">Pending</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="TRANSFER">Transfer</option>
+                            <option value="ASSIGN">Assign</option>
+                            <option value="RETURN">Return</option>
+                            <option value="REPAIR">Repair</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
                         </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Date From</label>
                         <input type="date" class="form-control" id="filterDateFrom">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Date To</label>
                         <input type="date" class="form-control" id="filterDateTo">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <label class="form-label">Search</label>
-                        <input type="text" class="form-control" id="filterSearch" placeholder="Asset or user...">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchTransactions"
+                                placeholder="Search transactions...">
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-danger" id="btnApplyFilters">
-                                <i class="fas fa-check me-1"></i>Apply
-                            </button>
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-end gap-2 mt-2">
                             <button class="btn btn-outline-secondary" id="btnResetFilters">
                                 <i class="fas fa-redo me-1"></i>Reset
                             </button>
@@ -113,27 +142,52 @@
     </div>
 
     <!-- Transactions List -->
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-history me-2"></i>Transaction History
-            <span class="badge bg-primary ms-2" id="totalTransactions">0</span>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="mb-0"><i class="fas fa-history me-2"></i>Transaction History</h6>
+                <span class="badge bg-primary" id="totalTransactions">0</span>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Asset</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th width="5%">#</th>
+                            <th width="15%">Date</th>
+                            <th width="15%">Status</th>
+                            <th width="25%">Asset</th>
+                            <th width="15%">From</th>
+                            <th width="15%">To</th>
+                            <th width="10%">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="transactionsTableBody"></tbody>
+                    <tbody id="transactionsTableBody">
+                        <!-- Data will be loaded by JavaScript -->
+                    </tbody>
                 </table>
+            </div>
+            <div id="transactionsEmpty" class="text-center py-5 d-none">
+                <div class="text-muted">
+                    <i class="fas fa-exchange-alt fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-0">No transactions found</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Footer -->
+        <div class="card-footer bg-white border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted">
+                    Showing <span id="showingTransactions">0</span> of <span id="totalFilteredTransactions">0</span>
+                    transactions
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="transactionsPagination">
+                        <!-- Pagination will be generated by JavaScript -->
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

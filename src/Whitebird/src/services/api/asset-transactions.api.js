@@ -1,5 +1,5 @@
 /**
- * Asset Transactions API Service
+ * Asset Transactions API Service - DIPERBAIKI
  */
 
 import { axiosInstance } from './axios.instance.js';
@@ -9,15 +9,16 @@ class AssetTransactionsAPI {
     TRANSACTIONS: '/api/assettransactions',
     TRANSACTIONS_BY_ID: '/api/assettransactions/{id}',
     TRANSACTIONS_BY_ASSET: '/api/assettransactions/asset/{assetId}',
+    // TRANSACTIONS_SEARCH: '/api/assettransactions/search', // ❌ HAPUS - Tidak ada di Swagger
   };
 
   replaceParams(endpoint, params) {
     return endpoint.replace(/{(\w+)}/g, (_, key) => params[key] || '');
   }
 
-  async getTransactions() {
+  async getTransactions(params = {}) {
     try {
-      const response = await axiosInstance.get(this.endpoints.TRANSACTIONS);
+      const response = await axiosInstance.get(this.endpoints.TRANSACTIONS, { params });
       return response.data;
     } catch (error) {
       throw error;
@@ -67,6 +68,18 @@ class AssetTransactionsAPI {
     try {
       const endpoint = this.replaceParams(this.endpoints.TRANSACTIONS_BY_ID, { id });
       const response = await axiosInstance.delete(endpoint);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // DIPERBAIKI: Gunakan endpoint utama dengan parameter
+  async searchTransactions(searchParams) {
+    try {
+      const response = await axiosInstance.get(this.endpoints.TRANSACTIONS, {
+        params: searchParams
+      });
       return response.data;
     } catch (error) {
       throw error;

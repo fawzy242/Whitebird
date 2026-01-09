@@ -1,39 +1,70 @@
 <!-- Category CRUD Page - Add/Edit Category -->
 <div id="categoryCrudPage">
     <div class="page-header mb-4">
-        <div>
-            <h1 id="crudTitle"><i class="fas fa-tag me-2"></i>Add New Category</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#" data-route="categories">Categories</a></li>
-                    <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
-                </ol>
-            </nav>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 id="crudTitle"><i class="fas fa-tag me-2"></i>Add New Category</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#" data-route="categories">Categories</a></li>
+                        <li class="breadcrumb-item active" id="breadcrumbAction">Add New</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn btn-outline-secondary" id="btnBackToCategories">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </button>
         </div>
-        <button class="btn btn-outline-secondary" id="btnBackToCategories">
-            <i class="fas fa-arrow-left me-2"></i>Back to List
-        </button>
     </div>
 
-    <div class="card">
+    <!-- Toast Messages -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+        <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
         <div class="card-body">
             <form id="categoryForm">
                 <div class="row">
                     <!-- Category Name (Required) -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Category Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="categoryName" name="categoryName" 
-                               maxlength="100" required placeholder="Enter category name">
+                        <input type="text" class="form-control" id="categoryName" name="categoryName" maxlength="100"
+                            required placeholder="Enter category name">
                         <div class="invalid-feedback">Category name is required (max 100 characters)</div>
                     </div>
 
                     <!-- Description (Optional) -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" 
-                                  maxlength="500" rows="4" placeholder="Enter description"></textarea>
+                        <textarea class="form-control" id="description" name="description" maxlength="500" rows="4"
+                            placeholder="Enter description (optional)"></textarea>
                         <div class="form-text">Optional, max 500 characters</div>
+                    </div>
+
+                    <!-- Is Active (For Update Mode Only) -->
+                    <div class="col-md-12 mb-3 d-none" id="isActiveField">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked>
+                            <label class="form-check-label" for="isActive">
+                                Active Status
+                            </label>
+                            <div class="form-text">Toggle to activate/deactivate category</div>
+                        </div>
                     </div>
                 </div>
 

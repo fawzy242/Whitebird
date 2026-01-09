@@ -43,59 +43,85 @@ const testConnection = async () => {
   }
 };
 
-// Test khusus untuk report download
-const testReportDownload = async () => {
-  console.group('📊 Testing Report Download');
+// Test untuk semua endpoint
+const testAllEndpoints = async () => {
+  console.group('🧪 Testing All API Endpoints');
+  const results = {
+    auth: false,
+    asset: false,
+    employee: false,
+    category: false,
+    transactions: false,
+    reports: false,
+  };
+
   try {
-    console.log('1. Checking permissions...');
-    const token = StorageService.getToken();
-    console.log('Token available:', !!token);
-    
-    console.log('2. Testing endpoint...');
-    const response = await axiosInstance.get('/api/reports/excel', {
-      responseType: 'blob',
-      validateStatus: null // Tidak throw error untuk status non-2xx
-    });
-    
-    console.log('Response:', {
-      status: response.status,
-      headers: response.headers,
-      dataType: typeof response.data,
-    });
-    
-    if (response.status === 200) {
-      console.log('✅ Endpoint is accessible');
-      
-      // Coba download kecil
-      if (response.data instanceof Blob && response.data.size > 0) {
-        console.log(`✅ File size: ${response.data.size} bytes`);
-        
-        // Simpan sample kecil untuk inspeksi
-        const sample = response.data.slice(0, Math.min(100, response.data.size));
-        const reader = new FileReader();
-        reader.onload = () => {
-          console.log('First 100 bytes:', reader.result);
-        };
-        reader.readAsText(sample);
-        
-        return { 
-          success: true, 
-          status: response.status,
-          size: response.data.size,
-          type: response.data.type
-        };
-      } else {
-        console.warn('⚠️ Response data is not a valid blob');
-        return { success: false, error: 'Invalid response format' };
-      }
-    } else {
-      console.error('❌ Endpoint returned error:', response.status);
-      return { success: false, error: `HTTP ${response.status}` };
+    // Test auth
+    console.log('1. Testing auth endpoint...');
+    try {
+      await authAPI.getMe();
+      results.auth = true;
+      console.log('✅ Auth endpoint OK');
+    } catch (e) {
+      console.log('⚠️ Auth endpoint not accessible (might need login)');
     }
-    
+
+    // Test asset
+    console.log('2. Testing asset endpoint...');
+    try {
+      await assetAPI.getAssetsGrid({ page: 1, pageSize: 1 });
+      results.asset = true;
+      console.log('✅ Asset endpoint OK');
+    } catch (e) {
+      console.error('❌ Asset endpoint failed:', e.message);
+    }
+
+    // Test employee
+    console.log('3. Testing employee endpoint...');
+    try {
+      await employeeAPI.getEmployeesGrid({ page: 1, pageSize: 1 });
+      results.employee = true;
+      console.log('✅ Employee endpoint OK');
+    } catch (e) {
+      console.error('❌ Employee endpoint failed:', e.message);
+    }
+
+    // Test category
+    console.log('4. Testing category endpoint...');
+    try {
+      await categoryAPI.getCategories();
+      results.category = true;
+      console.log('✅ Category endpoint OK');
+    } catch (e) {
+      console.error('❌ Category endpoint failed:', e.message);
+    }
+
+    // Test transactions
+    console.log('5. Testing transactions endpoint...');
+    try {
+      await assetTransactionsAPI.getTransactions();
+      results.transactions = true;
+      console.log('✅ Transactions endpoint OK');
+    } catch (e) {
+      console.error('❌ Transactions endpoint failed:', e.message);
+    }
+
+    // Test reports
+    console.log('6. Testing reports endpoint...');
+    try {
+      await reportsAPI.getReportData();
+      results.reports = true;
+      console.log('✅ Reports endpoint OK');
+    } catch (e) {
+      console.error('❌ Reports endpoint failed:', e.message);
+    }
+
+    console.log('📊 Final Results:', results);
+    return results;
+
   } catch (error) {
-    console.error('❌ Test failed:', error);
-    return { success: false, error: error.message };
+    console.error('❌ Test suite failed:', error);
+    return results;
   } finally {
     console.groupEnd();
   }
@@ -115,7 +141,7 @@ const WhitebirdAPI = {
   logout,
   checkHealth,
   testConnection,
-  testReportDownload,
+  testAllEndpoints,
 
   // Axios instance for advanced use
   axios: axiosInstance,
@@ -123,8 +149,10 @@ const WhitebirdAPI = {
   // Storage service
   storage: StorageService,
   
-  // Quick download helper
+  // Quick helpers
   downloadReport: () => reportsAPI.downloadExcelReport(),
+  getToken: () => StorageService.getToken(),
+  clearAuth: () => logout(),
 };
 
 // Export individual services (for direct import)
@@ -147,7 +175,7 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
 
   // Console helpers
   window.testAPI = () => WhitebirdAPI.testConnection();
-  window.testReport = () => WhitebirdAPI.testReportDownload();
+  window.testAllEndpoints = () => WhitebirdAPI.testAllEndpoints();
   window.getToken = () => StorageService.getToken();
   window.clearAuth = () => WhitebirdAPI.logout();
   window.downloadNow = () => WhitebirdAPI.downloadReport();
@@ -155,6 +183,6 @@ if (import.meta.env.DEV && typeof window !== 'undefined') {
   console.log('🔧 WhitebirdAPI loaded for debugging');
   console.log('Available test commands:');
   console.log('- testAPI() - Test connection');
-  console.log('- testReport() - Test report download');
+  console.log('- testAllEndpoints() - Test all endpoints');
   console.log('- downloadNow() - Quick download');
 }

@@ -1,6 +1,5 @@
 /**
- * Assets Menu Module
- * Manages asset inventory with tabs for Available, In Use, and Maintenance
+ * Assets Menu Module - Optimized
  * Connected to Whitebird API
  */
 
@@ -16,6 +15,8 @@ export class AssetsMenu {
     this.currentPage = 1;
     this.pageSize = 10;
     this.loading = false;
+    this.totalItems = 0;
+    this.totalPages = 1;
   }
 
   /**
@@ -24,15 +25,16 @@ export class AssetsMenu {
   async initialize() {
     console.log('📦 Assets Menu Initializing...');
     this.setupEventListeners();
-    await this.loadFromAPI();
     await this.loadCategories();
+    await this.loadFromAPI();
     this.populateCategories();
-    this.loadAndRender();
+    this.updateStats();
+    this.renderCurrentTab();
     console.log('✅ Assets Menu Initialized!');
   }
 
   /**
-   * Load assets from API
+   * Load assets from API with pagination
    */
   async loadFromAPI() {
     try {
@@ -41,24 +43,22 @@ export class AssetsMenu {
 
       console.log('📡 Loading assets from API...');
       const response = await WhitebirdAPI.asset.getAssetsGrid({
-        page: 1,
-        pageSize: 1000,
+        page: this.currentPage,
+        pageSize: this.pageSize,
       });
 
       if (response.isSuccess && response.data) {
         this.assets = response.data;
+        this.totalItems = response.totalCount || response.data.length;
+        this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.pageSize);
         this.filteredData = [...this.assets];
-        console.log(`✅ Loaded ${this.assets.length} assets from API`);
+        console.log(`✅ Loaded ${this.assets.length} assets from API (Total: ${this.totalItems})`);
       } else {
-        console.warn('⚠️ API returned no data, using fallback');
-        this.assets = this.generateSampleAssets();
-        this.filteredData = [...this.assets];
+        throw new Error(response.message || 'Failed to load assets');
       }
     } catch (error) {
       console.error('❌ Failed to load assets from API:', error);
-      console.log('📦 Using sample data as fallback');
-      this.assets = this.generateSampleAssets();
-      this.filteredData = [...this.assets];
+      this.showError('Failed to load assets');
     } finally {
       this.loading = false;
       this.showLoading(false);
@@ -74,66 +74,15 @@ export class AssetsMenu {
       const response = await WhitebirdAPI.category.getActiveCategories();
 
       if (response.isSuccess && response.data) {
-        this.categories = response.data.map((cat) => cat.categoryName || cat.name || cat);
+        this.categories = response.data;
         console.log(`✅ Loaded ${this.categories.length} categories from API`);
       } else {
-        console.warn('⚠️ API returned no categories, using fallback');
-        this.categories = ['Computer', 'Furniture', 'Vehicle', 'Equipment', 'Mobile Device'];
+        throw new Error(response.message || 'Failed to load categories');
       }
     } catch (error) {
       console.error('❌ Failed to load categories from API:', error);
-      this.categories = ['Computer', 'Furniture', 'Vehicle', 'Equipment', 'Mobile Device'];
+      this.showError('Failed to load categories');
     }
-  }
-
-  /**
-   * Generate sample assets (fallback)
-   */
-  generateSampleAssets() {
-    const assetNames = {
-      Computer: [
-        'Dell Laptop XPS 15',
-        'MacBook Pro 16"',
-        'HP Desktop Workstation',
-        'Lenovo ThinkPad',
-      ],
-      Furniture: ['Office Desk Oak', 'Ergonomic Chair', 'Meeting Table', 'Filing Cabinet'],
-      Vehicle: ['Toyota Camry 2023', 'Honda CR-V 2022', 'Ford Transit Van'],
-      Equipment: ['Projector Epson', 'Printer Canon', 'Scanner HP', 'Whiteboard'],
-      'Mobile Device': ['iPhone 15 Pro', 'Samsung Galaxy S24', 'iPad Pro 12.9"'],
-    };
-
-    const statuses = ['Available', 'In Use', 'Maintenance'];
-    const employees = ['John Doe', 'Jane Smith', 'Bob Johnson', 'Alice Williams'];
-    const issues = ['Screen broken', 'Battery replacement', 'Software update', 'Hardware check'];
-
-    const assets = [];
-    let id = 1;
-
-    Object.keys(assetNames).forEach((category) => {
-      assetNames[category].forEach((name) => {
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-        const asset = {
-          id: id++,
-          assetId: id,
-          assetName: name,
-          assetCode: `AST-${String(id).padStart(4, '0')}`,
-          categoryName: category,
-          status: status,
-          purchaseDate: this.randomDate(),
-          purchasePrice: Math.floor(Math.random() * 5000) + 500,
-          currentHolderName:
-            status === 'In Use' ? employees[Math.floor(Math.random() * employees.length)] : null,
-          assignedDate: status === 'In Use' ? this.randomDate() : null,
-          condition:
-            status === 'Maintenance' ? issues[Math.floor(Math.random() * issues.length)] : 'Good',
-          maintenanceDate: status === 'Maintenance' ? this.randomDate() : null,
-        };
-        assets.push(asset);
-      });
-    });
-
-    return assets;
   }
 
   /**
@@ -147,28 +96,19 @@ export class AssetsMenu {
   }
 
   /**
-   * Generate random date
-   */
-  randomDate() {
-    const start = new Date(2022, 0, 1);
-    const end = new Date();
-    const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    return date.toISOString().split('T')[0];
-  }
-
-  /**
    * Populate categories dropdown
    */
   populateCategories() {
     const select = document.getElementById('filterCategory');
-    if (!select) {
-      return;
-    }
+    if (!select) return;
+
+    // Clear and add default option
+    select.innerHTML = '<option value="">All Categories</option>';
 
     this.categories.forEach((cat) => {
       const option = document.createElement('option');
-      option.value = cat;
-      option.textContent = cat;
+      option.value = cat.categoryName || cat.name || cat;
+      option.textContent = cat.categoryName || cat.name || cat;
       select.appendChild(option);
     });
   }
@@ -194,16 +134,13 @@ export class AssetsMenu {
         try {
           await this.loadFromAPI();
           await this.loadCategories();
-          this.loadAndRender();
+          this.updateStats();
+          this.renderCurrentTab();
 
-          if (window.showNotification) {
-            window.showNotification('success', '✅ Assets refreshed successfully from API');
-          }
+          this.showNotification('success', '✅ Assets refreshed successfully');
         } catch (error) {
           console.error('❌ Refresh failed:', error);
-          if (window.showNotification) {
-            window.showNotification('danger', '❌ Failed to refresh assets');
-          }
+          this.showNotification('danger', '❌ Failed to refresh assets');
         } finally {
           refreshBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Refresh';
           refreshBtn.disabled = false;
@@ -272,13 +209,6 @@ export class AssetsMenu {
   }
 
   /**
-   * Load and render
-   */
-  loadAndRender() {
-    this.applyFilters();
-  }
-
-  /**
    * Apply filters
    */
   applyFilters() {
@@ -330,15 +260,21 @@ export class AssetsMenu {
    * Update stats
    */
   updateStats() {
-    const total = this.assets.length;
+    const total = this.totalItems;
     const available = this.assets.filter((a) => a.status === 'Available').length;
     const inUse = this.assets.filter((a) => a.status === 'In Use').length;
     const maintenance = this.assets.filter((a) => a.status === 'Maintenance').length;
 
-    document.getElementById('totalAssets').textContent = total;
-    document.getElementById('availableAssets').textContent = available;
-    document.getElementById('inUseAssets').textContent = inUse;
-    document.getElementById('maintenanceAssets').textContent = maintenance;
+    // Safe element updates
+    const setTextContent = (id, text) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    setTextContent('totalAssets', total);
+    setTextContent('availableAssets', available);
+    setTextContent('inUseAssets', inUse);
+    setTextContent('maintenanceAssets', maintenance);
   }
 
   /**
@@ -350,9 +286,14 @@ export class AssetsMenu {
     const maintenance = this.filteredData.filter((a) => a.status === 'Maintenance');
 
     // Update badge counts
-    document.getElementById('availableCount').textContent = available.length;
-    document.getElementById('inuseCount').textContent = inUse.length;
-    document.getElementById('maintenanceCount').textContent = maintenance.length;
+    const setBadgeCount = (id, count) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = count;
+    };
+
+    setBadgeCount('availableCount', available.length);
+    setBadgeCount('inuseCount', inUse.length);
+    setBadgeCount('maintenanceCount', maintenance.length);
 
     // Render appropriate tab
     if (this.currentTab === 'available') {
@@ -370,92 +311,86 @@ export class AssetsMenu {
         : this.currentTab === 'inuse'
           ? inUse
           : maintenance;
-    document.getElementById('showingCount').textContent = currentData.length;
-    document.getElementById('totalCount').textContent = this.assets.length;
+    
+    setBadgeCount('showingCount', currentData.length);
+    setBadgeCount('totalCount', this.totalItems);
+
+    // Render pagination
+    this.renderPagination();
   }
 
   /**
-   * Render table
+   * Render table with proper columns from API
    */
   renderTable(tbodyId, emptyId, data) {
     const tbody = document.getElementById(tbodyId);
     const emptyState = document.getElementById(emptyId);
 
-    if (!tbody) {
-      return;
-    }
-
-    // Pagination
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    const pageData = data.slice(start, end);
+    if (!tbody) return;
 
     // Show/hide empty state
-    if (pageData.length === 0) {
-      tbody.closest('.table-responsive').classList.add('d-none');
-      if (emptyState) {
-        emptyState.classList.remove('d-none');
-      }
+    if (data.length === 0) {
+      tbody.closest('.table-responsive')?.classList.add('d-none');
+      if (emptyState) emptyState.classList.remove('d-none');
       return;
     } else {
-      tbody.closest('.table-responsive').classList.remove('d-none');
-      if (emptyState) {
-        emptyState.classList.add('d-none');
-      }
+      tbody.closest('.table-responsive')?.classList.remove('d-none');
+      if (emptyState) emptyState.classList.add('d-none');
     }
 
     // Build rows
     const fragment = document.createDocumentFragment();
-    pageData.forEach((asset, index) => {
+    data.forEach((asset, index) => {
       const tr = document.createElement('tr');
 
+      // Determine columns based on tab
       if (this.currentTab === 'available') {
         tr.innerHTML = `
-          <td>${start + index + 1}</td>
-          <td><strong>${asset.assetName}</strong></td>
-          <td><code>${asset.assetCode}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName}</span></td>
-          <td>${asset.purchaseDate || 'N/A'}</td>
-          <td>$${(asset.purchasePrice || 0).toLocaleString()}</td>
+          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
+          <td><strong>${asset.assetName || 'N/A'}</strong></td>
+          <td><code>${asset.assetCode || 'N/A'}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
+          <td>${this.formatDate(asset.purchaseDate)}</td>
+          <td>${this.formatCurrency(asset.purchasePrice)}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId}" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId}" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </td>
         `;
       } else if (this.currentTab === 'inuse') {
         tr.innerHTML = `
-          <td>${start + index + 1}</td>
-          <td><strong>${asset.assetName}</strong></td>
-          <td><code>${asset.assetCode}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName}</span></td>
+          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
+          <td><strong>${asset.assetName || 'N/A'}</strong></td>
+          <td><code>${asset.assetCode || 'N/A'}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
           <td>${asset.currentHolderName || 'N/A'}</td>
-          <td>${asset.assignedDate || 'N/A'}</td>
+          <td>${this.formatDate(asset.assignedDate)}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId}" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId}" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </td>
         `;
       } else {
         tr.innerHTML = `
-          <td>${start + index + 1}</td>
-          <td><strong>${asset.assetName}</strong></td>
-          <td><code>${asset.assetCode}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName}</span></td>
+          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
+          <td><strong>${asset.assetName || 'N/A'}</strong></td>
+          <td><code>${asset.assetCode || 'N/A'}</code></td>
+          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
           <td>${asset.condition || 'N/A'}</td>
-          <td>${asset.maintenanceDate || 'N/A'}</td>
+          <td>${this.formatDate(asset.maintenanceDate)}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId}" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId || asset.id}">
+            <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${asset.assetId}" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </td>
@@ -470,6 +405,112 @@ export class AssetsMenu {
 
     // Attach event listeners
     this.attachRowEventListeners(tbody);
+  }
+
+  /**
+   * Format date
+   */
+  formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    } catch {
+      return dateString;
+    }
+  }
+
+  /**
+   * Format currency
+   */
+  formatCurrency(amount) {
+    if (!amount && amount !== 0) return 'N/A';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  }
+
+  /**
+   * Render pagination
+   */
+  renderPagination() {
+    const pagination = document.getElementById('pagination');
+    if (!pagination) return;
+
+    if (this.totalPages <= 1) {
+      pagination.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+
+    // Previous button
+    html += `
+      <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${this.currentPage - 1}">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      </li>
+    `;
+
+    // Page numbers
+    const maxPages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
+
+    if (endPage - startPage < maxPages - 1) {
+      startPage = Math.max(1, endPage - maxPages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      html += `
+        <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+          <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>
+      `;
+    }
+
+    // Next button
+    html += `
+      <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${this.currentPage + 1}">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </li>
+    `;
+
+    pagination.innerHTML = html;
+
+    // Attach pagination event listeners
+    this.attachPaginationListeners(pagination);
+  }
+
+  /**
+   * Attach pagination listeners
+   */
+  attachPaginationListeners(pagination) {
+    pagination.querySelectorAll('.page-link').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = parseInt(e.currentTarget.dataset.page);
+        if (!isNaN(page)) {
+          this.goToPage(page);
+        }
+      });
+    });
+  }
+
+  /**
+   * Go to page
+   */
+  async goToPage(page) {
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+    await this.loadFromAPI();
+    this.updateStats();
+    this.renderCurrentTab();
   }
 
   /**
@@ -496,12 +537,7 @@ export class AssetsMenu {
    */
   handleAdd() {
     console.log('➕ Navigating to assetscreate');
-
-    if (window.router) {
-      window.router.navigate('assetscreate');
-    } else {
-      window.location.href = '/assetscreate';
-    }
+    this.navigateTo('assetscreate');
   }
 
   /**
@@ -509,29 +545,22 @@ export class AssetsMenu {
    */
   handleEdit(id) {
     console.log(`✏️ Navigating to assetsupdate for ID: ${id}`);
-
-    if (window.router) {
-      window.router.navigate('assetsupdate', { id });
-    } else {
-      sessionStorage.setItem('crudId', id);
-      sessionStorage.setItem('crudMode', 'update');
-      window.location.href = '/assetsupdate';
-    }
+    sessionStorage.setItem('crudId', id);
+    sessionStorage.setItem('crudMode', 'update');
+    this.navigateTo('assetsupdate');
   }
 
   /**
    * Handle delete
    */
   async handleDelete(id) {
-    const asset = this.assets.find((a) => (a.assetId || a.id) === id);
-    if (!asset) {
-      return;
-    }
+    const asset = this.assets.find((a) => a.assetId === id);
+    if (!asset) return;
 
     const result = await confirmModal.show({
       type: 'danger',
       title: 'Delete Asset',
-      message: `Are you sure you want to delete ${asset.assetName}? This action cannot be undone.`,
+      message: `Are you sure you want to delete "${asset.assetName}"? This action cannot be undone.`,
       okText: 'Delete',
       cancelText: 'Cancel',
       okClass: 'btn-danger',
@@ -539,18 +568,24 @@ export class AssetsMenu {
 
     if (result) {
       try {
-        // Delete from API
         await WhitebirdAPI.asset.deleteAsset(id);
-
-        // Remove from local data
-        this.assets = this.assets.filter((a) => (a.assetId || a.id) !== id);
-        this.applyFilters();
-
+        await this.loadFromAPI();
         this.showNotification('success', 'Asset deleted successfully');
       } catch (error) {
         console.error('❌ Failed to delete asset:', error);
         this.showNotification('danger', 'Failed to delete asset');
       }
+    }
+  }
+
+  /**
+   * Navigate helper
+   */
+  navigateTo(page) {
+    if (window.router) {
+      window.router.navigate(page);
+    } else {
+      window.location.href = `/${page}`;
     }
   }
 
@@ -561,8 +596,16 @@ export class AssetsMenu {
     if (window.showNotification) {
       window.showNotification(type, message);
     } else {
-      console.log(`[${type}] ${message}`);
+      alert(message);
     }
+  }
+
+  /**
+   * Show error
+   */
+  showError(message) {
+    console.error('Error:', message);
+    this.showNotification('danger', message);
   }
 }
 
