@@ -494,40 +494,6 @@ export class AssetsMenu {
   /**
    * Format currency
    */
-<<<<<<< HEAD
-  formatCurrency(amount) {
-    if (amount === null || amount === undefined || amount === '') return 'N/A';
-    
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    if (isNaN(numAmount)) return 'N/A';
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(numAmount);
-  }
-
-  /**
-   * Attach event listeners to table row buttons
-   */
-  attachRowEventListeners(tbody) {
-    tbody.querySelectorAll('.btn-edit').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        this.handleEdit(id);
-      });
-    });
-
-    tbody.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        await this.handleDelete(id);
-      });
-    });
-  }
-=======
 formatCurrency(amount) {
     if (!amount && amount !== 0) return 'N/A';
     
@@ -538,7 +504,6 @@ formatCurrency(amount) {
       maximumFractionDigits: 0
     }).format(amount);
 }
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
 
   /**
    * Render pagination

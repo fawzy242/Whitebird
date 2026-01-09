@@ -1,36 +1,22 @@
 /**
-<<<<<<< HEAD
- * Employees Menu Module - Fixed Pagination and Filtering
-=======
  * Employees Menu Module - Optimized with Server-Side Grid
  * Connected to Whitebird API - REFACTORED VERSION
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
  */
 
 import WhitebirdAPI from '../services/api/index.js';
-import { confirmModal } from '../components/confirm-modal.component.js';
 
 export class EmployeesMenu {
   constructor() {
     this.currentTab = 'active';
     this.currentPage = 1;
-    this.pageSize = 10;
+    this.pageSize = 15;
     this.filteredData = [];
     this.loading = false;
-<<<<<<< HEAD
-    this.employees = []; // Data dari API (current page)
-    this.allEmployees = []; // Semua data untuk filtering
-    this.totalItems = 0;
-    this.totalPages = 1;
-    this.searchTimeout = null;
-    this.isFilterActive = false;
-=======
     this.totalItems = 0;
     this.totalPages = 1;
     this.searchTerm = '';
     this.departmentFilter = '';
     this.statusFilter = '';
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
@@ -38,24 +24,6 @@ export class EmployeesMenu {
    */
   async initialize() {
     console.log('👥 Employees Menu Initializing...');
-<<<<<<< HEAD
-    
-    try {
-      this.setupEventListeners();
-      await this.loadAllEmployees(); // Load semua data untuk filtering
-      await this.loadCurrentPage(); // Load halaman saat ini
-      this.updateDepartmentFilter();
-      this.renderCurrentTab();
-      console.log('✅ Employees Menu Initialized!');
-    } catch (error) {
-      console.error('❌ Employees Menu initialization error:', error);
-      this.showError('Failed to initialize employees menu');
-    }
-  }
-
-  /**
-   * Load semua employees untuk filtering
-=======
     this.setupEventListeners();
     await this.loadEmployees();
     console.log('✅ Employees Menu Initialized!');
@@ -63,66 +31,10 @@ export class EmployeesMenu {
 
   /**
    * Load employees from API with pagination and filters
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
    */
-  async loadAllEmployees() {
-    try {
-      console.log('📡 Loading all employees for filtering...');
-
-      // Gunakan pageSize besar untuk mendapatkan semua data
-      const response = await WhitebirdAPI.employee.getEmployeesGrid({
-        page: 1,
-        pageSize: 1000, // Request banyak data sekaligus
-      });
-
-      if (response.isSuccess && response.data) {
-        this.allEmployees = response.data;
-        this.totalItems = response.totalCount || this.allEmployees.length;
-        console.log(`✅ Loaded ${this.allEmployees.length} employees for filtering`);
-      } else {
-        console.warn('No employees data returned');
-        this.allEmployees = [];
-      }
-    } catch (error) {
-      console.error('❌ Failed to load all employees:', error);
-      this.allEmployees = [];
-    }
-  }
-
-  /**
-   * Load halaman saat ini untuk display
-   */
-  async loadCurrentPage() {
-    if (this.loading) return;
-
+  async loadEmployees() {
     try {
       this.loading = true;
-<<<<<<< HEAD
-      console.log(`📡 Loading employees page ${this.currentPage}...`);
-
-      const response = await WhitebirdAPI.employee.getEmployeesGrid({
-        page: this.currentPage,
-        pageSize: this.pageSize,
-      });
-
-      if (response.isSuccess && response.data) {
-        this.employees = response.data;
-        this.totalPages = response.totalPages || 1;
-        
-        // Jika tidak ada filter aktif, gunakan data dari API
-        if (!this.isFilterActive) {
-          this.filteredData = [...this.employees];
-        }
-        
-        console.log(`✅ Loaded page ${this.currentPage}/${this.totalPages} (${this.employees.length} employees)`);
-      } else {
-        console.warn('No employees data returned');
-        this.employees = [];
-      }
-    } catch (error) {
-      console.error('❌ Failed to load current page:', error);
-      this.employees = [];
-=======
       this.showLoading(true);
       
       // Build query params
@@ -178,7 +90,6 @@ export class EmployeesMenu {
       console.error('❌ Failed to load employees:', error);
       this.showError('Network error. Please check your connection.');
       this.filteredData = [];
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
     } finally {
       this.loading = false;
       this.showLoading(false);
@@ -211,38 +122,13 @@ export class EmployeesMenu {
   }
 
   /**
-   * Update department filter dropdown dengan unique departments
-   */
-  updateDepartmentFilter() {
-    const filterDept = document.getElementById('filterDepartment');
-    if (!filterDept) return;
-
-    // Gunakan allEmployees untuk departments
-    const departments = [...new Set(this.allEmployees
-      .map(emp => emp.department)
-      .filter(dept => dept && dept.trim() !== '')
-    )].sort();
-
-    // Clear existing options except first
-    filterDept.innerHTML = '<option value="">All Departments</option>';
-
-    // Add department options
-    departments.forEach(dept => {
-      const option = document.createElement('option');
-      option.value = dept;
-      option.textContent = dept;
-      filterDept.appendChild(option);
-    });
-  }
-
-  /**
    * Setup event listeners
    */
   setupEventListeners() {
-    // Add Employee button
-    const addBtn = document.getElementById('btnAddEmployee');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => this.handleAdd());
+    // Add Employee
+    const btnAdd = document.getElementById('btnAddEmployee');
+    if (btnAdd) {
+      btnAdd.addEventListener('click', () => this.redirectToAdd());
     }
 
     // Refresh button
@@ -254,20 +140,14 @@ export class EmployeesMenu {
     // Search with debounce
     const searchInput = document.getElementById('searchEmployee');
     if (searchInput) {
+      let searchTimeout;
       searchInput.addEventListener('input', (e) => {
-<<<<<<< HEAD
-        clearTimeout(this.searchTimeout);
-        this.searchTimeout = setTimeout(() => {
-          this.applyFilters();
-        }, 300);
-=======
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
           this.searchTerm = e.target.value;
           this.currentPage = 1; // Reset to first page when searching
           this.loadEmployees();
         }, 500);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       });
     }
 
@@ -294,25 +174,11 @@ export class EmployeesMenu {
     }
 
     // Reset Filters
-    const resetBtn = document.getElementById('btnResetFilters');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => this.resetFilters());
+    const btnReset = document.getElementById('btnResetFilters');
+    if (btnReset) {
+      btnReset.addEventListener('click', () => this.resetFilters());
     }
 
-<<<<<<< HEAD
-    // Tab switching menggunakan Bootstrap events
-    const employeeTabs = document.getElementById('employeeTabs');
-    if (employeeTabs) {
-      employeeTabs.addEventListener('shown.bs.tab', (e) => {
-        const tabId = e.target.id;
-        
-        if (tabId === 'active-tab') {
-          this.currentTab = 'active';
-        } else if (tabId === 'inactive-tab') {
-          this.currentTab = 'inactive';
-        }
-        
-=======
     // Tab switching - IMPORTANT: Now using Bootstrap tab events
     const activeTab = document.querySelector('#active-tab');
     const inactiveTab = document.querySelector('#inactive-tab');
@@ -330,7 +196,6 @@ export class EmployeesMenu {
       inactiveTab.addEventListener('click', (e) => {
         e.preventDefault();
         this.currentTab = 'inactive';
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
         this.currentPage = 1;
         this.applyClientSideFilters();
       });
@@ -356,117 +221,18 @@ export class EmployeesMenu {
   }
 
   /**
-<<<<<<< HEAD
-   * Handle refresh
-   */
-  async handleRefresh() {
-    const refreshBtn = document.getElementById('btnRefreshEmployees');
-    if (!refreshBtn) return;
-
-    console.log('🔄 Refreshing employees from API...');
-    
-    const originalText = refreshBtn.innerHTML;
-    refreshBtn.disabled = true;
-    refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
-
-    try {
-      await this.loadAllEmployees();
-      await this.loadCurrentPage();
-      this.updateDepartmentFilter();
-      this.renderCurrentTab();
-      this.showNotification('Employees refreshed successfully', 'success');
-    } catch (error) {
-      console.error('❌ Refresh failed:', error);
-      this.showNotification('Failed to refresh employees', 'danger');
-    } finally {
-      refreshBtn.disabled = false;
-      refreshBtn.innerHTML = originalText;
-    }
-  }
-
-  /**
-   * Apply filters - FIXED: Gunakan allEmployees untuk filtering
-   */
-  applyFilters() {
-    const searchQuery = document.getElementById('searchEmployee')?.value.toLowerCase() || '';
-    const departmentFilter = document.getElementById('filterDepartment')?.value || '';
-    const statusFilter = document.getElementById('filterStatus')?.value || '';
-
-    // Cek apakah ada filter aktif
-    this.isFilterActive = searchQuery !== '' || departmentFilter !== '' || statusFilter !== '';
-
-    if (this.isFilterActive) {
-      // Filter dari allEmployees
-      this.filteredData = this.allEmployees.filter((employee) => {
-        let match = true;
-
-        // Filter by search
-        if (searchQuery) {
-          const searchableText = [
-            employee.fullName,
-            employee.email,
-            employee.position,
-            employee.department,
-            employee.employeeCode
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase();
-          
-          match = match && searchableText.includes(searchQuery);
-        }
-
-        // Filter by department
-        if (departmentFilter && departmentFilter !== 'All Departments') {
-          match = match && employee.department === departmentFilter;
-        }
-
-        // Filter by status
-        if (statusFilter && statusFilter !== 'All Status') {
-          if (statusFilter === 'active') {
-            match = match && employee.isActive === true;
-          } else if (statusFilter === 'inactive') {
-            match = match && employee.isActive === false;
-          }
-        }
-
-        return match;
-      });
-    } else {
-      // Tidak ada filter, gunakan data dari API
-      this.filteredData = [...this.employees];
-    }
-
-    this.currentPage = 1;
-    this.renderCurrentTab();
-=======
    * Apply client-side filters (for status and department if API doesn't support)
    */
   applyClientSideFilters() {
     // Note: This should be called after data is loaded from API
     // For now, we'll reload from API and filter client-side
     this.loadEmployees();
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
    * Reset all filters
    */
   resetFilters() {
-<<<<<<< HEAD
-    const searchInput = document.getElementById('searchEmployee');
-    const filterDept = document.getElementById('filterDepartment');
-    const filterStatus = document.getElementById('filterStatus');
-
-    if (searchInput) searchInput.value = '';
-    if (filterDept) filterDept.value = '';
-    if (filterStatus) filterStatus.value = '';
-    
-    this.isFilterActive = false;
-    this.filteredData = [...this.employees];
-    this.currentPage = 1;
-    this.renderCurrentTab();
-=======
     document.getElementById('searchEmployee').value = '';
     document.getElementById('filterDepartment').value = '';
     document.getElementById('filterStatus').value = '';
@@ -477,66 +243,11 @@ export class EmployeesMenu {
     this.currentPage = 1;
     
     this.loadEmployees();
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
    * Handle refresh
    */
-<<<<<<< HEAD
-  renderCurrentTab() {
-    // Get data untuk current tab dari filteredData
-    let currentData = [];
-    let emptyStateId = '';
-    let tableBodyId = '';
-
-    if (this.currentTab === 'active') {
-      currentData = this.filteredData.filter(emp => emp.isActive === true);
-      emptyStateId = 'activeEmpty';
-      tableBodyId = 'activeTableBody';
-    } else {
-      currentData = this.filteredData.filter(emp => emp.isActive === false);
-      emptyStateId = 'inactiveEmpty';
-      tableBodyId = 'inactiveTableBody';
-    }
-
-    // Update badge counts
-    this.updateBadgeCounts(currentData);
-
-    // Render table dengan pagination yang benar
-    this.renderTable(tableBodyId, emptyStateId, currentData);
-
-    // Update showing count
-    this.updateShowingCount(currentData.length);
-
-    // Render pagination - Perbaikan: bedakan antara filter dan non-filter
-    this.renderPagination(currentData.length);
-  }
-
-  /**
-   * Update badge counts
-   */
-  updateBadgeCounts(currentData) {
-    const activeCount = currentData.filter(emp => emp.isActive === true).length;
-    const inactiveCount = currentData.filter(emp => emp.isActive === false).length;
-
-    const updateBadge = (id, count) => {
-      const badge = document.getElementById(id);
-      if (badge) badge.textContent = count;
-    };
-
-    updateBadge('activeCount', activeCount);
-    updateBadge('inactiveCount', inactiveCount);
-  }
-
-  /**
-   * Render table dengan pagination yang benar
-   */
-  renderTable(tbodyId, emptyStateId, data) {
-    const tbody = document.getElementById(tbodyId);
-    const emptyState = document.getElementById(emptyStateId);
-    const tableContainer = tbody?.closest('.table-responsive');
-=======
   async handleRefresh() {
     const refreshBtn = document.getElementById('btnRefreshEmployees');
     if (refreshBtn) {
@@ -570,120 +281,9 @@ export class EmployeesMenu {
     const tbody = document.getElementById(tbodyId);
     const emptyState = document.getElementById(emptyId);
     const tableContainer = document.querySelector(`#${this.currentTab === 'active' ? 'active-pane' : 'inactive-pane'} .table-responsive`);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
 
-    if (!tbody || !emptyState || !tableContainer) return;
+    if (!tbody) return;
 
-<<<<<<< HEAD
-    // Hitung data untuk ditampilkan
-    let pageData = [];
-    
-    if (this.isFilterActive) {
-      // Jika ada filter, lakukan pagination lokal
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      pageData = data.slice(start, end);
-    } else {
-      // Jika tidak ada filter, gunakan data dari API
-      pageData = data;
-    }
-
-    // Show/hide empty state
-    if (pageData.length === 0) {
-      tableContainer.classList.add('d-none');
-      emptyState.classList.remove('d-none');
-      return;
-    }
-
-    tableContainer.classList.remove('d-none');
-    emptyState.classList.add('d-none');
-
-    // Build table rows
-    const fragment = document.createDocumentFragment();
-    
-    pageData.forEach((employee, index) => {
-      const rowNumber = this.isFilterActive 
-        ? (this.currentPage - 1) * this.pageSize + index + 1
-        : index + 1;
-      
-      const row = this.createTableRow(employee, rowNumber);
-      fragment.appendChild(row);
-    });
-
-    tbody.innerHTML = '';
-    tbody.appendChild(fragment);
-
-    // Attach event listeners
-    this.attachRowEventListeners(tbody);
-  }
-
-  /**
-   * Create table row
-   */
-  createTableRow(employee, rowNumber) {
-    const tr = document.createElement('tr');
-    
-    // Get avatar initial
-    const avatarInitial = employee.fullName ? employee.fullName.charAt(0).toUpperCase() : '?';
-    
-    tr.innerHTML = `
-      <td>${rowNumber}</td>
-      <td>
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-sm me-2 bg-primary">
-            <span class="avatar-text">${avatarInitial}</span>
-          </div>
-          <div>
-            <strong>${this.escapeHtml(employee.fullName || 'N/A')}</strong>
-            <small class="text-muted d-block">${this.escapeHtml(employee.employeeCode || 'No Code')}</small>
-          </div>
-        </div>
-      </td>
-      <td>${this.escapeHtml(employee.email || 'N/A')}</td>
-      <td>${this.escapeHtml(employee.position || 'N/A')}</td>
-      <td><span class="badge bg-info">${this.escapeHtml(employee.department || 'N/A')}</span></td>
-      <td>
-        <span class="badge ${employee.isActive ? 'bg-success' : 'bg-secondary'}">
-          ${employee.isActive ? 'Active' : 'Inactive'}
-        </span>
-      </td>
-      <td>
-        <div class="btn-group btn-group-sm">
-          <button class="btn btn-outline-primary btn-edit" 
-                  data-id="${employee.employeeId}" 
-                  title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn btn-outline-danger btn-delete" 
-                  data-id="${employee.employeeId}" 
-                  title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </td>
-    `;
-
-    return tr;
-  }
-
-  /**
-   * Escape HTML to prevent XSS
-   */
-  escapeHtml(text) {
-    if (text === null || text === undefined) return 'N/A';
-    
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  /**
-   * Attach event listeners to table row buttons
-   */
-  attachRowEventListeners(tbody) {
-    // Edit button
-    tbody.querySelectorAll('.btn-edit').forEach(btn => {
-=======
     // Show/hide empty state
     if (this.filteredData.length === 0) {
       if (emptyState) emptyState.classList.remove('d-none');
@@ -784,15 +384,13 @@ export class EmployeesMenu {
     if (!tbody) return;
 
     tbody.querySelectorAll('.btn-edit').forEach((btn) => {
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       btn.addEventListener('click', (e) => {
         const id = parseInt(e.currentTarget.dataset.id);
-        this.handleEdit(id);
+        this.redirectToEdit(id);
       });
     });
 
-    // Delete button
-    tbody.querySelectorAll('.btn-delete').forEach(btn => {
+    tbody.querySelectorAll('.btn-delete').forEach((btn) => {
       btn.addEventListener('click', async (e) => {
         const id = parseInt(e.currentTarget.dataset.id);
         await this.handleDelete(id);
@@ -801,34 +399,6 @@ export class EmployeesMenu {
   }
 
   /**
-<<<<<<< HEAD
-   * Render pagination - FIXED VERSION
-   */
-  renderPagination(filteredDataLength) {
-    const pagination = document.getElementById('employeesPagination');
-    if (!pagination) return;
-
-    // Tentukan totalPages berdasarkan kondisi
-    let totalPages;
-    
-    if (this.isFilterActive) {
-      // Jika ada filter, hitung dari data yang difilter
-      totalPages = Math.ceil(filteredDataLength / this.pageSize);
-    } else {
-      // Jika tidak ada filter, gunakan totalPages dari API
-      totalPages = this.totalPages;
-    }
-
-    console.log(`Pagination Debug:
-      - Filter Active: ${this.isFilterActive}
-      - Current Page: ${this.currentPage}
-      - Total Pages: ${totalPages}
-      - Filtered Data Length: ${filteredDataLength}
-      - Page Size: ${this.pageSize}
-    `);
-
-    if (totalPages <= 1) {
-=======
    * Render pagination controls
    */
   renderPagination() {
@@ -836,7 +406,6 @@ export class EmployeesMenu {
     if (!pagination) return;
 
     if (this.totalPages <= 1) {
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       pagination.innerHTML = '';
       return;
     }
@@ -844,29 +413,20 @@ export class EmployeesMenu {
     let html = '';
 
     // Previous button
-    const hasPrevious = this.currentPage > 1;
     html += `
-      <li class="page-item ${!hasPrevious ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="prev" ${!hasPrevious ? 'tabindex="-1" aria-disabled="true"' : ''}>
+      <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" data-page="${this.currentPage - 1}">
           <i class="fas fa-chevron-left"></i>
         </a>
       </li>
     `;
 
-<<<<<<< HEAD
-    // Page numbers
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-=======
     // Page numbers - show up to 5 pages
     const maxVisiblePages = 5;
     let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
     // Adjust if we're near the end
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
     if (endPage - startPage < maxVisiblePages - 1) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -901,15 +461,9 @@ export class EmployeesMenu {
     }
 
     // Next button
-    const hasNext = this.currentPage < totalPages;
     html += `
-<<<<<<< HEAD
-      <li class="page-item ${!hasNext ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="next" ${!hasNext ? 'tabindex="-1" aria-disabled="true"' : ''}>
-=======
       <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
         <a class="page-link" href="#" data-page="${this.currentPage + 1}">
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
           <i class="fas fa-chevron-right"></i>
         </a>
       </li>
@@ -918,47 +472,12 @@ export class EmployeesMenu {
     pagination.innerHTML = html;
 
     // Attach pagination event listeners
-<<<<<<< HEAD
-    this.attachPaginationListeners(pagination, totalPages);
-=======
     this.attachPaginationListeners();
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
    * Attach pagination event listeners
    */
-<<<<<<< HEAD
-  attachPaginationListeners(pagination, totalPages) {
-    pagination.querySelectorAll('.page-link').forEach(link => {
-      link.addEventListener('click', async (e) => {
-        e.preventDefault();
-        
-        const pageAction = e.currentTarget.dataset.page;
-        let newPage = this.currentPage;
-
-        if (pageAction === 'prev') {
-          newPage = this.currentPage - 1;
-        } else if (pageAction === 'next') {
-          newPage = this.currentPage + 1;
-        } else {
-          newPage = parseInt(pageAction);
-        }
-
-        console.log(`Page navigation: ${this.currentPage} -> ${newPage} (totalPages: ${totalPages})`);
-
-        if (newPage >= 1 && newPage <= totalPages && newPage !== this.currentPage) {
-          this.currentPage = newPage;
-          
-          if (this.isFilterActive) {
-            // Jika ada filter, cukup render ulang
-            this.renderCurrentTab();
-          } else {
-            // Jika tidak ada filter, load halaman baru dari API
-            await this.loadCurrentPage();
-            this.renderCurrentTab();
-          }
-=======
   attachPaginationListeners() {
     const pagination = document.getElementById('employeesPagination');
     if (!pagination) return;
@@ -969,46 +488,12 @@ export class EmployeesMenu {
         const page = parseInt(e.currentTarget.dataset.page);
         if (!isNaN(page) && page >= 1 && page <= this.totalPages && page !== this.currentPage) {
           this.goToPage(page);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
         }
       });
     });
   }
 
   /**
-<<<<<<< HEAD
-   * Update showing count
-   */
-  updateShowingCount(filteredDataLength) {
-    let showingText = '';
-    let totalText = '';
-    
-    if (this.isFilterActive) {
-      // Jika ada filter, hitung dari data yang difilter
-      const start = (this.currentPage - 1) * this.pageSize + 1;
-      const end = Math.min(this.currentPage * this.pageSize, filteredDataLength);
-      showingText = filteredDataLength > 0 ? `${start}-${end}` : '0';
-      totalText = filteredDataLength.toString();
-    } else {
-      // Jika tidak ada filter, gunakan data dari API
-      const start = (this.currentPage - 1) * this.pageSize + 1;
-      const end = Math.min(this.currentPage * this.pageSize, this.totalItems);
-      showingText = this.totalItems > 0 ? `${start}-${end}` : '0';
-      totalText = this.totalItems.toString();
-    }
-    
-    const showingEl = document.getElementById('showingEmployees');
-    const totalEl = document.getElementById('totalFilteredEmployees');
-    
-    if (showingEl) {
-      showingEl.textContent = showingText;
-    }
-    if (totalEl) {
-      totalEl.textContent = totalText;
-    }
-    
-    console.log(`Showing: ${showingText} of ${totalText}`);
-=======
    * Navigate to specific page
    */
   goToPage(page) {
@@ -1053,38 +538,30 @@ export class EmployeesMenu {
     } else {
       loadingElement.style.display = show ? 'block' : 'none';
     }
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
-   * Handle edit employee
+   * Redirect to Add Employee page
    */
-  handleEdit(id) {
-    console.log(`✏️ Navigating to employeesupdate for ID: ${id}`);
-    
-    sessionStorage.setItem('crudId', id.toString());
+  redirectToAdd() {
+    console.log('➡️ Navigating to employeescreate');
+    this.navigateTo('employeescreate');
+  }
+
+  /**
+   * Redirect to Edit Employee page
+   */
+  redirectToEdit(id) {
+    console.log(`➡️ Navigating to employeesupdate for ID: ${id}`);
+    sessionStorage.setItem('crudId', id);
     sessionStorage.setItem('crudMode', 'update');
-    
     this.navigateTo('employeesupdate');
   }
 
   /**
-   * Handle delete employee
+   * Handle delete with confirmation
    */
   async handleDelete(id) {
-<<<<<<< HEAD
-    const employee = this.allEmployees.find(emp => emp.employeeId === id);
-    if (!employee) return;
-
-    const result = await confirmModal.show({
-      type: 'danger',
-      title: 'Delete Employee',
-      message: `Are you sure you want to delete "${employee.fullName}"? This action cannot be undone.`,
-      okText: 'Delete',
-      cancelText: 'Cancel',
-      okClass: 'btn-danger',
-    });
-=======
     // Find employee data
     const employee = this.filteredData.find(e => e.employeeId === id);
     if (!employee) return;
@@ -1092,24 +569,11 @@ export class EmployeesMenu {
     const confirmed = confirm(
       `Are you sure you want to delete employee "${employee.fullName}"?\n\nThis action cannot be undone.`
     );
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
 
-    if (result) {
+    if (confirmed) {
       try {
         await WhitebirdAPI.employee.deleteEmployee(id);
         
-<<<<<<< HEAD
-        // Reload semua data
-        await this.loadAllEmployees();
-        await this.loadCurrentPage();
-        this.updateDepartmentFilter();
-        this.renderCurrentTab();
-        
-        this.showNotification('Employee deleted successfully', 'success');
-      } catch (error) {
-        console.error('❌ Failed to delete employee:', error);
-        this.showNotification('Failed to delete employee', 'danger');
-=======
         // Refresh data
         await this.loadEmployees();
         
@@ -1117,24 +581,11 @@ export class EmployeesMenu {
       } catch (error) {
         console.error('❌ Failed to delete employee:', error);
         this.showNotification('danger', '❌ Failed to delete employee: ' + error.message);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       }
     }
   }
 
   /**
-<<<<<<< HEAD
-   * Handle add employee
-   */
-  handleAdd() {
-    console.log('➕ Navigating to employeescreate');
-    
-    // Clear any existing session storage
-    sessionStorage.removeItem('crudId');
-    sessionStorage.removeItem('crudMode');
-    
-    this.navigateTo('employeescreate');
-=======
    * Show notification
    */
   showNotification(type, message) {
@@ -1187,7 +638,6 @@ export class EmployeesMenu {
   showError(message) {
     console.error('Showing error:', message);
     this.showNotification('danger', message);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
   }
 
   /**
@@ -1200,49 +650,7 @@ export class EmployeesMenu {
       window.location.href = `/${page}`;
     }
   }
-<<<<<<< HEAD
-
-  /**
-   * Show notification
-   */
-  showNotification(message, type = 'info') {
-    console.log(`${type.toUpperCase()}: ${message}`);
-    
-    if (typeof window.showNotification === 'function') {
-      window.showNotification(type, message);
-      return;
-    }
-    
-    if (type === 'danger' || type === 'error') {
-      setTimeout(() => {
-        alert(`${type.toUpperCase()}: ${message}`);
-      }, 100);
-    }
-  }
-
-  /**
-   * Show error message
-   */
-  showError(message) {
-    this.showNotification(message, 'danger');
-  }
-
-  /**
-   * Clean up
-   */
-  destroy() {
-    console.log('🧹 Cleaning up employees menu...');
-    
-    // Clear timeouts
-    if (this.searchTimeout) {
-      clearTimeout(this.searchTimeout);
-    }
-    
-    console.log('✅ Employees menu cleaned up');
-  }
-=======
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
 }
 
-// Export singleton instance
+// Export singleton
 export const employeesMenu = new EmployeesMenu();

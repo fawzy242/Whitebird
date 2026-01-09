@@ -43,16 +43,8 @@ export class TransactionCrudModule {
       this.setupEventListeners();
       this.updatePageTitle();
 
-<<<<<<< HEAD
-      if (this.mode === 'update' && this.transactionId) {
-        await this.loadTransaction(parseInt(this.transactionId));
-      } else {
-        // Set default date for create mode
-        this.setDefaultTransactionDate();
-=======
       if (this.mode === 'update' && this.assetTransactionsId) {
         await this.loadTransaction(parseInt(this.assetTransactionsId));
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       }
 
       this.initialized = true;
