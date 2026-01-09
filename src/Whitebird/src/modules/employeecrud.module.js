@@ -11,6 +11,8 @@ export class EmployeeCrudModule {
     this.employeeId = null;
     this.employee = null;
     this.initialized = false;
+    this.handleSubmitBound = null;
+    this.handleCancelBound = null;
   }
 
   /**
@@ -30,7 +32,7 @@ export class EmployeeCrudModule {
 
       console.log(`Mode: ${this.mode}, ID: ${this.employeeId}`);
 
-      // Tunggu DOM siap sepenuhnya
+      // Wait for DOM
       await this.waitForDOM();
 
       this.setupEventListeners();
@@ -38,6 +40,9 @@ export class EmployeeCrudModule {
 
       if (this.mode === 'update' && this.employeeId) {
         await this.loadEmployee(parseInt(this.employeeId));
+      } else {
+        // Hide isActive field for create mode
+        this.hideUpdateFields();
       }
 
       this.initialized = true;
@@ -53,12 +58,32 @@ export class EmployeeCrudModule {
    */
   waitForDOM() {
     return new Promise((resolve) => {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', resolve);
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(resolve, 100);
       } else {
-        setTimeout(resolve, 100); // Tunggu sedikit untuk render
+        document.addEventListener('DOMContentLoaded', () => setTimeout(resolve, 100));
       }
     });
+  }
+
+  /**
+   * Hide update-specific fields for create mode
+   */
+  hideUpdateFields() {
+    const isActiveField = document.getElementById('isActiveField');
+    if (isActiveField) {
+      isActiveField.classList.add('d-none');
+    }
+  }
+
+  /**
+   * Show update-specific fields for edit mode
+   */
+  showUpdateFields() {
+    const isActiveField = document.getElementById('isActiveField');
+    if (isActiveField) {
+      isActiveField.classList.remove('d-none');
+    }
   }
 
   /**
@@ -67,67 +92,56 @@ export class EmployeeCrudModule {
   setupEventListeners() {
     console.log('🔗 Setting up event listeners...');
 
-    // Coba beberapa kali jika elemen belum ada
-    let attempts = 0;
-    const maxAttempts = 10;
+    const form = document.getElementById('employeeForm');
+    const btnSave = document.getElementById('btnSaveEmployee');
+    const btnCancel = document.getElementById('btnCancelEmployee');
+    const btnBack = document.getElementById('btnBackToEmployees');
 
-    const trySetup = () => {
-      attempts++;
+    console.log('Elements found:', { 
+      form: !!form, 
+      btnSave: !!btnSave, 
+      btnCancel: !!btnCancel, 
+      btnBack: !!btnBack 
+    });
 
-      const form = document.getElementById('employeeForm');
-      const btnSave = document.getElementById('btnSaveEmployee');
-      const btnCancel = document.getElementById('btnCancelEmployee');
-      const btnBack = document.getElementById('btnBackToEmployees');
+    if (!form || !btnSave || !btnCancel) {
+      console.error('❌ Required form elements not found');
+      return;
+    }
 
-      console.log('Looking for elements...', { form, btnSave, btnCancel, btnBack });
-
-      if (!form || !btnSave || !btnCancel) {
-        if (attempts < maxAttempts) {
-          console.log(`Elements not found, retrying... (${attempts}/${maxAttempts})`);
-          setTimeout(trySetup, 100);
-          return;
-        } else {
-          console.error('❌ Form elements not found after multiple attempts!');
-          this.showError('Form elements not found. Please refresh the page.');
-          return;
-        }
-      }
-
-      // Form submit - HAPUS event listener lama dulu untuk menghindari duplikasi
+    // Remove existing listeners if any
+    if (this.handleSubmitBound) {
       form.removeEventListener('submit', this.handleSubmitBound);
-      this.handleSubmitBound = this.handleSubmit.bind(this);
-      form.addEventListener('submit', this.handleSubmitBound);
-
-      // Cancel button
-      btnCancel.removeEventListener('click', this.handleCancelBound);
-      this.handleCancelBound = this.handleCancel.bind(this);
-      btnCancel.addEventListener('click', this.handleCancelBound);
-
-      // Back button
-      if (btnBack) {
-        btnBack.removeEventListener('click', this.handleCancelBound);
-        btnBack.addEventListener('click', this.handleCancelBound);
-      }
-
-      // Tambahkan juga click listener langsung ke save button sebagai fallback
       btnSave.removeEventListener('click', this.handleSubmitBound);
-      btnSave.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Save button clicked directly');
-        this.handleSubmit();
-      });
+    }
 
-      console.log('✅ Event listeners attached successfully');
-      console.log('Form elements found:', {
-        form: form?.id,
-        btnSave: btnSave?.id,
-        btnCancel: btnCancel?.id,
-        btnBack: btnBack?.id,
-      });
-    };
+    if (this.handleCancelBound) {
+      btnCancel.removeEventListener('click', this.handleCancelBound);
+      if (btnBack) btnBack.removeEventListener('click', this.handleCancelBound);
+    }
 
-    trySetup();
+    // Create bound methods
+    this.handleSubmitBound = this.handleSubmit.bind(this);
+    this.handleCancelBound = this.handleCancel.bind(this);
+
+    // Form submit
+    form.addEventListener('submit', this.handleSubmitBound);
+    
+    // Direct save button click
+    btnSave.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.handleSubmitBound();
+    });
+
+    // Cancel button
+    btnCancel.addEventListener('click', this.handleCancelBound);
+
+    // Back button
+    if (btnBack) {
+      btnBack.addEventListener('click', this.handleCancelBound);
+    }
+
+    console.log('✅ Event listeners attached successfully');
   }
 
   /**
@@ -144,6 +158,8 @@ export class EmployeeCrudModule {
       if (breadcrumbEl) {
         breadcrumbEl.textContent = 'Edit';
       }
+      // Show update fields for edit mode
+      this.showUpdateFields();
     } else {
       if (titleEl) {
         titleEl.innerHTML = '<i class="fas fa-user me-2"></i>Add New Employee';
@@ -173,7 +189,6 @@ export class EmployeeCrudModule {
     } catch (error) {
       console.error('❌ Failed to load employee:', error);
       this.showError('Failed to load employee data');
-      // Jangan langsung cancel, biarkan user memutuskan
     }
   }
 
@@ -183,62 +198,88 @@ export class EmployeeCrudModule {
   populateForm(employee) {
     console.log('Populating form with:', employee);
 
-    const formFields = {
-      fullName: employee.fullName || '',
-      email: employee.email || '',
-      phoneNumber: employee.phoneNumber || '',
-      department: employee.department || '',
-      position: employee.position || '',
-    };
+    // Field mappings
+    const fieldMappings = [
+      { id: 'fullName', value: employee.fullName || '' },
+      { id: 'email', value: employee.email || '' },
+      { id: 'phoneNumber', value: employee.phoneNumber || '' },
+      { id: 'department', value: employee.department || '' },
+      { id: 'position', value: employee.position || '' },
+    ];
 
     // Set form values
-    Object.entries(formFields).forEach(([id, value]) => {
+    fieldMappings.forEach(({ id, value }) => {
       const element = document.getElementById(id);
       if (element) {
         element.value = value;
-        console.log(`Set ${id} to:`, value);
-      } else {
-        console.warn(`Element #${id} not found`);
       }
     });
 
-    // Handle isActive checkbox
-    const isActiveCheckbox = document.getElementById('isActive');
-    if (isActiveCheckbox) {
-      isActiveCheckbox.checked = employee.isActive || false;
-      console.log('Set isActive to:', employee.isActive || false);
+    // Handle isActive checkbox for update mode
+    if (this.mode === 'update') {
+      const isActiveCheckbox = document.getElementById('isActive');
+      if (isActiveCheckbox) {
+        isActiveCheckbox.checked = employee.isActive !== false; // Default to true
+      }
     }
+
+    console.log('✅ Form populated');
   }
 
   /**
    * Get form data
    */
   getFormData() {
-    const getValue = (id, defaultValue = null) => {
+    const data = {};
+
+    // Helper function to get field value
+    const getValue = (id, allowNull = false) => {
       const element = document.getElementById(id);
-      const value = element ? element.value.trim() : defaultValue;
-      console.log(`Getting ${id}:`, value);
+      if (!element) return allowNull ? null : undefined;
+
+      const value = element.value.trim();
+      
+      if (value === '' && allowNull) {
+        return null;
+      }
+
+      if (value === '') {
+        return undefined;
+      }
+
       return value;
     };
 
-    const getCheckboxValue = (id) => {
-      const element = document.getElementById(id);
-      const value = element ? element.checked : true;
-      console.log(`Getting checkbox ${id}:`, value);
-      return value;
-    };
+    // Required field
+    data.fullName = getValue('fullName');
 
-    const data = {
-      fullName: getValue('fullName', ''),
-      email: getValue('email', null),
-      phoneNumber: getValue('phoneNumber', null),
-      department: getValue('department', null),
-      position: getValue('position', null),
-    };
+    // Optional fields
+    const email = getValue('email', true);
+    if (email !== undefined) {
+      data.email = email;
+    }
 
-    // Untuk update mode, tambahkan isActive
+    const phoneNumber = getValue('phoneNumber', true);
+    if (phoneNumber !== undefined) {
+      data.phoneNumber = phoneNumber;
+    }
+
+    const department = getValue('department', true);
+    if (department !== undefined) {
+      data.department = department;
+    }
+
+    const position = getValue('position', true);
+    if (position !== undefined) {
+      data.position = position;
+    }
+
+    // For update mode, add isActive
     if (this.mode === 'update') {
-      data.isActive = getCheckboxValue('isActive');
+      const isActiveElement = document.getElementById('isActive');
+      if (isActiveElement) {
+        data.isActive = isActiveElement.checked;
+      }
     }
 
     console.log('Form data collected:', data);
@@ -249,61 +290,59 @@ export class EmployeeCrudModule {
    * Validate form data
    */
   validateFormData(data) {
-    console.log('Validating form data:', data);
     const errors = [];
 
+    // Required field validation
     if (!data.fullName || data.fullName.trim() === '') {
       errors.push('Full Name is required');
+      this.highlightField('fullName', true);
+    } else if (data.fullName.length > 100) {
+      errors.push('Full Name must be less than 100 characters');
       this.highlightField('fullName', true);
     } else {
       this.highlightField('fullName', false);
     }
 
-    if (data.email && !this.isValidEmail(data.email)) {
-      errors.push('Please enter a valid email address');
-      this.highlightField('email', true);
-    } else if (data.email) {
-      this.highlightField('email', false);
-    }
-
+    // Email validation
     if (data.email && data.email.length > 100) {
       errors.push('Email must be less than 100 characters');
       this.highlightField('email', true);
+    } else if (data.email && !this.isValidEmail(data.email)) {
+      errors.push('Please enter a valid email address');
+      this.highlightField('email', true);
+    } else if (data.email !== undefined) {
+      this.highlightField('email', false);
     }
 
-    if (data.fullName && data.fullName.length > 100) {
-      errors.push('Full Name must be less than 100 characters');
-      this.highlightField('fullName', true);
-    }
-
+    // Phone number validation
     if (data.phoneNumber && data.phoneNumber.length > 20) {
       errors.push('Phone Number must be less than 20 characters');
       this.highlightField('phoneNumber', true);
-    } else if (data.phoneNumber) {
+    } else if (data.phoneNumber !== undefined) {
       this.highlightField('phoneNumber', false);
     }
 
+    // Department validation
     if (data.department && data.department.length > 50) {
       errors.push('Department must be less than 50 characters');
       this.highlightField('department', true);
-    } else if (data.department) {
+    } else if (data.department !== undefined) {
       this.highlightField('department', false);
     }
 
+    // Position validation
     if (data.position && data.position.length > 50) {
       errors.push('Position must be less than 50 characters');
       this.highlightField('position', true);
-    } else if (data.position) {
+    } else if (data.position !== undefined) {
       this.highlightField('position', false);
     }
 
     if (errors.length > 0) {
-      console.log('Validation errors:', errors);
       this.showError(errors.join('<br>'));
       return false;
     }
 
-    console.log('✅ Form validation passed');
     return true;
   }
 
@@ -320,9 +359,14 @@ export class EmployeeCrudModule {
    */
   highlightField(fieldId, hasError) {
     const element = document.getElementById(fieldId);
-    if (!element) {
-      console.warn(`Cannot highlight field #${fieldId} - element not found`);
-      return;
+    if (!element) return;
+
+    const formGroup = element.closest('.mb-3');
+    if (formGroup) {
+      const feedback = formGroup.querySelector('.invalid-feedback');
+      if (feedback && hasError) {
+        feedback.style.display = 'block';
+      }
     }
 
     if (hasError) {
@@ -338,50 +382,40 @@ export class EmployeeCrudModule {
    * Show error message
    */
   showError(message) {
-    console.error('Showing error:', message);
+    console.error('Error:', message);
 
-    // Try to use Bootstrap toast if available
-    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-      const toastEl = document.getElementById('errorToast');
-      if (toastEl) {
-        const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) {
-          toastBody.innerHTML = message;
-        }
-
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-        return;
+    const toastEl = document.getElementById('errorToast');
+    if (toastEl && typeof bootstrap !== 'undefined') {
+      const toastBody = toastEl.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.innerHTML = message;
       }
+      
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    } else {
+      alert(message);
     }
-
-    // Fallback to alert
-    alert(message);
   }
 
   /**
    * Show success message
    */
   showSuccess(message) {
-    console.log('Showing success:', message);
+    console.log('Success:', message);
 
-    // Try to use Bootstrap toast if available
-    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-      const toastEl = document.getElementById('successToast');
-      if (toastEl) {
-        const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) {
-          toastBody.textContent = message;
-        }
-
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-        return;
+    const toastEl = document.getElementById('successToast');
+    if (toastEl && typeof bootstrap !== 'undefined') {
+      const toastBody = toastEl.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.textContent = message;
       }
+      
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    } else {
+      alert(message);
     }
-
-    // Fallback to alert
-    alert(message);
   }
 
   /**
@@ -390,17 +424,12 @@ export class EmployeeCrudModule {
   async handleSubmit(e) {
     if (e) {
       e.preventDefault();
-      e.stopPropagation();
     }
 
-    console.log('🔄 Submitting form...');
+    console.log('🔄 Submitting employee form...');
 
     const btnSave = document.getElementById('btnSaveEmployee');
-    if (!btnSave) {
-      console.error('Save button not found!');
-      this.showError('Save button not found. Please refresh the page.');
-      return;
-    }
+    if (!btnSave) return;
 
     try {
       // Get form data
@@ -408,7 +437,6 @@ export class EmployeeCrudModule {
 
       // Validate
       if (!this.validateFormData(formData)) {
-        console.log('Form validation failed');
         return;
       }
 
@@ -429,20 +457,15 @@ export class EmployeeCrudModule {
       console.log('API Response:', response);
 
       if (response.isSuccess) {
-        console.log('✅ Employee saved successfully:', response);
-        this.showSuccess(
-          this.mode === 'update'
-            ? 'Employee updated successfully!'
-            : 'Employee created successfully!'
-        );
+        const successMessage = this.mode === 'update' 
+          ? 'Employee updated successfully!' 
+          : 'Employee created successfully!';
+        
+        this.showSuccess(successMessage);
 
-        // Navigate back to employees list
+        // Navigate back to employees list after delay
         setTimeout(() => {
-          if (window.router) {
-            window.router.navigate('employees');
-          } else {
-            window.location.href = '/employees';
-          }
+          this.cleanupAndNavigate();
         }, 1500);
       } else {
         throw new Error(response.message || 'Failed to save employee');
@@ -462,14 +485,15 @@ export class EmployeeCrudModule {
   /**
    * Handle cancel
    */
-  handleCancel(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  handleCancel() {
+    console.log('🚫 Cancelling employee form...');
+    this.cleanupAndNavigate();
+  }
 
-    console.log('🚫 Cancelling form...');
-
+  /**
+   * Cleanup and navigate back
+   */
+  cleanupAndNavigate() {
     // Clear session storage
     sessionStorage.removeItem('crudMode');
     sessionStorage.removeItem('crudId');
@@ -486,50 +510,31 @@ export class EmployeeCrudModule {
    * Clean up event listeners
    */
   destroy() {
-    console.log('🧹 Cleaning up event listeners...');
+    console.log('🧹 Cleaning up employee CRUD module...');
 
-    const form = document.getElementById('employeeForm');
-    const btnSave = document.getElementById('btnSaveEmployee');
-    const btnCancel = document.getElementById('btnCancelEmployee');
-    const btnBack = document.getElementById('btnBackToEmployees');
-
-    if (this.handleSubmitBound && form) {
-      form.removeEventListener('submit', this.handleSubmitBound);
+    if (this.handleSubmitBound) {
+      const form = document.getElementById('employeeForm');
+      const btnSave = document.getElementById('btnSaveEmployee');
+      
+      if (form) form.removeEventListener('submit', this.handleSubmitBound);
+      if (btnSave) btnSave.removeEventListener('click', this.handleSubmitBound);
     }
 
-    if (this.handleCancelBound && btnCancel) {
-      btnCancel.removeEventListener('click', this.handleCancelBound);
+    if (this.handleCancelBound) {
+      const btnCancel = document.getElementById('btnCancelEmployee');
+      const btnBack = document.getElementById('btnBackToEmployees');
+      
+      if (btnCancel) btnCancel.removeEventListener('click', this.handleCancelBound);
+      if (btnBack) btnBack.removeEventListener('click', this.handleCancelBound);
     }
 
-    if (this.handleCancelBound && btnBack) {
-      btnBack.removeEventListener('click', this.handleCancelBound);
-    }
-
+    this.handleSubmitBound = null;
+    this.handleCancelBound = null;
     this.initialized = false;
+
     console.log('✅ Employee CRUD module cleaned up');
   }
 }
 
 // Export instance
 export const employeeCrudModule = new EmployeeCrudModule();
-
-// Auto-initialize if module is loaded standalone
-if (import.meta.env.DEV) {
-  // Wait for DOM to be ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      // Only initialize if we're on an employee CRUD page
-      if (document.getElementById('employeeForm')) {
-        console.log('Auto-initializing Employee CRUD module...');
-        employeeCrudModule.initialize();
-      }
-    });
-  } else {
-    setTimeout(() => {
-      if (document.getElementById('employeeForm')) {
-        console.log('Auto-initializing Employee CRUD module...');
-        employeeCrudModule.initialize();
-      }
-    }, 100);
-  }
-}

@@ -13,6 +13,8 @@ export class TransactionCrudModule {
     this.assets = [];
     this.employees = [];
     this.initialized = false;
+    this.handleSubmitBound = null;
+    this.handleCancelBound = null;
   }
 
   /**
@@ -32,7 +34,7 @@ export class TransactionCrudModule {
 
       console.log(`Mode: ${this.mode}, ID: ${this.transactionId}`);
 
-      // Tunggu DOM siap sepenuhnya
+      // Wait for DOM
       await this.waitForDOM();
 
       // Load assets and employees for dropdowns
@@ -43,6 +45,9 @@ export class TransactionCrudModule {
 
       if (this.mode === 'update' && this.transactionId) {
         await this.loadTransaction(parseInt(this.transactionId));
+      } else {
+        // Set default date for create mode
+        this.setDefaultTransactionDate();
       }
 
       this.initialized = true;
@@ -58,12 +63,30 @@ export class TransactionCrudModule {
    */
   waitForDOM() {
     return new Promise((resolve) => {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', resolve);
-      } else {
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
         setTimeout(resolve, 100);
+      } else {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(resolve, 100));
       }
     });
+  }
+
+  /**
+   * Set default transaction date for create mode
+   */
+  setDefaultTransactionDate() {
+    const dateElement = document.getElementById('transactionDate');
+    if (dateElement) {
+      const now = new Date();
+      // Format to YYYY-MM-DDThh:mm
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      dateElement.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
   }
 
   /**
@@ -78,7 +101,8 @@ export class TransactionCrudModule {
         this.populateAssetDropdown();
         console.log(`✅ Loaded ${this.assets.length} assets`);
       } else {
-        throw new Error(response.message || 'Failed to load assets');
+        console.warn('No assets data returned');
+        this.assets = [];
       }
     } catch (error) {
       console.error('❌ Failed to load assets:', error);
@@ -95,11 +119,11 @@ export class TransactionCrudModule {
 
       if (response.isSuccess && response.data) {
         this.employees = response.data;
-        this.populateEmployeeDropdown('fromEmployeeId');
-        this.populateEmployeeDropdown('toEmployeeId');
+        this.populateEmployeeDropdowns();
         console.log(`✅ Loaded ${this.employees.length} employees`);
       } else {
-        throw new Error(response.message || 'Failed to load employees');
+        console.warn('No employees data returned');
+        this.employees = [];
       }
     } catch (error) {
       console.error('❌ Failed to load employees:', error);
@@ -123,30 +147,45 @@ export class TransactionCrudModule {
     this.assets.forEach((asset) => {
       const option = document.createElement('option');
       option.value = asset.assetId;
-      const displayText = `${asset.assetCode || ''} - ${asset.assetName}`.trim();
-      option.textContent = displayText || `Asset #${asset.assetId}`;
+      const displayText = asset.assetCode 
+        ? `${asset.assetCode} - ${asset.assetName}`
+        : asset.assetName || `Asset #${asset.assetId}`;
+      option.textContent = displayText;
       select.appendChild(option);
     });
   }
 
   /**
-   * Populate employee dropdown (for both from and to employees)
+   * Populate employee dropdowns for both from and to
    */
-  populateEmployeeDropdown(selectId) {
-    const select = document.getElementById(selectId);
-    if (!select) {
-      console.warn(`Employee select element ${selectId} not found`);
-      return;
+  populateEmployeeDropdowns() {
+    const fromSelect = document.getElementById('fromEmployeeId');
+    const toSelect = document.getElementById('toEmployeeId');
+
+    // Clear existing options
+    if (fromSelect) {
+      fromSelect.innerHTML = '<option value="">Select Employee</option>';
+    }
+    if (toSelect) {
+      toSelect.innerHTML = '<option value="">Select Employee</option>';
     }
 
-    // Clear existing options except first
-    select.innerHTML = '<option value="">Select Employee</option>';
-
     this.employees.forEach((emp) => {
-      const option = document.createElement('option');
-      option.value = emp.employeeId;
-      option.textContent = emp.fullName || `Employee #${emp.employeeId}`;
-      select.appendChild(option);
+      const optionText = emp.fullName || `Employee #${emp.employeeId}`;
+      
+      if (fromSelect) {
+        const fromOption = document.createElement('option');
+        fromOption.value = emp.employeeId;
+        fromOption.textContent = optionText;
+        fromSelect.appendChild(fromOption);
+      }
+      
+      if (toSelect) {
+        const toOption = document.createElement('option');
+        toOption.value = emp.employeeId;
+        toOption.textContent = optionText;
+        toSelect.appendChild(toOption);
+      }
     });
   }
 
@@ -156,65 +195,56 @@ export class TransactionCrudModule {
   setupEventListeners() {
     console.log('🔗 Setting up event listeners...');
 
-    let attempts = 0;
-    const maxAttempts = 10;
+    const form = document.getElementById('transactionForm');
+    const btnSave = document.getElementById('btnSaveTransaction');
+    const btnCancel = document.getElementById('btnCancelTransaction');
+    const btnBack = document.getElementById('btnBackToTransactions');
 
-    const trySetup = () => {
-      attempts++;
+    console.log('Elements found:', { 
+      form: !!form, 
+      btnSave: !!btnSave, 
+      btnCancel: !!btnCancel, 
+      btnBack: !!btnBack 
+    });
 
-      const form = document.getElementById('transactionForm');
-      const btnSave = document.getElementById('btnSaveTransaction');
-      const btnCancel = document.getElementById('btnCancelTransaction');
-      const btnBack = document.getElementById('btnBackToTransactions');
+    if (!form || !btnSave || !btnCancel) {
+      console.error('❌ Required form elements not found');
+      return;
+    }
 
-      console.log('Looking for elements...', {
-        form: form?.id,
-        btnSave: btnSave?.id,
-        btnCancel: btnCancel?.id,
-        btnBack: btnBack?.id,
-      });
-
-      if (!form || !btnSave || !btnCancel) {
-        if (attempts < maxAttempts) {
-          console.log(`Elements not found, retrying... (${attempts}/${maxAttempts})`);
-          setTimeout(trySetup, 100);
-          return;
-        } else {
-          console.error('❌ Form elements not found after multiple attempts!');
-          this.showError('Form elements not found. Please refresh the page.');
-          return;
-        }
-      }
-
-      // Form submit - HAPUS event listener lama dulu
+    // Remove existing listeners if any
+    if (this.handleSubmitBound) {
       form.removeEventListener('submit', this.handleSubmitBound);
-      this.handleSubmitBound = this.handleSubmit.bind(this);
-      form.addEventListener('submit', this.handleSubmitBound);
-
-      // Cancel button
-      btnCancel.removeEventListener('click', this.handleCancelBound);
-      this.handleCancelBound = this.handleCancel.bind(this);
-      btnCancel.addEventListener('click', this.handleCancelBound);
-
-      // Back button
-      if (btnBack) {
-        btnBack.removeEventListener('click', this.handleCancelBound);
-        btnBack.addEventListener('click', this.handleCancelBound);
-      }
-
-      // Tambahkan click listener langsung ke save button sebagai fallback
       btnSave.removeEventListener('click', this.handleSubmitBound);
-      btnSave.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Save button clicked directly');
-        this.handleSubmit();
-      });
+    }
 
-      console.log('✅ Event listeners attached successfully');
-    };
+    if (this.handleCancelBound) {
+      btnCancel.removeEventListener('click', this.handleCancelBound);
+      if (btnBack) btnBack.removeEventListener('click', this.handleCancelBound);
+    }
 
-    trySetup();
+    // Create bound methods
+    this.handleSubmitBound = this.handleSubmit.bind(this);
+    this.handleCancelBound = this.handleCancel.bind(this);
+
+    // Form submit
+    form.addEventListener('submit', this.handleSubmitBound);
+    
+    // Direct save button click
+    btnSave.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.handleSubmitBound();
+    });
+
+    // Cancel button
+    btnCancel.addEventListener('click', this.handleCancelBound);
+
+    // Back button
+    if (btnBack) {
+      btnBack.addEventListener('click', this.handleCancelBound);
+    }
+
+    console.log('✅ Event listeners attached successfully');
   }
 
   /**
@@ -269,84 +299,104 @@ export class TransactionCrudModule {
   populateForm(transaction) {
     console.log('Populating form with:', transaction);
 
-    const formFields = {
-      assetId: transaction.assetId || '',
-      fromEmployeeId: transaction.fromEmployeeId || '',
-      toEmployeeId: transaction.toEmployeeId || '',
-      status: transaction.status || '',
-      notes: transaction.notes || '',
-    };
+    // Field mappings
+    const fieldMappings = [
+      { id: 'assetId', value: transaction.assetId || '' },
+      { id: 'fromEmployeeId', value: transaction.fromEmployeeId || '' },
+      { id: 'toEmployeeId', value: transaction.toEmployeeId || '' },
+      { id: 'status', value: transaction.status || '' },
+      { id: 'notes', value: transaction.notes || '' },
+    ];
 
     // Set form values
-    Object.entries(formFields).forEach(([id, value]) => {
+    fieldMappings.forEach(({ id, value }) => {
       const element = document.getElementById(id);
       if (element) {
         element.value = value;
-        console.log(`Set ${id} to:`, value);
-      } else {
-        console.warn(`Element #${id} not found`);
       }
     });
 
-    // Handle dates separately
+    // Handle transaction date
     if (transaction.transactionDate) {
       const dateElement = document.getElementById('transactionDate');
       if (dateElement) {
-        const date = new Date(transaction.transactionDate);
-        dateElement.value = date.toISOString().slice(0, 16);
-        console.log('Set transactionDate to:', dateElement.value);
+        try {
+          const date = new Date(transaction.transactionDate);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          
+          dateElement.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        } catch (e) {
+          console.warn('Invalid transaction date:', transaction.transactionDate);
+        }
       }
     }
+
+    console.log('✅ Form populated');
   }
 
   /**
    * Get form data
    */
   getFormData() {
-    const getValue = (id, defaultValue = null) => {
+    const data = {};
+
+    // Helper function to get field value
+    const getValue = (id, isNumber = false, allowNull = false) => {
       const element = document.getElementById(id);
-      const value = element ? element.value.trim() : defaultValue;
-      console.log(`Getting ${id}:`, value);
+      if (!element) return allowNull ? null : undefined;
+
+      const value = element.value.trim();
+      
+      if (value === '' && allowNull) {
+        return null;
+      }
+
+      if (value === '') {
+        return undefined;
+      }
+
+      if (isNumber) {
+        const num = parseInt(value, 10);
+        return isNaN(num) ? undefined : num;
+      }
+
       return value;
     };
 
-    const data = {
-      assetId: parseInt(getValue('assetId', '0')),
-      status: getValue('status', ''),
-    };
+    // Required fields
+    data.assetId = getValue('assetId', true);
+    data.status = getValue('status');
 
-    // Handle transaction date
-    const transactionDate = getValue('transactionDate', '');
+    // Transaction date
+    const transactionDate = getValue('transactionDate');
     if (transactionDate) {
       data.transactionDate = new Date(transactionDate).toISOString();
+    } else if (this.mode === 'update' && this.transaction) {
+      data.transactionDate = this.transaction.transactionDate;
     } else {
-      if (this.mode === 'update') {
-        data.transactionDate = this.transaction
-          ? this.transaction.transactionDate
-          : new Date().toISOString();
-      } else {
-        data.transactionDate = new Date().toISOString();
-      }
+      data.transactionDate = new Date().toISOString();
     }
 
-    // Handle employee IDs
-    const fromEmployeeId = getValue('fromEmployeeId', '');
-    if (fromEmployeeId) {
-      data.fromEmployeeId = parseInt(fromEmployeeId);
-    } else {
-      data.fromEmployeeId = null;
+    // Optional employee IDs
+    const fromEmployeeId = getValue('fromEmployeeId', true, true);
+    if (fromEmployeeId !== undefined) {
+      data.fromEmployeeId = fromEmployeeId;
     }
 
-    const toEmployeeId = getValue('toEmployeeId', '');
-    if (toEmployeeId) {
-      data.toEmployeeId = parseInt(toEmployeeId);
-    } else {
-      data.toEmployeeId = null;
+    const toEmployeeId = getValue('toEmployeeId', true, true);
+    if (toEmployeeId !== undefined) {
+      data.toEmployeeId = toEmployeeId;
     }
 
-    // Handle notes
-    const notes = getValue('notes', '');
-    data.notes = notes || null;
+    // Notes
+    const notes = getValue('notes', false, true);
+    if (notes !== undefined) {
+      data.notes = notes;
+    }
 
     console.log('Form data collected:', data);
     return data;
@@ -356,9 +406,9 @@ export class TransactionCrudModule {
    * Validate form data
    */
   validateFormData(data) {
-    console.log('Validating form data:', data);
     const errors = [];
 
+    // Required field validation
     if (!data.assetId || data.assetId <= 0) {
       errors.push('Asset is required');
       this.highlightField('assetId', true);
@@ -373,25 +423,28 @@ export class TransactionCrudModule {
       this.highlightField('status', false);
     }
 
-    // Validasi transactionDate
+    // Transaction date validation
     if (!data.transactionDate) {
-      errors.push('Transaction Date is required');
+      errors.push('Transaction date is required');
+      const dateElement = document.getElementById('transactionDate');
+      if (dateElement) {
+        dateElement.classList.add('is-invalid');
+      }
     }
 
+    // Notes length validation
     if (data.notes && data.notes.length > 500) {
       errors.push('Notes must be less than 500 characters');
       this.highlightField('notes', true);
-    } else if (data.notes) {
+    } else if (data.notes !== undefined) {
       this.highlightField('notes', false);
     }
 
     if (errors.length > 0) {
-      console.log('Validation errors:', errors);
       this.showError(errors.join('<br>'));
       return false;
     }
 
-    console.log('✅ Form validation passed');
     return true;
   }
 
@@ -400,9 +453,14 @@ export class TransactionCrudModule {
    */
   highlightField(fieldId, hasError) {
     const element = document.getElementById(fieldId);
-    if (!element) {
-      console.warn(`Cannot highlight field #${fieldId} - element not found`);
-      return;
+    if (!element) return;
+
+    const formGroup = element.closest('.mb-3');
+    if (formGroup) {
+      const feedback = formGroup.querySelector('.invalid-feedback');
+      if (feedback && hasError) {
+        feedback.style.display = 'block';
+      }
     }
 
     if (hasError) {
@@ -418,48 +476,40 @@ export class TransactionCrudModule {
    * Show error message
    */
   showError(message) {
-    console.error('Showing error:', message);
+    console.error('Error:', message);
 
-    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-      const toastEl = document.getElementById('errorToast');
-      if (toastEl) {
-        const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) {
-          toastBody.innerHTML = message;
-        }
-
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-        return;
+    const toastEl = document.getElementById('errorToast');
+    if (toastEl && typeof bootstrap !== 'undefined') {
+      const toastBody = toastEl.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.innerHTML = message;
       }
+      
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    } else {
+      alert(message);
     }
-
-    // Fallback to alert
-    alert(message);
   }
 
   /**
    * Show success message
    */
   showSuccess(message) {
-    console.log('Showing success:', message);
+    console.log('Success:', message);
 
-    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-      const toastEl = document.getElementById('successToast');
-      if (toastEl) {
-        const toastBody = toastEl.querySelector('.toast-body');
-        if (toastBody) {
-          toastBody.textContent = message;
-        }
-
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-        return;
+    const toastEl = document.getElementById('successToast');
+    if (toastEl && typeof bootstrap !== 'undefined') {
+      const toastBody = toastEl.querySelector('.toast-body');
+      if (toastBody) {
+        toastBody.textContent = message;
       }
+      
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    } else {
+      alert(message);
     }
-
-    // Fallback to alert
-    alert(message);
   }
 
   /**
@@ -468,17 +518,12 @@ export class TransactionCrudModule {
   async handleSubmit(e) {
     if (e) {
       e.preventDefault();
-      e.stopPropagation();
     }
 
     console.log('🔄 Submitting transaction form...');
 
     const btnSave = document.getElementById('btnSaveTransaction');
-    if (!btnSave) {
-      console.error('Save button not found!');
-      this.showError('Save button not found. Please refresh the page.');
-      return;
-    }
+    if (!btnSave) return;
 
     try {
       // Get form data
@@ -486,7 +531,6 @@ export class TransactionCrudModule {
 
       // Validate
       if (!this.validateFormData(formData)) {
-        console.log('Form validation failed');
         return;
       }
 
@@ -507,20 +551,15 @@ export class TransactionCrudModule {
       console.log('API Response:', response);
 
       if (response.isSuccess) {
-        console.log('✅ Transaction saved successfully:', response);
-        this.showSuccess(
-          this.mode === 'update'
-            ? 'Transaction updated successfully!'
-            : 'Transaction created successfully!'
-        );
+        const successMessage = this.mode === 'update' 
+          ? 'Transaction updated successfully!' 
+          : 'Transaction created successfully!';
+        
+        this.showSuccess(successMessage);
 
-        // Navigate back to transactions list
+        // Navigate back to transactions list after delay
         setTimeout(() => {
-          if (window.router) {
-            window.router.navigate('transactions');
-          } else {
-            window.location.href = '/transactions';
-          }
+          this.cleanupAndNavigate();
         }, 1500);
       } else {
         throw new Error(response.message || 'Failed to save transaction');
@@ -540,14 +579,15 @@ export class TransactionCrudModule {
   /**
    * Handle cancel
    */
-  handleCancel(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
+  handleCancel() {
     console.log('🚫 Cancelling transaction form...');
+    this.cleanupAndNavigate();
+  }
 
+  /**
+   * Cleanup and navigate back
+   */
+  cleanupAndNavigate() {
     // Clear session storage
     sessionStorage.removeItem('crudMode');
     sessionStorage.removeItem('crudId');
@@ -564,31 +604,28 @@ export class TransactionCrudModule {
    * Clean up event listeners
    */
   destroy() {
-    console.log('🧹 Cleaning up transaction event listeners...');
+    console.log('🧹 Cleaning up transaction CRUD module...');
 
-    const form = document.getElementById('transactionForm');
-    const btnSave = document.getElementById('btnSaveTransaction');
-    const btnCancel = document.getElementById('btnCancelTransaction');
-    const btnBack = document.getElementById('btnBackToTransactions');
-
-    if (this.handleSubmitBound && form) {
-      form.removeEventListener('submit', this.handleSubmitBound);
+    if (this.handleSubmitBound) {
+      const form = document.getElementById('transactionForm');
+      const btnSave = document.getElementById('btnSaveTransaction');
+      
+      if (form) form.removeEventListener('submit', this.handleSubmitBound);
+      if (btnSave) btnSave.removeEventListener('click', this.handleSubmitBound);
     }
 
-    if (this.handleCancelBound && btnCancel) {
-      btnCancel.removeEventListener('click', this.handleCancelBound);
+    if (this.handleCancelBound) {
+      const btnCancel = document.getElementById('btnCancelTransaction');
+      const btnBack = document.getElementById('btnBackToTransactions');
+      
+      if (btnCancel) btnCancel.removeEventListener('click', this.handleCancelBound);
+      if (btnBack) btnBack.removeEventListener('click', this.handleCancelBound);
     }
 
-    if (this.handleCancelBound && btnBack) {
-      btnBack.removeEventListener('click', this.handleCancelBound);
-    }
-
-    if (btnSave) {
-      const newBtnSave = btnSave.cloneNode(true);
-      btnSave.parentNode.replaceChild(newBtnSave, btnSave);
-    }
-
+    this.handleSubmitBound = null;
+    this.handleCancelBound = null;
     this.initialized = false;
+
     console.log('✅ Transaction CRUD module cleaned up');
   }
 }

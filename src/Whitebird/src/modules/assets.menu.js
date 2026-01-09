@@ -1,5 +1,5 @@
 /**
- * Assets Menu Module - Optimized
+ * Assets Menu Module - Optimized and Cleaned
  * Connected to Whitebird API
  */
 
@@ -17,6 +17,7 @@ export class AssetsMenu {
     this.loading = false;
     this.totalItems = 0;
     this.totalPages = 1;
+    this.searchTimeout = null;
   }
 
   /**
@@ -24,19 +25,27 @@ export class AssetsMenu {
    */
   async initialize() {
     console.log('📦 Assets Menu Initializing...');
-    this.setupEventListeners();
-    await this.loadCategories();
-    await this.loadFromAPI();
-    this.populateCategories();
-    this.updateStats();
-    this.renderCurrentTab();
-    console.log('✅ Assets Menu Initialized!');
+    
+    try {
+      this.setupEventListeners();
+      await this.loadCategories();
+      await this.loadFromAPI();
+      this.populateCategories();
+      this.updateStats();
+      this.renderCurrentTab();
+      console.log('✅ Assets Menu Initialized!');
+    } catch (error) {
+      console.error('❌ Assets Menu initialization error:', error);
+      this.showError('Failed to initialize assets menu');
+    }
   }
 
   /**
    * Load assets from API with pagination
    */
   async loadFromAPI() {
+    if (this.loading) return;
+
     try {
       this.loading = true;
       this.showLoading(true);
@@ -49,10 +58,12 @@ export class AssetsMenu {
 
       if (response.isSuccess && response.data) {
         this.assets = response.data;
-        this.totalItems = response.totalCount || response.data.length;
-        this.totalPages = response.totalPages || Math.ceil(this.totalItems / this.pageSize);
+        this.totalItems = response.totalCount || 0;
+        this.totalPages = response.totalPages || 1;
         this.filteredData = [...this.assets];
-        console.log(`✅ Loaded ${this.assets.length} assets from API (Total: ${this.totalItems})`);
+        
+        console.log(`✅ Loaded ${this.assets.length} assets from API`);
+        console.log(`Total: ${this.totalItems}, Pages: ${this.totalPages}`);
       } else {
         throw new Error(response.message || 'Failed to load assets');
       }
@@ -102,7 +113,6 @@ export class AssetsMenu {
     const select = document.getElementById('filterCategory');
     if (!select) return;
 
-    // Clear and add default option
     select.innerHTML = '<option value="">All Categories</option>';
 
     this.categories.forEach((cat) => {
@@ -126,35 +136,15 @@ export class AssetsMenu {
     // Refresh button
     const refreshBtn = document.getElementById('btnRefreshAssets');
     if (refreshBtn) {
-      refreshBtn.addEventListener('click', async () => {
-        console.log('🔄 Refreshing assets from API...');
-        refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
-        refreshBtn.disabled = true;
-
-        try {
-          await this.loadFromAPI();
-          await this.loadCategories();
-          this.updateStats();
-          this.renderCurrentTab();
-
-          this.showNotification('success', '✅ Assets refreshed successfully');
-        } catch (error) {
-          console.error('❌ Refresh failed:', error);
-          this.showNotification('danger', '❌ Failed to refresh assets');
-        } finally {
-          refreshBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Refresh';
-          refreshBtn.disabled = false;
-        }
-      });
+      refreshBtn.addEventListener('click', () => this.handleRefresh());
     }
 
-    // Search
+    // Search input with debounce
     const searchInput = document.getElementById('searchAssets');
     if (searchInput) {
-      let searchTimeout;
       searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
           this.applyFilters();
         }, 300);
       });
@@ -178,33 +168,51 @@ export class AssetsMenu {
       resetBtn.addEventListener('click', () => this.resetFilters());
     }
 
-    // Tab switching
-    const availableTab = document.getElementById('availableTab');
-    const inuseTab = document.getElementById('inuseTab');
-    const maintenanceTab = document.getElementById('maintenanceTab');
-
-    if (availableTab) {
-      availableTab.addEventListener('shown.bs.tab', () => {
-        this.currentTab = 'available';
+    // Tab switching using Bootstrap events
+    const assetTabs = document.getElementById('assetTabs');
+    if (assetTabs) {
+      assetTabs.addEventListener('shown.bs.tab', (e) => {
+        const tabId = e.target.id;
+        
+        if (tabId === 'availableTab') {
+          this.currentTab = 'available';
+        } else if (tabId === 'inuseTab') {
+          this.currentTab = 'inuse';
+        } else if (tabId === 'maintenanceTab') {
+          this.currentTab = 'maintenance';
+        }
+        
         this.currentPage = 1;
         this.renderCurrentTab();
       });
     }
+  }
 
-    if (inuseTab) {
-      inuseTab.addEventListener('shown.bs.tab', () => {
-        this.currentTab = 'inuse';
-        this.currentPage = 1;
-        this.renderCurrentTab();
-      });
-    }
+  /**
+   * Handle refresh button click
+   */
+  async handleRefresh() {
+    const refreshBtn = document.getElementById('btnRefreshAssets');
+    if (!refreshBtn) return;
 
-    if (maintenanceTab) {
-      maintenanceTab.addEventListener('shown.bs.tab', () => {
-        this.currentTab = 'maintenance';
-        this.currentPage = 1;
-        this.renderCurrentTab();
-      });
+    console.log('🔄 Refreshing assets from API...');
+    
+    const originalText = refreshBtn.innerHTML;
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
+
+    try {
+      await this.loadFromAPI();
+      await this.loadCategories();
+      this.updateStats();
+      this.renderCurrentTab();
+      this.showNotification('Assets refreshed successfully', 'success');
+    } catch (error) {
+      console.error('❌ Refresh failed:', error);
+      this.showNotification('Failed to refresh assets', 'danger');
+    } finally {
+      refreshBtn.disabled = false;
+      refreshBtn.innerHTML = originalText;
     }
   }
 
@@ -219,22 +227,25 @@ export class AssetsMenu {
     this.filteredData = this.assets.filter((asset) => {
       let match = true;
 
-      // Search
+      // Search across multiple fields
       if (searchQuery) {
-        match =
-          match &&
-          (asset.assetName?.toLowerCase().includes(searchQuery) ||
-            asset.assetCode?.toLowerCase().includes(searchQuery) ||
-            asset.categoryName?.toLowerCase().includes(searchQuery));
+        const searchableFields = [
+          asset.assetName,
+          asset.assetCode,
+          asset.categoryName,
+          asset.serialNumber
+        ].map(field => field?.toLowerCase() || '');
+        
+        match = match && searchableFields.some(field => field.includes(searchQuery));
       }
 
       // Category filter
-      if (categoryFilter) {
+      if (categoryFilter && categoryFilter !== 'All Categories') {
         match = match && asset.categoryName === categoryFilter;
       }
 
       // Status filter
-      if (statusFilter) {
+      if (statusFilter && statusFilter !== 'All Status') {
         match = match && asset.status === statusFilter;
       }
 
@@ -250,106 +261,151 @@ export class AssetsMenu {
    * Reset filters
    */
   resetFilters() {
-    document.getElementById('searchAssets').value = '';
-    document.getElementById('filterCategory').value = '';
-    document.getElementById('filterStatus').value = '';
+    const searchInput = document.getElementById('searchAssets');
+    const filterCategory = document.getElementById('filterCategory');
+    const filterStatus = document.getElementById('filterStatus');
+
+    if (searchInput) searchInput.value = '';
+    if (filterCategory) filterCategory.value = '';
+    if (filterStatus) filterStatus.value = '';
+    
     this.applyFilters();
   }
 
   /**
-   * Update stats
+   * Update statistics
    */
   updateStats() {
-    const total = this.totalItems;
-    const available = this.assets.filter((a) => a.status === 'Available').length;
-    const inUse = this.assets.filter((a) => a.status === 'In Use').length;
-    const maintenance = this.assets.filter((a) => a.status === 'Maintenance').length;
+    const total = this.assets.length;
+    const available = this.assets.filter(a => a.status === 'Available').length;
+    const inUse = this.assets.filter(a => a.status === 'In Use').length;
+    const maintenance = this.assets.filter(a => a.status === 'Maintenance').length;
 
-    // Safe element updates
-    const setTextContent = (id, text) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
+    // Update element text safely
+    const updateElementText = (id, text) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = text;
     };
 
-    setTextContent('totalAssets', total);
-    setTextContent('availableAssets', available);
-    setTextContent('inUseAssets', inUse);
-    setTextContent('maintenanceAssets', maintenance);
+    updateElementText('totalAssets', total);
+    updateElementText('availableAssets', available);
+    updateElementText('inUseAssets', inUse);
+    updateElementText('maintenanceAssets', maintenance);
   }
 
   /**
-   * Render current tab
+   * Render current tab content
    */
   renderCurrentTab() {
-    const available = this.filteredData.filter((a) => a.status === 'Available');
-    const inUse = this.filteredData.filter((a) => a.status === 'In Use');
-    const maintenance = this.filteredData.filter((a) => a.status === 'Maintenance');
+    // Get data for current tab
+    let currentData = [];
+    let emptyStateId = '';
+    let tableBodyId = '';
 
-    // Update badge counts
-    const setBadgeCount = (id, count) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = count;
-    };
-
-    setBadgeCount('availableCount', available.length);
-    setBadgeCount('inuseCount', inUse.length);
-    setBadgeCount('maintenanceCount', maintenance.length);
-
-    // Render appropriate tab
-    if (this.currentTab === 'available') {
-      this.renderTable('availableTableBody', 'availableEmpty', available);
-    } else if (this.currentTab === 'inuse') {
-      this.renderTable('inuseTableBody', 'inuseEmpty', inUse);
-    } else if (this.currentTab === 'maintenance') {
-      this.renderTable('maintenanceTableBody', 'maintenanceEmpty', maintenance);
+    switch (this.currentTab) {
+      case 'available':
+        currentData = this.filteredData.filter(a => a.status === 'Available');
+        emptyStateId = 'availableEmpty';
+        tableBodyId = 'availableTableBody';
+        break;
+      case 'inuse':
+        currentData = this.filteredData.filter(a => a.status === 'In Use');
+        emptyStateId = 'inuseEmpty';
+        tableBodyId = 'inuseTableBody';
+        break;
+      case 'maintenance':
+        currentData = this.filteredData.filter(a => a.status === 'Maintenance');
+        emptyStateId = 'maintenanceEmpty';
+        tableBodyId = 'maintenanceTableBody';
+        break;
     }
 
+    // Update badge counts
+    this.updateBadgeCounts();
+
+    // Render table
+    this.renderTable(tableBodyId, emptyStateId, currentData);
+
     // Update showing count
-    const currentData =
-      this.currentTab === 'available'
-        ? available
-        : this.currentTab === 'inuse'
-          ? inUse
-          : maintenance;
+    const showingCountEl = document.getElementById('showingCount');
+    const totalCountEl = document.getElementById('totalCount');
     
-    setBadgeCount('showingCount', currentData.length);
-    setBadgeCount('totalCount', this.totalItems);
+    if (showingCountEl) showingCountEl.textContent = currentData.length;
+    if (totalCountEl) totalCountEl.textContent = this.assets.length;
 
     // Render pagination
     this.renderPagination();
   }
 
   /**
-   * Render table with proper columns from API
+   * Update badge counts
    */
-  renderTable(tbodyId, emptyId, data) {
-    const tbody = document.getElementById(tbodyId);
-    const emptyState = document.getElementById(emptyId);
+  updateBadgeCounts() {
+    const availableCount = this.filteredData.filter(a => a.status === 'Available').length;
+    const inuseCount = this.filteredData.filter(a => a.status === 'In Use').length;
+    const maintenanceCount = this.filteredData.filter(a => a.status === 'Maintenance').length;
 
-    if (!tbody) return;
+    const updateBadge = (id, count) => {
+      const badge = document.getElementById(id);
+      if (badge) badge.textContent = count;
+    };
+
+    updateBadge('availableCount', availableCount);
+    updateBadge('inuseCount', inuseCount);
+    updateBadge('maintenanceCount', maintenanceCount);
+  }
+
+  /**
+   * Render table with data
+   */
+  renderTable(tbodyId, emptyStateId, data) {
+    const tbody = document.getElementById(tbodyId);
+    const emptyState = document.getElementById(emptyStateId);
+    const tableContainer = tbody?.closest('.table-responsive');
+
+    if (!tbody || !emptyState || !tableContainer) return;
 
     // Show/hide empty state
     if (data.length === 0) {
-      tbody.closest('.table-responsive')?.classList.add('d-none');
-      if (emptyState) emptyState.classList.remove('d-none');
+      tableContainer.classList.add('d-none');
+      emptyState.classList.remove('d-none');
       return;
-    } else {
-      tbody.closest('.table-responsive')?.classList.remove('d-none');
-      if (emptyState) emptyState.classList.add('d-none');
     }
 
-    // Build rows
-    const fragment = document.createDocumentFragment();
-    data.forEach((asset, index) => {
-      const tr = document.createElement('tr');
+    tableContainer.classList.remove('d-none');
+    emptyState.classList.add('d-none');
 
-      // Determine columns based on tab
-      if (this.currentTab === 'available') {
-        tr.innerHTML = `
-          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
-          <td><strong>${asset.assetName || 'N/A'}</strong></td>
-          <td><code>${asset.assetCode || 'N/A'}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
+    // Build table rows
+    const fragment = document.createDocumentFragment();
+    
+    data.forEach((asset, index) => {
+      const row = this.createTableRow(asset, index);
+      fragment.appendChild(row);
+    });
+
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
+
+    // Attach event listeners to action buttons
+    this.attachRowEventListeners(tbody);
+  }
+
+  /**
+   * Create table row based on current tab
+   */
+  createTableRow(asset, index) {
+    const tr = document.createElement('tr');
+    const rowNumber = (this.currentPage - 1) * this.pageSize + index + 1;
+
+    let rowContent = '';
+
+    switch (this.currentTab) {
+      case 'available':
+        rowContent = `
+          <td>${rowNumber}</td>
+          <td><strong>${this.escapeHtml(asset.assetName || 'N/A')}</strong></td>
+          <td><code>${this.escapeHtml(asset.assetCode || 'N/A')}</code></td>
+          <td><span class="badge bg-info">${this.escapeHtml(asset.categoryName || 'N/A')}</span></td>
           <td>${this.formatDate(asset.purchaseDate)}</td>
           <td>${this.formatCurrency(asset.purchasePrice)}</td>
           <td>
@@ -361,13 +417,15 @@ export class AssetsMenu {
             </button>
           </td>
         `;
-      } else if (this.currentTab === 'inuse') {
-        tr.innerHTML = `
-          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
-          <td><strong>${asset.assetName || 'N/A'}</strong></td>
-          <td><code>${asset.assetCode || 'N/A'}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
-          <td>${asset.currentHolderName || 'N/A'}</td>
+        break;
+
+      case 'inuse':
+        rowContent = `
+          <td>${rowNumber}</td>
+          <td><strong>${this.escapeHtml(asset.assetName || 'N/A')}</strong></td>
+          <td><code>${this.escapeHtml(asset.assetCode || 'N/A')}</code></td>
+          <td><span class="badge bg-info">${this.escapeHtml(asset.categoryName || 'N/A')}</span></td>
+          <td>${this.escapeHtml(asset.currentHolderName || 'N/A')}</td>
           <td>${this.formatDate(asset.assignedDate)}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId}" title="Edit">
@@ -378,13 +436,15 @@ export class AssetsMenu {
             </button>
           </td>
         `;
-      } else {
-        tr.innerHTML = `
-          <td>${(this.currentPage - 1) * this.pageSize + index + 1}</td>
-          <td><strong>${asset.assetName || 'N/A'}</strong></td>
-          <td><code>${asset.assetCode || 'N/A'}</code></td>
-          <td><span class="badge bg-info">${asset.categoryName || 'N/A'}</span></td>
-          <td>${asset.condition || 'N/A'}</td>
+        break;
+
+      case 'maintenance':
+        rowContent = `
+          <td>${rowNumber}</td>
+          <td><strong>${this.escapeHtml(asset.assetName || 'N/A')}</strong></td>
+          <td><code>${this.escapeHtml(asset.assetCode || 'N/A')}</code></td>
+          <td><span class="badge bg-info">${this.escapeHtml(asset.categoryName || 'N/A')}</span></td>
+          <td>${this.escapeHtml(asset.condition || 'N/A')}</td>
           <td>${this.formatDate(asset.maintenanceDate)}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary btn-edit" data-id="${asset.assetId}" title="Edit">
@@ -395,16 +455,20 @@ export class AssetsMenu {
             </button>
           </td>
         `;
-      }
+        break;
+    }
 
-      fragment.appendChild(tr);
-    });
+    tr.innerHTML = rowContent;
+    return tr;
+  }
 
-    tbody.innerHTML = '';
-    tbody.appendChild(fragment);
-
-    // Attach event listeners
-    this.attachRowEventListeners(tbody);
+  /**
+   * Escape HTML to prevent XSS
+   */
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   /**
@@ -412,11 +476,18 @@ export class AssetsMenu {
    */
   formatDate(dateString) {
     if (!dateString) return 'N/A';
+    
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString();
+      if (isNaN(date.getTime())) return 'N/A';
+      
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
     } catch {
-      return dateString;
+      return 'N/A';
     }
   }
 
@@ -424,11 +495,36 @@ export class AssetsMenu {
    * Format currency
    */
   formatCurrency(amount) {
-    if (!amount && amount !== 0) return 'N/A';
+    if (amount === null || amount === undefined || amount === '') return 'N/A';
+    
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    if (isNaN(numAmount)) return 'N/A';
+    
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(numAmount);
+  }
+
+  /**
+   * Attach event listeners to table row buttons
+   */
+  attachRowEventListeners(tbody) {
+    tbody.querySelectorAll('.btn-edit').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.currentTarget.dataset.id);
+        this.handleEdit(id);
+      });
+    });
+
+    tbody.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = parseInt(e.currentTarget.dataset.id);
+        await this.handleDelete(id);
+      });
+    });
   }
 
   /**
@@ -436,10 +532,8 @@ export class AssetsMenu {
    */
   renderPagination() {
     const pagination = document.getElementById('pagination');
-    if (!pagination) return;
-
-    if (this.totalPages <= 1) {
-      pagination.innerHTML = '';
+    if (!pagination || this.totalPages <= 1) {
+      if (pagination) pagination.innerHTML = '';
       return;
     }
 
@@ -448,19 +542,19 @@ export class AssetsMenu {
     // Previous button
     html += `
       <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${this.currentPage - 1}">
+        <a class="page-link" href="#" data-page="prev">
           <i class="fas fa-chevron-left"></i>
         </a>
       </li>
     `;
 
     // Page numbers
-    const maxPages = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
-    let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
-    if (endPage - startPage < maxPages - 1) {
-      startPage = Math.max(1, endPage - maxPages + 1);
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -474,7 +568,7 @@ export class AssetsMenu {
     // Next button
     html += `
       <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
-        <a class="page-link" href="#" data-page="${this.currentPage + 1}">
+        <a class="page-link" href="#" data-page="next">
           <i class="fas fa-chevron-right"></i>
         </a>
       </li>
@@ -490,71 +584,60 @@ export class AssetsMenu {
    * Attach pagination listeners
    */
   attachPaginationListeners(pagination) {
-    pagination.querySelectorAll('.page-link').forEach((link) => {
-      link.addEventListener('click', (e) => {
+    pagination.querySelectorAll('.page-link').forEach(link => {
+      link.addEventListener('click', async (e) => {
         e.preventDefault();
-        const page = parseInt(e.currentTarget.dataset.page);
-        if (!isNaN(page)) {
-          this.goToPage(page);
+        
+        const pageAction = e.currentTarget.dataset.page;
+        let newPage = this.currentPage;
+
+        if (pageAction === 'prev') {
+          newPage = this.currentPage - 1;
+        } else if (pageAction === 'next') {
+          newPage = this.currentPage + 1;
+        } else {
+          newPage = parseInt(pageAction);
+        }
+
+        if (newPage >= 1 && newPage <= this.totalPages && newPage !== this.currentPage) {
+          this.currentPage = newPage;
+          await this.loadFromAPI();
+          this.renderCurrentTab();
         }
       });
     });
   }
 
   /**
-   * Go to page
-   */
-  async goToPage(page) {
-    if (page < 1 || page > this.totalPages) return;
-
-    this.currentPage = page;
-    await this.loadFromAPI();
-    this.updateStats();
-    this.renderCurrentTab();
-  }
-
-  /**
-   * Attach row event listeners
-   */
-  attachRowEventListeners(tbody) {
-    tbody.querySelectorAll('.btn-edit').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        this.handleEdit(id);
-      });
-    });
-
-    tbody.querySelectorAll('.btn-delete').forEach((btn) => {
-      btn.addEventListener('click', async (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        await this.handleDelete(id);
-      });
-    });
-  }
-
-  /**
-   * Handle add
+   * Handle add button click
    */
   handleAdd() {
     console.log('➕ Navigating to assetscreate');
+    
+    // Clear any existing session storage
+    sessionStorage.removeItem('crudId');
+    sessionStorage.removeItem('crudMode');
+    
     this.navigateTo('assetscreate');
   }
 
   /**
-   * Handle edit
+   * Handle edit button click
    */
   handleEdit(id) {
     console.log(`✏️ Navigating to assetsupdate for ID: ${id}`);
-    sessionStorage.setItem('crudId', id);
+    
+    sessionStorage.setItem('crudId', id.toString());
     sessionStorage.setItem('crudMode', 'update');
+    
     this.navigateTo('assetsupdate');
   }
 
   /**
-   * Handle delete
+   * Handle delete button click
    */
   async handleDelete(id) {
-    const asset = this.assets.find((a) => a.assetId === id);
+    const asset = this.assets.find(a => a.assetId === id);
     if (!asset) return;
 
     const result = await confirmModal.show({
@@ -569,11 +652,16 @@ export class AssetsMenu {
     if (result) {
       try {
         await WhitebirdAPI.asset.deleteAsset(id);
+        
+        // Reload data
         await this.loadFromAPI();
-        this.showNotification('success', 'Asset deleted successfully');
+        this.updateStats();
+        this.renderCurrentTab();
+        
+        this.showNotification('Asset deleted successfully', 'success');
       } catch (error) {
         console.error('❌ Failed to delete asset:', error);
-        this.showNotification('danger', 'Failed to delete asset');
+        this.showNotification('Failed to delete asset', 'danger');
       }
     }
   }
@@ -592,20 +680,68 @@ export class AssetsMenu {
   /**
    * Show notification
    */
-  showNotification(type, message) {
+  showNotification(message, type = 'info') {
+    // Try to use existing notification system
     if (window.showNotification) {
       window.showNotification(type, message);
+      return;
+    }
+
+    // Fallback to toast if Bootstrap is available
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      const toastContainer = document.querySelector('.toast-container');
+      if (!toastContainer) {
+        // Create toast container if it doesn't exist
+        const container = document.createElement('div');
+        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        document.body.appendChild(container);
+      }
+
+      const toastId = `toast-${Date.now()}`;
+      const toastHtml = `
+        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-${type} text-white">
+            <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+          </div>
+          <div class="toast-body">${message}</div>
+        </div>
+      `;
+
+      toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+      const toastEl = document.getElementById(toastId);
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+
+      // Remove toast after it's hidden
+      toastEl.addEventListener('hidden.bs.toast', () => {
+        toastEl.remove();
+      });
     } else {
+      // Fallback to alert
       alert(message);
     }
   }
 
   /**
-   * Show error
+   * Show error message
    */
   showError(message) {
-    console.error('Error:', message);
-    this.showNotification('danger', message);
+    this.showNotification(message, 'danger');
+  }
+
+  /**
+   * Clean up
+   */
+  destroy() {
+    console.log('🧹 Cleaning up assets menu...');
+    
+    // Clear timeouts
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    
+    console.log('✅ Assets menu cleaned up');
   }
 }
 

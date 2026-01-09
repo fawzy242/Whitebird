@@ -10,6 +10,7 @@ namespace Whitebird.Domain.Features.Employee.View
         public string FullName { get; set; } = default!;
         public string? Department { get; set; }
         public string? Position { get; set; }
+        public string? Email { get; set; }
         public bool IsActive { get; set; }
     }
 
