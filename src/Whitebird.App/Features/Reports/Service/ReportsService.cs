@@ -7,6 +7,7 @@ using System.Reflection;
 using Whitebird.App.Features.Common.Service;
 using Whitebird.App.Features.Reports.Interfaces;
 using Whitebird.Domain.Features.Reports.View;
+using Whitebird.Infra.Features.AssetTransactions;
 using Whitebird.Infra.Features.Reports;
 
 namespace Whitebird.App.Features.Reports.Service
