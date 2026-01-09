@@ -13,9 +13,9 @@
             <button class="btn btn-outline-secondary" id="btnRefreshDashboard">
                 <i class="fas fa-sync-alt me-2"></i>Refresh
             </button>
-            <button class="btn btn-danger" id="btnExportReport">
+            <!-- <button class="btn btn-danger" id="btnExportReport">
                 <i class="fas fa-download me-2"></i>Export Report
-            </button>
+            </button> -->
         </div>
     </div>
 
@@ -24,139 +24,6 @@
         <i class="fas fa-info-circle me-2"></i>
         <strong>Welcome back!</strong> Here's your business overview for today.
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-
-    <!-- Statistics Cards Row -->
-    <div class="row mb-4" id="statsCardsContainer">
-        <!-- Stats cards will be generated here -->
-    </div>
-
-    <!-- Charts Row -->
-    <div class="row mb-4">
-        <!-- Sales Chart -->
-        <div class="col-lg-8 mb-4">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-chart-line me-2"></i>Sales Overview
-                    </div>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button type="button" class="btn btn-outline-secondary active" data-period="week">Week</button>
-                        <button type="button" class="btn btn-outline-secondary" data-period="month">Month</button>
-                        <button type="button" class="btn btn-outline-secondary" data-period="year">Year</button>
-                    </div>
-                </div>
-                <div class="card-body" style="height: 320px; position: relative;">
-                    <canvas id="salesChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Activity Timeline -->
-        <div class="col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>
-                        <i class="fas fa-history me-2"></i>Recent Activity
-                    </span>
-                    <span class="badge bg-primary" id="activityCount">0</span>
-                </div>
-                <div class="card-body p-3">
-                    <div id="activityTimeline" class="activity-timeline-container">
-                        <!-- Activity items will be generated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Secondary Charts Row -->
-    <div class="row mb-4">
-        <!-- Revenue Chart -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <i class="fas fa-dollar-sign me-2"></i>Revenue Distribution
-                </div>
-                <div class="card-body" style="height: 300px; position: relative;">
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Traffic Sources -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <i class="fas fa-users me-2"></i>User Traffic Sources
-                </div>
-                <div class="card-body" style="height: 300px; position: relative;">
-                    <canvas id="trafficChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Orders Table -->
-    <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <i class="fas fa-shopping-cart me-2"></i>Recent Orders
-                <span class="badge bg-danger ms-2" id="ordersCount">0</span>
-            </div>
-            <a href="/model1" class="btn btn-sm btn-outline-primary">View All</a>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0" id="recentOrdersTable">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Product</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentOrdersBody">
-                        <!-- Orders will be generated here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Top Products & Performance -->
-    <div class="row">
-        <!-- Top Products -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <i class="fas fa-trophy me-2"></i>Top Products
-                </div>
-                <div class="card-body">
-                    <div id="topProductsList">
-                        <!-- Top products will be generated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Performance Metrics -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <i class="fas fa-chart-bar me-2"></i>Performance Metrics
-                </div>
-                <div class="card-body">
-                    <div id="performanceMetrics">
-                        <!-- Metrics will be generated here -->
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

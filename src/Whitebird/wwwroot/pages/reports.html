@@ -2,7 +2,7 @@
 <div id="reportsPage">
     <div class="page-header">
         <div>
-            <h1><i class="fas fa-chart-bar me-2"></i>Reports & Analytics</h1>
+            <h1><i class="fas fa-file-download me-2"></i>Download Reports</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="#" data-route="dashboard">Home</a></li>
@@ -12,146 +12,42 @@
         </div>
     </div>
 
-    <!-- Report Types -->
-    <div class="row mb-4">
+    <!-- Single Report Card -->
+    <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-file-alt me-2"></i>Quick Reports
-                </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <button class="list-group-item list-group-item-action" id="btnAssetReport">
-                            <i class="fas fa-box me-3"></i>Asset Inventory Report
-                        </button>
-                        <button class="list-group-item list-group-item-action" id="btnEmployeeReport">
-                            <i class="fas fa-users me-3"></i>Employee Report
-                        </button>
-                        <button class="list-group-item list-group-item-action" id="btnTransactionReport">
-                            <i class="fas fa-exchange-alt me-3"></i>Transaction Report
-                        </button>
-                        <button class="list-group-item list-group-item-action" id="btnFinancialReport">
-                            <i class="fas fa-dollar-sign me-3"></i>Financial Report
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-calendar-alt me-2"></i>Date Range Reports
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Download Reports</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Report Type</label>
-                        <select class="form-select" id="reportType">
-                            <option>Asset Inventory</option>
-                            <option>Employee Records</option>
-                            <option>Transaction History</option>
-                            <option>Financial Summary</option>
+                        <label class="form-label fw-bold">Select Report</label>
+                        <select class="form-select" id="selectReport">
+                            <option value="">-- Pilih Report --</option>
                         </select>
+                        <div class="form-text">Pilih jenis report yang ingin di-download</div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="fromDate">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="toDate">
-                        </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Format</label>
+                        <select class="form-select" id="selectFormat">
+                            <option value="excel" selected>Excel (.xlsx)</option>
+                            <option value="pdf" disabled>PDF (.pdf) - Coming Soon</option>
+                        </select>
+                        <div class="form-text">Pilih format file untuk download</div>
                     </div>
-                    <button class="btn btn-danger w-100" id="btnGenerateReport">
-                        <i class="fas fa-file-download me-2"></i>Generate Report
+
+                    <button class="btn btn-danger w-100" id="btnDownloadReport">
+                        <i class="fas fa-download me-2"></i>Download Report
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Advanced Filters -->
-    <div class="card mb-4">
-        <div class="card-header" data-bs-toggle="collapse" data-bs-target="#reportFilters" style="cursor: pointer;">
-            <i class="fas fa-filter me-2"></i>Report Filters
-            <i class="fas fa-chevron-down float-end"></i>
-        </div>
-        <div class="collapse" id="reportFilters">
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Report Type</label>
-                        <select class="form-select" id="filterReportType">
-                            <option value="">All Types</option>
-                            <option value="asset">Asset Report</option>
-                            <option value="employee">Employee Report</option>
-                            <option value="transaction">Transaction Report</option>
-                            <option value="financial">Financial Report</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="filterReportStatus">
-                            <option value="">All Status</option>
-                            <option value="generated">Generated</option>
-                            <option value="pending">Pending</option>
-                            <option value="error">Error</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Date From</label>
-                        <input type="date" class="form-control" id="filterDateFrom">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Date To</label>
-                        <input type="date" class="form-control" id="filterDateTo">
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">&nbsp;</label>
-                        <button class="btn btn-danger w-100" id="btnApplyFilters">
-                            <i class="fas fa-check"></i>
-                        </button>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">&nbsp;</label>
-                        <button class="btn btn-outline-secondary w-100" id="btnResetFilters">
-                            <i class="fas fa-redo"></i>
-                        </button>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">&nbsp;</label>
-                        <button class="btn btn-success w-100" id="btnExportFiltered" title="Export Filtered Results">
-                            <i class="fas fa-file-export"></i>
-                        </button>
+                <div class="card-footer bg-light">
+                    <div class="small text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Report akan langsung di-download ke perangkat Anda dalam format Excel.
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Reports -->
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-history me-2"></i>Recent Reports
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Type</th>
-                            <th>Generated</th>
-                            <th>By</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recentReportsBody"></tbody>
-                </table>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Module initialized by page-initializer.util.js -->

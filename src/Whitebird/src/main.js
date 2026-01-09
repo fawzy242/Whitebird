@@ -45,10 +45,8 @@ class RedAdminApp {
     this.api = WhitebirdAPI;
 
     // Make libraries available globally for debugging in development
-    if (import.meta.env.DEV) {
-      window.bootstrap = bootstrap;
-      window.Chart = Chart;
-    }
+    window.bootstrap = bootstrap;
+    window.Chart = Chart;
   }
 
   /**

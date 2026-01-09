@@ -17,6 +17,9 @@ using Whitebird.Infra.Features.Common;
 using Whitebird.App.Features.Auth.Service;
 using Whitebird.App.Features.Auth.Interfaces;
 using Whitebird.Infra.Features.Auth;
+using Whitebird.Infra.Features.Reports;
+using Whitebird.App.Features.Reports.Interfaces;
+using Whitebird.App.Features.Reports.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +125,8 @@ builder.Services.AddMapster();
 builder.Services.AddScoped<IAuthReps, AuthReps>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IReportsReps, ReportsReps>();
+builder.Services.AddScoped<IReportsService, ReportsService>();
 
 // Configure Mapster mappings
 TypeAdapterConfig.GlobalSettings.Default.PreserveReference(true);

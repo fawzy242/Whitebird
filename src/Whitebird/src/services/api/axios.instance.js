@@ -31,8 +31,6 @@ const axiosInstance = axios.create({
     Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
   },
-  // Add credentials for cross-origin requests if needed
-  // withCredentials: true
 });
 
 // Request interceptor
@@ -76,14 +74,31 @@ axiosInstance.interceptors.response.use(
       console.log(
         `📥 ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`,
         {
-          data: response.data,
           status: response.status,
           statusText: response.statusText,
+          headers: response.headers,
+          responseType: response.config.responseType,
         }
       );
     }
 
-    // Standardize response format
+    // JANGAN modifikasi response untuk file downloads (blob/arraybuffer)
+    // Cek jika ini response untuk file download
+    const isFileDownload = 
+      response.config.responseType === 'blob' || 
+      response.config.responseType === 'arraybuffer' ||
+      response.headers['content-type']?.includes('application/vnd.openxmlformats') ||
+      response.headers['content-type']?.includes('application/octet-stream') ||
+      response.headers['content-disposition']?.includes('attachment');
+
+    if (isFileDownload) {
+      if (DEBUG) {
+        console.log('📄 File download detected, returning raw response');
+      }
+      return response;
+    }
+
+    // Standardize response format hanya untuk JSON responses
     return {
       ...response,
       data: {
@@ -155,17 +170,29 @@ axiosInstance.download = async (url, filename) => {
       responseType: 'blob',
     });
 
-    const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+    // Validasi response
+    if (!(response.data instanceof Blob)) {
+      console.error('❌ Response is not a Blob:', response.data);
+      throw new Error('Invalid response format');
+    }
+
+    // Download file
+    const downloadUrl = window.URL.createObjectURL(response.data);
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.setAttribute('download', filename);
+    link.setAttribute('download', filename || 'download.xlsx');
     document.body.appendChild(link);
     link.click();
-    link.remove();
-    window.URL.revokeObjectURL(downloadUrl);
+    
+    // Cleanup
+    setTimeout(() => {
+      link.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+    }, 100);
 
     return { success: true };
   } catch (error) {
+    console.error('Download error:', error);
     return { success: false, error };
   }
 };
@@ -184,11 +211,6 @@ axiosInstance.upload = async (url, formData, onProgress) => {
     return { success: false, error };
   }
 };
-
-// Make axios instance available globally for debugging
-if (DEBUG) {
-  window.axiosInstance = axiosInstance;
-}
 
 // Export
 export { axiosInstance };
