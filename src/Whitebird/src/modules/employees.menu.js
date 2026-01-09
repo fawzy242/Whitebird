@@ -1,6 +1,6 @@
 /**
- * Employees Menu Module - Optimized with Grid View
- * Connected to Whitebird API
+ * Employees Menu Module - Optimized with Server-Side Grid
+ * Connected to Whitebird API - REFACTORED VERSION
  */
 
 import WhitebirdAPI from '../services/api/index.js';
@@ -12,9 +12,11 @@ export class EmployeesMenu {
     this.pageSize = 15;
     this.filteredData = [];
     this.loading = false;
-    this.employees = [];
     this.totalItems = 0;
     this.totalPages = 1;
+    this.searchTerm = '';
+    this.departmentFilter = '';
+    this.statusFilter = '';
   }
 
   /**
@@ -24,37 +26,98 @@ export class EmployeesMenu {
     console.log('👥 Employees Menu Initializing...');
     this.setupEventListeners();
     await this.loadEmployees();
-    this.renderCurrentTab();
     console.log('✅ Employees Menu Initialized!');
   }
 
   /**
-   * Load employees from API
+   * Load employees from API with pagination and filters
    */
   async loadEmployees() {
     try {
       this.loading = true;
-      console.log('📡 Loading employees from API...');
-
-      const response = await WhitebirdAPI.employee.getEmployeesGrid({
+      this.showLoading(true);
+      
+      // Build query params
+      const params = {
         page: this.currentPage,
-        pageSize: 1000, // Load all for filtering
-      });
+        pageSize: this.pageSize
+      };
 
-      if (response.isSuccess && response.data) {
-        this.employees = response.data;
-        this.totalItems = response.totalCount || this.employees.length;
-        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-        console.log(`✅ Loaded ${this.employees.length} employees from API`);
+      // Add search filter
+      if (this.searchTerm && this.searchTerm.trim()) {
+        params.search = this.searchTerm.trim();
+      }
+
+      // Add department filter
+      if (this.departmentFilter) {
+        // Note: API mungkin tidak support department filter di endpoint grid
+        // Jika tidak, kita filter di client setelah data diterima
+      }
+
+      console.log('📡 Loading employees with params:', params);
+
+      const response = await WhitebirdAPI.employee.getEmployeesGrid(params);
+
+      if (response.isSuccess) {
+        // Handle response data based on API structure
+        if (response.data && Array.isArray(response.data)) {
+          this.filteredData = response.data;
+          this.totalItems = response.totalCount || response.data.length;
+          this.totalPages = response.totalPages || 
+            Math.ceil(this.totalItems / this.pageSize);
+          
+          console.log(`✅ Loaded ${this.filteredData.length} employees`);
+          console.log(`📊 Total: ${this.totalItems}, Pages: ${this.totalPages}`);
+        } else {
+          console.warn('⚠️ API returned invalid data structure:', response);
+          this.filteredData = [];
+          this.totalItems = 0;
+          this.totalPages = 1;
+        }
+        
+        this.renderTable();
+        this.renderPagination();
+        this.updateCounts();
+        
+        // Update tab counts from separate API call for accuracy
+        await this.updateTabCounts();
       } else {
-        console.warn('⚠️ API returned no data');
-        this.employees = [];
+        console.error('❌ API Error:', response.message);
+        this.showError('Failed to load employees: ' + response.message);
+        this.filteredData = [];
       }
     } catch (error) {
-      console.error('❌ Failed to load employees from API:', error);
-      this.employees = [];
+      console.error('❌ Failed to load employees:', error);
+      this.showError('Network error. Please check your connection.');
+      this.filteredData = [];
     } finally {
       this.loading = false;
+      this.showLoading(false);
+    }
+  }
+
+  /**
+   * Update tab counts from API
+   */
+  async updateTabCounts() {
+    try {
+      // Load active employees count
+      const activeResponse = await WhitebirdAPI.employee.getActiveEmployees();
+      if (activeResponse.isSuccess && activeResponse.data) {
+        const activeCount = activeResponse.data.length || 0;
+        document.getElementById('activeCount').textContent = activeCount;
+      }
+
+      // Load all employees for inactive count
+      const allResponse = await WhitebirdAPI.employee.getEmployees();
+      if (allResponse.isSuccess && allResponse.data) {
+        const totalCount = allResponse.data.length || 0;
+        const activeCount = parseInt(document.getElementById('activeCount').textContent) || 0;
+        const inactiveCount = totalCount - activeCount;
+        document.getElementById('inactiveCount').textContent = inactiveCount > 0 ? inactiveCount : 0;
+      }
+    } catch (error) {
+      console.warn('⚠️ Failed to update tab counts:', error);
     }
   }
 
@@ -71,47 +134,43 @@ export class EmployeesMenu {
     // Refresh button
     const refreshBtn = document.getElementById('btnRefreshEmployees');
     if (refreshBtn) {
-      refreshBtn.addEventListener('click', async () => {
-        console.log('🔄 Refreshing employees from API...');
-        refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
-        refreshBtn.disabled = true;
-
-        try {
-          await this.loadEmployees();
-          this.applyFilters();
-          this.showNotification('success', '✅ Employees refreshed successfully');
-        } catch (error) {
-          console.error('❌ Refresh failed:', error);
-          this.showNotification('danger', '❌ Failed to refresh employees');
-        } finally {
-          refreshBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Refresh';
-          refreshBtn.disabled = false;
-        }
-      });
+      refreshBtn.addEventListener('click', () => this.handleRefresh());
     }
 
-    // Search
+    // Search with debounce
     const searchInput = document.getElementById('searchEmployee');
     if (searchInput) {
       let searchTimeout;
       searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
-          this.applyFilters();
-        }, 300);
+          this.searchTerm = e.target.value;
+          this.currentPage = 1; // Reset to first page when searching
+          this.loadEmployees();
+        }, 500);
       });
     }
 
-    // Filters
+    // Department filter
     const filterDept = document.getElementById('filterDepartment');
-    const filterStatus = document.getElementById('filterStatus');
-
     if (filterDept) {
-      filterDept.addEventListener('change', () => this.applyFilters());
+      filterDept.addEventListener('change', (e) => {
+        this.departmentFilter = e.target.value;
+        this.currentPage = 1;
+        // If API supports department filter, use it. Otherwise filter client-side
+        this.loadEmployees();
+      });
     }
 
+    // Status filter
+    const filterStatus = document.getElementById('filterStatus');
     if (filterStatus) {
-      filterStatus.addEventListener('change', () => this.applyFilters());
+      filterStatus.addEventListener('change', (e) => {
+        this.statusFilter = e.target.value;
+        this.currentPage = 1;
+        // Status filtering will be done client-side based on tab
+        this.applyClientSideFilters();
+      });
     }
 
     // Reset Filters
@@ -120,137 +179,159 @@ export class EmployeesMenu {
       btnReset.addEventListener('click', () => this.resetFilters());
     }
 
-    // Tab switching
-    const activeTab = document.getElementById('active-tab');
-    const inactiveTab = document.getElementById('inactive-tab');
+    // Tab switching - IMPORTANT: Now using Bootstrap tab events
+    const activeTab = document.querySelector('#active-tab');
+    const inactiveTab = document.querySelector('#inactive-tab');
 
     if (activeTab) {
-      activeTab.addEventListener('shown.bs.tab', () => {
+      activeTab.addEventListener('click', (e) => {
+        e.preventDefault();
         this.currentTab = 'active';
         this.currentPage = 1;
-        this.renderCurrentTab();
+        this.applyClientSideFilters();
       });
     }
 
     if (inactiveTab) {
-      inactiveTab.addEventListener('shown.bs.tab', () => {
+      inactiveTab.addEventListener('click', (e) => {
+        e.preventDefault();
         this.currentTab = 'inactive';
         this.currentPage = 1;
-        this.renderCurrentTab();
+        this.applyClientSideFilters();
       });
+    }
+
+    // Initialize Bootstrap tabs if available
+    if (typeof bootstrap !== 'undefined') {
+      const tabEl = document.querySelector('#employeeTabs');
+      if (tabEl) {
+        const tab = new bootstrap.Tab(tabEl);
+        tabEl.addEventListener('shown.bs.tab', (event) => {
+          const target = event.target.getAttribute('data-bs-target');
+          if (target === '#active-pane') {
+            this.currentTab = 'active';
+          } else if (target === '#inactive-pane') {
+            this.currentTab = 'inactive';
+          }
+          this.currentPage = 1;
+          this.applyClientSideFilters();
+        });
+      }
     }
   }
 
   /**
-   * Apply filters
+   * Apply client-side filters (for status and department if API doesn't support)
    */
-  applyFilters() {
-    const search = document.getElementById('searchEmployee')?.value.toLowerCase() || '';
-    const department = document.getElementById('filterDepartment')?.value || '';
-    const statusFilter = document.getElementById('filterStatus')?.value || '';
-
-    this.filteredData = this.employees.filter((emp) => {
-      let match = true;
-
-      // Filter by active/inactive tab
-      if (this.currentTab === 'active') {
-        match = match && emp.isActive === true;
-      } else {
-        match = match && emp.isActive === false;
-      }
-
-      // Filter by search
-      if (search) {
-        match =
-          match &&
-          (emp.fullName?.toLowerCase().includes(search) ||
-            emp.email?.toLowerCase().includes(search) ||
-            emp.position?.toLowerCase().includes(search) ||
-            emp.employeeCode?.toLowerCase().includes(search));
-      }
-
-      // Filter by department
-      if (department) {
-        match = match && emp.department === department;
-      }
-
-      // Filter by status (if implemented)
-      if (statusFilter && emp.status) {
-        match = match && emp.status === statusFilter;
-      }
-
-      return match;
-    });
-
-    this.currentPage = 1;
-    this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
-    this.renderCurrentTab();
+  applyClientSideFilters() {
+    // Note: This should be called after data is loaded from API
+    // For now, we'll reload from API and filter client-side
+    this.loadEmployees();
   }
 
   /**
-   * Reset filters
+   * Reset all filters
    */
   resetFilters() {
     document.getElementById('searchEmployee').value = '';
     document.getElementById('filterDepartment').value = '';
     document.getElementById('filterStatus').value = '';
-    this.applyFilters();
+    
+    this.searchTerm = '';
+    this.departmentFilter = '';
+    this.statusFilter = '';
+    this.currentPage = 1;
+    
+    this.loadEmployees();
   }
 
   /**
-   * Render current tab
+   * Handle refresh
    */
-  renderCurrentTab() {
-    // Update counts
-    const activeCount = this.employees.filter((emp) => emp.isActive).length;
-    const inactiveCount = this.employees.filter((emp) => !emp.isActive).length;
-
-    document.getElementById('activeCount').textContent = activeCount;
-    document.getElementById('inactiveCount').textContent = inactiveCount;
-
-    // Render table
-    if (this.currentTab === 'active') {
-      this.renderTable('activeTableBody', 'activeEmpty', this.filteredData.filter(emp => emp.isActive));
-    } else {
-      this.renderTable('inactiveTableBody', 'inactiveEmpty', this.filteredData.filter(emp => !emp.isActive));
+  async handleRefresh() {
+    const refreshBtn = document.getElementById('btnRefreshEmployees');
+    if (refreshBtn) {
+      refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Refreshing...';
+      refreshBtn.disabled = true;
     }
 
-    this.updateCounts();
+    try {
+      await this.loadEmployees();
+      this.showNotification('success', '✅ Employees refreshed successfully');
+    } catch (error) {
+      console.error('❌ Refresh failed:', error);
+      this.showNotification('danger', '❌ Failed to refresh employees');
+    } finally {
+      if (refreshBtn) {
+        refreshBtn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Refresh';
+        refreshBtn.disabled = false;
+      }
+    }
   }
 
   /**
-   * Render table
+   * Render table based on current tab
    */
-  renderTable(tbodyId, emptyId, data) {
+  renderTable() {
+    // Determine which table body to render to
+    const tbodyId = this.currentTab === 'active' ? 'activeTableBody' : 'inactiveTableBody';
+    const emptyId = this.currentTab === 'active' ? 'activeEmpty' : 'inactiveEmpty';
+    const tableContainerId = this.currentTab === 'active' ? 'activeTableContainer' : 'inactiveTableContainer';
+    
     const tbody = document.getElementById(tbodyId);
     const emptyState = document.getElementById(emptyId);
+    const tableContainer = document.querySelector(`#${this.currentTab === 'active' ? 'active-pane' : 'inactive-pane'} .table-responsive`);
 
     if (!tbody) return;
 
     // Show/hide empty state
-    if (data.length === 0) {
-      emptyState?.classList.remove('d-none');
-      tbody.parentElement.parentElement?.classList.add('d-none');
+    if (this.filteredData.length === 0) {
+      if (emptyState) emptyState.classList.remove('d-none');
+      if (tableContainer) tableContainer.classList.add('d-none');
       return;
     } else {
-      emptyState?.classList.add('d-none');
-      tbody.parentElement.parentElement?.classList.remove('d-none');
+      if (emptyState) emptyState.classList.add('d-none');
+      if (tableContainer) tableContainer.classList.remove('d-none');
     }
 
-    // Pagination
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    const pageData = data.slice(start, end);
+    // Filter data based on current tab
+    let displayData = this.filteredData;
+    
+    // Apply tab filter (active/inactive)
+    if (this.currentTab === 'active') {
+      displayData = displayData.filter(emp => emp.isActive === true);
+    } else {
+      displayData = displayData.filter(emp => emp.isActive === false);
+    }
+    
+    // Apply client-side department filter if needed
+    if (this.departmentFilter && this.departmentFilter !== '') {
+      displayData = displayData.filter(emp => emp.department === this.departmentFilter);
+    }
 
-    // Use DocumentFragment for better performance
-    const fragment = document.createDocumentFragment();
+    // Apply client-side status filter if needed
+    if (this.statusFilter && this.statusFilter !== '') {
+      if (this.statusFilter === 'active') {
+        displayData = displayData.filter(emp => emp.isActive === true);
+      } else if (this.statusFilter === 'inactive') {
+        displayData = displayData.filter(emp => emp.isActive === false);
+      }
+    }
 
-    pageData.forEach((emp, index) => {
+    // Clear table
+    tbody.innerHTML = '';
+
+    // Render rows
+    displayData.forEach((emp, index) => {
       if (!emp || !emp.fullName) return;
 
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${start + index + 1}</td>
+      const row = document.createElement('tr');
+      
+      // Calculate display number based on pagination
+      const displayNumber = (this.currentPage - 1) * this.pageSize + index + 1;
+      
+      row.innerHTML = `
+        <td>${displayNumber}</td>
         <td>
           <div class="d-flex align-items-center">
             <div class="avatar avatar-sm me-2 bg-primary">
@@ -285,24 +366,23 @@ export class EmployeesMenu {
           </div>
         </td>
       `;
-      fragment.appendChild(tr);
+      
+      tbody.appendChild(row);
     });
 
-    // Clear and append (single DOM operation)
-    tbody.innerHTML = '';
-    tbody.appendChild(fragment);
-
-    // Attach event listeners
-    this.attachRowEventListeners(tbody);
-
-    // Render pagination
-    this.renderPagination(data.length);
+    // Attach event listeners to action buttons
+    this.attachRowEventListeners();
   }
 
   /**
-   * Attach row event listeners
+   * Attach event listeners to table rows
    */
-  attachRowEventListeners(tbody) {
+  attachRowEventListeners() {
+    const tbodyId = this.currentTab === 'active' ? 'activeTableBody' : 'inactiveTableBody';
+    const tbody = document.getElementById(tbodyId);
+    
+    if (!tbody) return;
+
     tbody.querySelectorAll('.btn-edit').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const id = parseInt(e.currentTarget.dataset.id);
@@ -319,15 +399,13 @@ export class EmployeesMenu {
   }
 
   /**
-   * Render pagination
+   * Render pagination controls
    */
-  renderPagination(totalItems) {
+  renderPagination() {
     const pagination = document.getElementById('employeesPagination');
     if (!pagination) return;
 
-    const totalPages = Math.ceil(totalItems / this.pageSize);
-
-    if (totalPages <= 1) {
+    if (this.totalPages <= 1) {
       pagination.innerHTML = '';
       return;
     }
@@ -343,15 +421,27 @@ export class EmployeesMenu {
       </li>
     `;
 
-    // Page numbers
-    const maxPages = 5;
-    let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
-    let endPage = Math.min(totalPages, startPage + maxPages - 1);
+    // Page numbers - show up to 5 pages
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
-    if (endPage - startPage < maxPages - 1) {
-      startPage = Math.max(1, endPage - maxPages + 1);
+    // Adjust if we're near the end
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
+    // First page
+    if (startPage > 1) {
+      html += `
+        <li class="page-item">
+          <a class="page-link" href="#" data-page="1">1</a>
+        </li>
+        ${startPage > 2 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+      `;
+    }
+
+    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       html += `
         <li class="page-item ${i === this.currentPage ? 'active' : ''}">
@@ -360,9 +450,19 @@ export class EmployeesMenu {
       `;
     }
 
+    // Last page
+    if (endPage < this.totalPages) {
+      html += `
+        ${endPage < this.totalPages - 1 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+        <li class="page-item">
+          <a class="page-link" href="#" data-page="${this.totalPages}">${this.totalPages}</a>
+        </li>
+      `;
+    }
+
     // Next button
     html += `
-      <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+      <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
         <a class="page-link" href="#" data-page="${this.currentPage + 1}">
           <i class="fas fa-chevron-right"></i>
         </a>
@@ -371,19 +471,22 @@ export class EmployeesMenu {
 
     pagination.innerHTML = html;
 
-    // Attach pagination listeners
-    this.attachPaginationListeners(pagination);
+    // Attach pagination event listeners
+    this.attachPaginationListeners();
   }
 
   /**
-   * Attach pagination listeners
+   * Attach pagination event listeners
    */
-  attachPaginationListeners(pagination) {
+  attachPaginationListeners() {
+    const pagination = document.getElementById('employeesPagination');
+    if (!pagination) return;
+
     pagination.querySelectorAll('.page-link').forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const page = parseInt(e.currentTarget.dataset.page);
-        if (!isNaN(page)) {
+        if (!isNaN(page) && page >= 1 && page <= this.totalPages && page !== this.currentPage) {
           this.goToPage(page);
         }
       });
@@ -391,34 +494,50 @@ export class EmployeesMenu {
   }
 
   /**
-   * Go to page
+   * Navigate to specific page
    */
   goToPage(page) {
-    const currentData = this.currentTab === 'active' 
-      ? this.filteredData.filter(emp => emp.isActive)
-      : this.filteredData.filter(emp => !emp.isActive);
-    
-    const totalPages = Math.ceil(currentData.length / this.pageSize);
-
-    if (page < 1 || page > totalPages) return;
-
     this.currentPage = page;
-    this.renderCurrentTab();
+    this.loadEmployees();
+    
+    // Scroll to top of table
+    const tableContainer = document.querySelector('.table-responsive');
+    if (tableContainer) {
+      tableContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   /**
-   * Update counts
+   * Update display counts
    */
   updateCounts() {
-    const currentData = this.currentTab === 'active' 
-      ? this.filteredData.filter(emp => emp.isActive)
-      : this.filteredData.filter(emp => !emp.isActive);
-    
     const start = (this.currentPage - 1) * this.pageSize + 1;
-    const end = Math.min(this.currentPage * this.pageSize, currentData.length);
+    const end = Math.min(this.currentPage * this.pageSize, this.totalItems);
+    
+    document.getElementById('showingEmployees').textContent = 
+      this.totalItems > 0 ? `${start}-${end}` : '0';
+    document.getElementById('totalFilteredEmployees').textContent = this.totalItems;
+  }
 
-    document.getElementById('showingEmployees').textContent = currentData.length > 0 ? `${start}-${end}` : '0';
-    document.getElementById('totalFilteredEmployees').textContent = currentData.length;
+  /**
+   * Show loading state
+   */
+  showLoading(show) {
+    const loadingElement = document.getElementById('employeesLoading');
+    if (!loadingElement) {
+      // Create loading element if it doesn't exist
+      const loadingDiv = document.createElement('div');
+      loadingDiv.id = 'employeesLoading';
+      loadingDiv.className = 'text-center py-5';
+      loadingDiv.innerHTML = '<i class="fas fa-spinner fa-spin fa-2x text-primary"></i><p class="mt-2">Loading employees...</p>';
+      
+      const contentArea = document.querySelector('#employeesPage .card-body');
+      if (contentArea) {
+        contentArea.prepend(loadingDiv);
+      }
+    } else {
+      loadingElement.style.display = show ? 'block' : 'none';
+    }
   }
 
   /**
@@ -443,24 +562,82 @@ export class EmployeesMenu {
    * Handle delete with confirmation
    */
   async handleDelete(id) {
-    const employee = this.employees.find((e) => e.employeeId === id);
+    // Find employee data
+    const employee = this.filteredData.find(e => e.employeeId === id);
     if (!employee) return;
 
     const confirmed = confirm(
-      `Delete employee "${employee.fullName}"?\n\nThis action cannot be undone.`
+      `Are you sure you want to delete employee "${employee.fullName}"?\n\nThis action cannot be undone.`
     );
 
     if (confirmed) {
       try {
         await WhitebirdAPI.employee.deleteEmployee(id);
+        
+        // Refresh data
         await this.loadEmployees();
-        this.applyFilters();
-        this.showNotification('success', 'Employee deleted successfully');
+        
+        this.showNotification('success', '✅ Employee deleted successfully');
       } catch (error) {
         console.error('❌ Failed to delete employee:', error);
-        this.showNotification('danger', 'Failed to delete employee');
+        this.showNotification('danger', '❌ Failed to delete employee: ' + error.message);
       }
     }
+  }
+
+  /**
+   * Show notification
+   */
+  showNotification(type, message) {
+    // Try to use existing notification system
+    if (window.showNotification) {
+      window.showNotification(type, message);
+      return;
+    }
+    
+    // Fallback to Bootstrap toast
+    if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+      const toastContainer = document.querySelector('.toast-container');
+      if (!toastContainer) {
+        const container = document.createElement('div');
+        container.className = 'toast-container position-fixed top-0 end-0 p-3';
+        container.style.zIndex = '1060';
+        document.body.appendChild(container);
+      }
+      
+      const toastId = 'notification-' + Date.now();
+      const toastHtml = `
+        <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-${type} text-white">
+            <strong class="me-auto">${type === 'success' ? 'Success' : 'Error'}</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+          </div>
+          <div class="toast-body">${message}</div>
+        </div>
+      `;
+      
+      document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toastHtml);
+      
+      const toastEl = document.getElementById(toastId);
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+      
+      // Remove toast after it's hidden
+      toastEl.addEventListener('hidden.bs.toast', () => {
+        toastEl.remove();
+      });
+    } else {
+      // Fallback to alert
+      alert(message);
+    }
+  }
+
+  /**
+   * Show error message
+   */
+  showError(message) {
+    console.error('Showing error:', message);
+    this.showNotification('danger', message);
   }
 
   /**
@@ -471,17 +648,6 @@ export class EmployeesMenu {
       window.router.navigate(page);
     } else {
       window.location.href = `/${page}`;
-    }
-  }
-
-  /**
-   * Show notification
-   */
-  showNotification(type, message) {
-    if (window.showNotification) {
-      window.showNotification(type, message);
-    } else {
-      alert(message);
     }
   }
 }

@@ -8,7 +8,7 @@ import WhitebirdAPI from '../services/api/index.js';
 export class TransactionCrudModule {
   constructor() {
     this.mode = 'create'; // 'create' or 'update'
-    this.transactionId = null;
+    this.assetTransactionsId = null;
     this.transaction = null;
     this.assets = [];
     this.employees = [];
@@ -28,9 +28,9 @@ export class TransactionCrudModule {
     try {
       // Get mode from sessionStorage
       this.mode = sessionStorage.getItem('crudMode') || 'create';
-      this.transactionId = sessionStorage.getItem('crudId');
+      this.assetTransactionsId = sessionStorage.getItem('crudId');
 
-      console.log(`Mode: ${this.mode}, ID: ${this.transactionId}`);
+      console.log(`Mode: ${this.mode}, ID: ${this.assetTransactionsId}`);
 
       // Tunggu DOM siap sepenuhnya
       await this.waitForDOM();
@@ -41,8 +41,8 @@ export class TransactionCrudModule {
       this.setupEventListeners();
       this.updatePageTitle();
 
-      if (this.mode === 'update' && this.transactionId) {
-        await this.loadTransaction(parseInt(this.transactionId));
+      if (this.mode === 'update' && this.assetTransactionsId) {
+        await this.loadTransaction(parseInt(this.assetTransactionsId));
       }
 
       this.initialized = true;
@@ -497,8 +497,8 @@ export class TransactionCrudModule {
 
       let response;
       if (this.mode === 'update') {
-        console.log(`📤 Updating transaction ${this.transactionId}...`, formData);
-        response = await WhitebirdAPI.transactions.updateTransaction(this.transactionId, formData);
+        console.log(`📤 Updating transaction ${this.assetTransactionsId}...`, formData);
+        response = await WhitebirdAPI.transactions.updateTransaction(this.assetTransactionsId, formData);
       } else {
         console.log('📤 Creating new transaction...', formData);
         response = await WhitebirdAPI.transactions.createTransaction(formData);

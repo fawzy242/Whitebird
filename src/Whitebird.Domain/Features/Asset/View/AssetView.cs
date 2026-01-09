@@ -13,6 +13,7 @@ namespace Whitebird.Domain.Features.Asset.View
         public string? CurrentHolderName { get; set; }
         public string? Condition { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public decimal? PurchasePrice { get; set; }
     }
 
     public class AssetDetailViewModel

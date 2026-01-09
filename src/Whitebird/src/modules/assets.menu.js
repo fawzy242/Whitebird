@@ -423,13 +423,16 @@ export class AssetsMenu {
   /**
    * Format currency
    */
-  formatCurrency(amount) {
+formatCurrency(amount) {
     if (!amount && amount !== 0) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
+    
+    return new Intl.NumberFormat('id-ID', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(amount);
-  }
+}
 
   /**
    * Render pagination

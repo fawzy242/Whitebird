@@ -232,12 +232,12 @@ export class TransactionsMenu {
         <td>
           <div class="btn-group btn-group-sm">
             <button class="btn btn-outline-primary btn-view" 
-                    data-id="${trans.transactionId || trans.id}" 
+                    data-id="${trans.assetTransactionsId || trans.id}" 
                     title="View Details">
               <i class="fas fa-eye"></i>
             </button>
             <button class="btn btn-outline-danger btn-delete" 
-                    data-id="${trans.transactionId || trans.id}" 
+                    data-id="${trans.assetTransactionsId || trans.id}" 
                     title="Delete">
               <i class="fas fa-trash"></i>
             </button>
@@ -392,11 +392,11 @@ export class TransactionsMenu {
    */
   handleView(id) {
     console.log(`👁️ Viewing transaction ${id}`);
-    const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
+    const transaction = this.transactions.find((t) => (t.assetTransactionsId || t.id) === id);
     if (transaction) {
       alert(
         `Transaction Details:\n\n` +
-        `ID: ${transaction.transactionId}\n` +
+        `ID: ${transaction.assetTransactionsId}\n` +
         `Asset: ${transaction.assetName} (${transaction.assetCode})\n` +
         `Status: ${transaction.status}\n` +
         `From: ${transaction.fromEmployeeName || 'N/A'}\n` +
@@ -410,7 +410,7 @@ export class TransactionsMenu {
    * Handle delete transaction
    */
   async handleDelete(id) {
-    const transaction = this.transactions.find((t) => (t.transactionId || t.id) === id);
+    const transaction = this.transactions.find((t) => (t.assetTransactionsId || t.id) === id);
     if (!transaction) return;
 
     const result = await confirmModal.show({
