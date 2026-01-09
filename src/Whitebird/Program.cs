@@ -20,8 +20,6 @@ using Whitebird.Infra.Features.Auth;
 using Whitebird.Infra.Features.Reports;
 using Whitebird.App.Features.Reports.Interfaces;
 using Whitebird.App.Features.Reports.Service;
-using Whitebird.Infra.Features.AssetTransactions;
-using Whitebird.Infra.Features.Asset;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -125,8 +123,6 @@ builder.Services.AddMapster();
 
 // 6. AUTH SERVICES
 builder.Services.AddScoped<IAuthReps, AuthReps>();
-builder.Services.AddScoped<IAssetReps, AssetReps>();
-builder.Services.AddScoped<IAssetTransactionsReps, AssetTransactionsReps>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IReportsReps, ReportsReps>();
@@ -218,7 +214,7 @@ TypeAdapterConfig<EmployeeUpdateViewModel, EmployeeEntity>.NewConfig()
 
 // Asset Transactions mappings
 TypeAdapterConfig<AssetTransactionsEntity, AssetTransactionsDetailViewModel>.NewConfig()
-    .Map(dest => dest.AssetTransactionsId, src => src.AssetTransactionsId)
+    .Map(dest => dest.TransactionId, src => src.TransactionId)
     .Map(dest => dest.AssetId, src => src.AssetId)
     .Map(dest => dest.FromEmployeeId, src => src.FromEmployeeId)
     .Map(dest => dest.ToEmployeeId, src => src.ToEmployeeId)
@@ -227,7 +223,7 @@ TypeAdapterConfig<AssetTransactionsEntity, AssetTransactionsDetailViewModel>.New
     .Map(dest => dest.Status, src => src.Status);
 
 TypeAdapterConfig<AssetTransactionsEntity, AssetTransactionsListViewModel>.NewConfig()
-    .Map(dest => dest.AssetTransactionsId, src => src.AssetTransactionsId)
+    .Map(dest => dest.TransactionId, src => src.TransactionId)
     .Map(dest => dest.AssetId, src => src.AssetId)
     .Map(dest => dest.AssetCode, src => "Unknown")
     .Map(dest => dest.AssetName, src => "Unknown")
@@ -242,7 +238,7 @@ TypeAdapterConfig<AssetTransactionsCreateViewModel, AssetTransactionsEntity>.New
     .Map(dest => dest.ToEmployeeId, src => src.ToEmployeeId)
     .Map(dest => dest.Notes, src => src.Notes)
     .Map(dest => dest.Status, src => src.Status)
-    .Ignore(dest => dest.AssetTransactionsId)
+    .Ignore(dest => dest.TransactionId)
     .Ignore(dest => dest.TransactionDate)
     .Ignore(dest => dest.CreatedDate)
     .Ignore(dest => dest.CreatedBy);
@@ -254,7 +250,7 @@ TypeAdapterConfig<AssetTransactionsUpdateViewModel, AssetTransactionsEntity>.New
     .Map(dest => dest.TransactionDate, src => src.TransactionDate)
     .Map(dest => dest.Notes, src => src.Notes)
     .Map(dest => dest.Status, src => src.Status)
-    .Ignore(dest => dest.AssetTransactionsId)
+    .Ignore(dest => dest.TransactionId)
     .Ignore(dest => dest.CreatedDate)
     .Ignore(dest => dest.CreatedBy);
 

@@ -8,7 +8,7 @@ import WhitebirdAPI from '../services/api/index.js';
 export class TransactionCrudModule {
   constructor() {
     this.mode = 'create'; // 'create' or 'update'
-    this.assetTransactionsId = null;
+    this.transactionId = null;
     this.transaction = null;
     this.assets = [];
     this.employees = [];
@@ -30,9 +30,9 @@ export class TransactionCrudModule {
     try {
       // Get mode from sessionStorage
       this.mode = sessionStorage.getItem('crudMode') || 'create';
-      this.assetTransactionsId = sessionStorage.getItem('crudId');
+      this.transactionId = sessionStorage.getItem('crudId');
 
-      console.log(`Mode: ${this.mode}, ID: ${this.assetTransactionsId}`);
+      console.log(`Mode: ${this.mode}, ID: ${this.transactionId}`);
 
       // Wait for DOM
       await this.waitForDOM();
@@ -43,16 +43,11 @@ export class TransactionCrudModule {
       this.setupEventListeners();
       this.updatePageTitle();
 
-<<<<<<< HEAD
       if (this.mode === 'update' && this.transactionId) {
         await this.loadTransaction(parseInt(this.transactionId));
       } else {
         // Set default date for create mode
         this.setDefaultTransactionDate();
-=======
-      if (this.mode === 'update' && this.assetTransactionsId) {
-        await this.loadTransaction(parseInt(this.assetTransactionsId));
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
       }
 
       this.initialized = true;
@@ -546,8 +541,8 @@ export class TransactionCrudModule {
 
       let response;
       if (this.mode === 'update') {
-        console.log(`📤 Updating transaction ${this.assetTransactionsId}...`, formData);
-        response = await WhitebirdAPI.transactions.updateTransaction(this.assetTransactionsId, formData);
+        console.log(`📤 Updating transaction ${this.transactionId}...`, formData);
+        response = await WhitebirdAPI.transactions.updateTransaction(this.transactionId, formData);
       } else {
         console.log('📤 Creating new transaction...', formData);
         response = await WhitebirdAPI.transactions.createTransaction(formData);

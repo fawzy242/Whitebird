@@ -315,47 +315,10 @@ export class TransactionsMenu {
 
     // Build table rows
     const fragment = document.createDocumentFragment();
-<<<<<<< HEAD
     
     pageData.forEach((transaction, index) => {
       const row = this.createTableRow(transaction, start + index, statusColors);
       fragment.appendChild(row);
-=======
-    pageData.forEach((trans, index) => {
-      const tr = document.createElement('tr');
-      
-      tr.innerHTML = `
-        <td>${start + index + 1}</td>
-        <td>${this.formatDate(trans.transactionDate)}</td>
-        <td>
-          <span class="badge bg-${statusColors[trans.status] || 'secondary'}">
-            ${trans.status || 'N/A'}
-          </span>
-        </td>
-        <td>
-          <strong>${trans.assetName || 'N/A'}</strong>
-          <small class="text-muted d-block">${trans.assetCode || 'No Code'}</small>
-        </td>
-        <td>${trans.fromEmployeeName || 'N/A'}</td>
-        <td>${trans.toEmployeeName || 'N/A'}</td>
-        <td>
-          <div class="btn-group btn-group-sm">
-            <button class="btn btn-outline-primary btn-view" 
-                    data-id="${trans.assetTransactionsId || trans.id}" 
-                    title="View Details">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-outline-danger btn-delete" 
-                    data-id="${trans.assetTransactionsId || trans.id}" 
-                    title="Delete">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </td>
-      `;
-
-      fragment.appendChild(tr);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
     });
 
     tbody.innerHTML = '';
@@ -601,16 +564,11 @@ export class TransactionsMenu {
    * Handle view transaction
    */
   handleView(id) {
-<<<<<<< HEAD
     const transaction = this.transactions.find(t => t.transactionId === id);
-=======
-    console.log(`👁️ Viewing transaction ${id}`);
-    const transaction = this.transactions.find((t) => (t.assetTransactionsId || t.id) === id);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
     if (transaction) {
       alert(
         `Transaction Details:\n\n` +
-        `ID: ${transaction.assetTransactionsId}\n` +
+        `ID: ${transaction.transactionId}\n` +
         `Asset: ${transaction.assetName} (${transaction.assetCode})\n` +
         `Status: ${transaction.status}\n` +
         `From: ${transaction.fromEmployeeName}\n` +
@@ -637,11 +595,7 @@ export class TransactionsMenu {
    * Handle delete transaction
    */
   async handleDelete(id) {
-<<<<<<< HEAD
     const transaction = this.transactions.find(t => t.transactionId === id);
-=======
-    const transaction = this.transactions.find((t) => (t.assetTransactionsId || t.id) === id);
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
     if (!transaction) return;
 
     const result = await confirmModal.show({

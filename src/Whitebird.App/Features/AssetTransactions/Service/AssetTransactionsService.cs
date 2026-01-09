@@ -5,8 +5,6 @@ using Whitebird.App.Features.AssetTransactions.Interfaces;
 using Whitebird.App.Features.Common.Service;
 using Whitebird.Domain.Features.AssetTransactions.Entities;
 using Whitebird.Domain.Features.AssetTransactions.View;
-using Whitebird.Infra.Features.Asset;
-using Whitebird.Infra.Features.AssetTransactions;
 using Whitebird.Infra.Features.Common;
 
 namespace Whitebird.App.Features.AssetTransactions.Service
@@ -14,14 +12,11 @@ namespace Whitebird.App.Features.AssetTransactions.Service
     public class AssetTransactionsService : IAssetTransactionsService
     {
         private readonly IGenericRepository<AssetTransactionsEntity> _repository;
-        private readonly IAssetTransactionsReps _assetTransactionsReps;
-
         private readonly IMapper _mapper;
 
-        public AssetTransactionsService(IGenericRepository<AssetTransactionsEntity> repository, IAssetTransactionsReps assetTransactionsReps, IMapper mapper)
+        public AssetTransactionsService(IGenericRepository<AssetTransactionsEntity> repository, IMapper mapper)
         {
             _repository = repository;
-            _assetTransactionsReps = assetTransactionsReps;
             _mapper = mapper;
         }
 
@@ -29,7 +24,7 @@ namespace Whitebird.App.Features.AssetTransactions.Service
         {
             try
             {
-                var transaction = await _assetTransactionsReps.GetByIdAsync(id);
+                var transaction = await _repository.GetByIdAsync(id);
                 if (transaction == null)
                     return Result<AssetTransactionsDetailViewModel>.Failure("Transaction not found");
 
@@ -46,7 +41,7 @@ namespace Whitebird.App.Features.AssetTransactions.Service
         {
             try
             {
-                var transactions = await _assetTransactionsReps.GetAllAsync();
+                var transactions = await _repository.GetAllAsync();
                 var viewModels = transactions.Select(t => _mapper.Map<AssetTransactionsListViewModel>(t));
                 return Result<IEnumerable<AssetTransactionsListViewModel>>.Success(viewModels);
             }

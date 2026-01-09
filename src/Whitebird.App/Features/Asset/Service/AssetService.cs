@@ -5,7 +5,6 @@ using Whitebird.App.Features.Asset.Interfaces;
 using Whitebird.App.Features.Common.Service;
 using Whitebird.Domain.Features.Asset.Entities;
 using Whitebird.Domain.Features.Asset.View;
-using Whitebird.Infra.Features.Asset;
 using Whitebird.Infra.Features.Common;
 
 namespace Whitebird.App.Features.Asset.Service
@@ -13,13 +12,11 @@ namespace Whitebird.App.Features.Asset.Service
     public class AssetService : IAssetService
     {
         private readonly IGenericRepository<AssetEntity> _repository;
-        private readonly IAssetReps _assetReps;
         private readonly IMapper _mapper;
 
-        public AssetService(IGenericRepository<AssetEntity> repository, IAssetReps assetReps, IMapper mapper)
+        public AssetService(IGenericRepository<AssetEntity> repository, IMapper mapper)
         {
             _repository = repository;
-            _assetReps = assetReps;
             _mapper = mapper;
         }
 
@@ -27,7 +24,7 @@ namespace Whitebird.App.Features.Asset.Service
         {
             try
             {
-                var asset = await _assetReps.GetByIdAsync(id);
+                var asset = await _repository.GetByIdAsync(id);
                 if (asset == null || !asset.IsActive)
                     return Result<AssetDetailViewModel>.Failure("Asset not found or inactive");
 
@@ -44,7 +41,7 @@ namespace Whitebird.App.Features.Asset.Service
         {
             try
             {
-                var assets = await _assetReps.GetAllAsync();
+                var assets = await _repository.GetAllAsync();
                 var activeAssets = assets.Where(a => a.IsActive);
                 var viewModels = _mapper.Map<IEnumerable<AssetListViewModel>>(activeAssets);
                 return Result<IEnumerable<AssetListViewModel>>.Success(viewModels);
@@ -136,7 +133,7 @@ namespace Whitebird.App.Features.Asset.Service
         {
             try
             {
-                var assets = await _assetReps.GetAllAsync();
+                var assets = await _repository.GetAllAsync();
 
                 // Filter active assets
                 var query = assets.Where(a => a.IsActive);

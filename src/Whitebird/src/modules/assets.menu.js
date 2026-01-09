@@ -494,7 +494,6 @@ export class AssetsMenu {
   /**
    * Format currency
    */
-<<<<<<< HEAD
   formatCurrency(amount) {
     if (amount === null || amount === undefined || amount === '') return 'N/A';
     
@@ -527,18 +526,6 @@ export class AssetsMenu {
       });
     });
   }
-=======
-formatCurrency(amount) {
-    if (!amount && amount !== 0) return 'N/A';
-    
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-}
->>>>>>> b23c9d8f68f06041a15a05e44bd5218be6d6809c
 
   /**
    * Render pagination

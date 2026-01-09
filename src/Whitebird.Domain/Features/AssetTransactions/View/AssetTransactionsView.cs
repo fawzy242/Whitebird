@@ -5,7 +5,7 @@ namespace Whitebird.Domain.Features.AssetTransactions.View
 {
     public class AssetTransactionsListViewModel
     {
-        public int AssetTransactionsId { get; set; }
+        public int TransactionId { get; set; }
         public int AssetId { get; set; }
         public string AssetCode { get; set; } = default!;
         public string AssetName { get; set; } = default!;
@@ -17,7 +17,7 @@ namespace Whitebird.Domain.Features.AssetTransactions.View
 
     public class AssetTransactionsDetailViewModel
     {
-        public int AssetTransactionsId { get; set; }
+        public int TransactionId { get; set; }
 
         [Required(ErrorMessage = "AssetId is required")]
         [Range(1, int.MaxValue, ErrorMessage = "AssetId must be greater than 0")]
