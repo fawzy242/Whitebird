@@ -13,7 +13,7 @@ export class AssetsMenu {
     this.filteredData = [];
     this.currentTab = 'available';
     this.currentPage = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.loading = false;
     this.totalItems = 0;
     this.totalPages = 1;

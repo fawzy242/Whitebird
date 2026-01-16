@@ -10,7 +10,7 @@ export class TransactionsMenu {
     this.transactions = [];
     this.filteredData = [];
     this.currentPage = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.totalItems = 0;
     this.totalPages = 1;
     this.loading = false;

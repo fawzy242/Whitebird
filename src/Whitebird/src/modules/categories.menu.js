@@ -11,7 +11,7 @@ export class CategoriesMenu {
     this.categories = [];
     this.filteredData = [];
     this.currentPage = 1;
-    this.pageSize = 10;
+    this.pageSize = 100;
     this.totalItems = 0;
     this.loading = false;
   }

@@ -9,7 +9,7 @@ export class EmployeesMenu {
   constructor() {
     this.currentTab = 'active';
     this.currentPage = 1;
-    this.pageSize = 15;
+    this.pageSize = 100;
     this.filteredData = [];
     this.loading = false;
     this.totalItems = 0;
